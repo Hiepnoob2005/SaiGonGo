@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - SaiGonGo</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <script src="./assets/js/login.js"></script>
+  </head>
+  <style>
+    /* General page style */
+    body {
+      font-family: "Heebo", sans-serif;
+      background: linear-gradient(to right, #f6d365, #fda085);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    p, p a {
+  display: inline;
+  white-space: nowrap;
+}
+
+  </style>
+  <body>
+    <div class="login-container">
+      <h2>Login</h2>
+
+      <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <div align="center">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+
+      <p>Don’t have an account? <a href="register.html">Register</a></p>
+<p><a href="forgot_password.html">Forgor</a> your password?</p>
+
+    </div>
+  </body>
+</html>
