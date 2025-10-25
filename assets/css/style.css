@@ -1150,3 +1150,9 @@ body {
 .form-container a:hover {
   text-decoration: underline;
 }
+
+.navbar-user {
+  color: white;
+  margin-right: 10px;
+  font-weight: 600;
+}

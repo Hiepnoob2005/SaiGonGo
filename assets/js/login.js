@@ -11,7 +11,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     password === "1234"
   ) {
     alert("Login successful (local demo)!");
-    window.location.href = "index.html";
+    window.location.href = "index copy.html";
     return;
   }
 
@@ -27,7 +27,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     if (response.ok) {
       alert("Login successful!");
-      window.location.href = "dashboard.html";
+      window.location.href = "index copy.html";
     } else {
       alert(result.message || "Login failed!");
     }

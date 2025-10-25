@@ -1,0 +1,2 @@
+username;email;password
+24127020;oizooi12345@gmail.com;123
