@@ -1,2 +1,2 @@
 username;email;password
-24127020;oizooi12345@gmail.com;123
+24127020;oizooi12345@gmail.com;$2b$12$qivop04Tau2p7W3j5N7bKeXLLtjjuSQ1osa4OiPKGnSz45b9tsO/S

@@ -21,13 +21,10 @@ USER_FILE = "user_accounts.txt"
 def register_secure():
     """
     Tuyến đường (route) để xử lý đăng ký tài khoản MỘT CÁCH AN TOÀN.
-    Nhận JSON, băm mật khẩu, và lưu vào file.
     """
     try:
-        # Lấy dữ liệu JSON từ yêu cầu
         data = request.get_json()
         
-        # Kiểm tra xem có đủ trường không
         if not data or 'username' not in data or 'email' not in data or 'password' not in data:
             return jsonify({"message": "Thiếu username, email, hoặc password"}), 400
 
@@ -35,19 +32,86 @@ def register_secure():
         email = data.get('email')
         password = data.get('password')
 
-        user_line = f"{username};{email};{password}\n"
+        # --- KIỂM TRA TRÙNG LẶP ---
+        if os.path.exists(USER_FILE):
+            with open(USER_FILE, "r", encoding="utf-8") as f:
+                for line in f:
+                    parts = line.strip().split(';')
+                    if len(parts) >= 2:
+                        if parts[0] == username:
+                            return jsonify({"message": "Username đã tồn tại"}), 409
+                        if parts[1] == email:
+                            return jsonify({"message": "Email đã tồn tại"}), 409
+
+        # --- PHẦN BẢO MẬT QUAN TRỌNG ---
+        # 1. Băm mật khẩu bằng bcrypt (An toàn)
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        
+        # 2. CHỈ LƯU MẬT KHẨU ĐÃ BĂM
+        user_line = f"{username};{email};{hashed_password}\n"
 
         # 3. Ghi vào file
-        # 'a' nghĩa là 'append' (nối vào cuối file)
         with open(USER_FILE, "a", encoding="utf-8") as f:
             f.write(user_line)
 
-        # 4. Trả về thông báo thành công
-        # Mã 201 có nghĩa là "Created" (Đã tạo thành công)
         return jsonify({"message": "Tài khoản đã được tạo thành công!"}), 201
 
     except Exception as e:
-        print(f"Lỗi máy chủ: {e}")
+        print(f"Lỗi máy chủ khi đăng ký: {e}")
+        return jsonify({"message": "Đã xảy ra lỗi nội bộ máy chủ"}), 500
+
+@app.route('/api/login', methods=['POST'])
+def login_secure():
+    """
+    Tuyến đường (route) để xử lý đăng nhập MỘT CÁCH AN TOÀN.
+    """
+    try:
+        data = request.get_json()
+        if not data or 'email' not in data or 'password' not in data:
+            return jsonify({"message": "Thiếu email hoặc password"}), 400
+
+        # JavaScript gửi trường 'email' nhưng có thể chứa username
+        email_or_username = data.get('email')
+        password = data.get('password')
+
+        # Kiểm tra file có tồn tại không
+        if not os.path.exists(USER_FILE):
+             return jsonify({"message": "Sai email hoặc mật khẩu"}), 401
+
+        user_found = False
+        with open(USER_FILE, "r", encoding="utf-8") as f:
+            for line in f:
+                # Tách dòng: username;email;hashed_password
+                parts = line.strip().split(';')
+                if len(parts) < 3: 
+                    continue # Bỏ qua dòng lỗi
+
+                stored_username = parts[0]
+                stored_email = parts[1]
+                stored_hash = parts[2] # Đây là mật khẩu đã băm
+
+                # Kiểm tra xem người dùng nhập email hay username
+                if email_or_username == stored_email or email_or_username == stored_username:
+                    user_found = True
+                    
+                    # --- PHẦN BẢO MẬT QUAN TRỌNG ---
+                    # 1. Dùng bcrypt để so sánh mật khẩu
+                    if bcrypt.check_password_hash(stored_hash, password):
+                        # Mật khẩu khớp!
+                        return jsonify({
+                            "message": "Đăng nhập thành công!",
+                            "username": stored_username  # Gửi username về cho JS
+                        }), 200
+                    else:
+                        # Mật khẩu sai
+                        return jsonify({"message": "Sai email hoặc mật khẩu"}), 401
+
+        # Nếu chạy hết vòng lặp mà không tìm thấy user
+        if not user_found:
+            return jsonify({"message": "Sai email hoặc mật khẩu"}), 401
+
+    except Exception as e:
+        print(f"Lỗi máy chủ khi đăng nhập: {e}")
         return jsonify({"message": "Đã xảy ra lỗi nội bộ máy chủ"}), 500
     
 @app.route("/")
