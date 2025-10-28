@@ -100,9 +100,24 @@
 <!-- Xếp hạng -->
 <section class="ranking" style="text-align: center;">
   <h2 style="font-size: 1.5rem; color: #222;">Xếp hạng</h2>
-  <p style="color: #ff6b00; font-weight: 600; font-size: 1.1rem; margin-top: 10px;">
+  <p id="xp-score" style="color: #ff6b00; font-weight: 600; font-size: 1.1rem; margin-top: 10px;">
     Điểm cao nhất 💎 0 XP
   </p>
+        <!-- 
+        *** RƯƠNG KHO BÁU ĐƯỢC THÊM VÀO ĐÂY ***
+        Sử dụng hình ảnh placeholder. 
+        Bạn có thể thay thế src bằng đường dẫn thật của bạn.
+      -->
+      <div style="margin-top: 20px;">
+        <img 
+          id="treasure-chest"
+          src="./assets/images/Ruong_dong.png"
+          // alt="Rương kho báu đóng"
+          data-closed-src="./assets/images/Ruong_dong.png"
+          data-open-src="./assets/images/Ruong.jpeg"
+        />
+      </div>
+      <!-- Kết thúc phần rương kho báu -->
 </section>
 
 <hr style="margin: 40px 0; border: 0.5px solid #ddd;">
@@ -122,5 +137,59 @@
   </a>
 </div>
   </main>
+
+  <div id="toast-notification">Đây là thông báo của bạn!</div>
+<script>
+  // Lấy các phần tử DOM
+  const chestImage = document.getElementById('treasure-chest');
+  const toast = document.getElementById('toast-notification');
+  const xpScoreElement = document.getElementById('xp-score'); // <-- DÒNG 1 PHẢI CÓ Ở ĐÂY
+
+  // --- BẠN CÓ THỂ TÙY CHỈNH DÒNG THÔNG BÁO TẠI ĐÂY ---
+  const customMessage = "Bạn đã mở rương! +50 XP!";
+  // ----------------------------------------------------
+
+  // Lấy URL hình ảnh từ thuộc tính data
+  const closedSrc = chestImage.getAttribute('data-closed-src');
+  const openSrc = chestImage.getAttribute('data-open-src');
+
+  let isChestOpen = false; // Trạng thái rương
+
+  // Thêm sự kiện click vào rương
+  chestImage.addEventListener('click', () => {
+    // Chỉ thực hiện nếu rương chưa mở
+    if (!isChestOpen) {
+      // 1. Thay đổi hình ảnh
+      chestImage.src = openSrc;
+      isChestOpen = true; // Đánh dấu là rương đã mở
+
+      // 2. Hiển thị thông báo đẩy
+      showToast(customMessage);
+
+      // 3. CẬP NHẬT ĐIỂM SỐ
+      xpScoreElement.textContent = "Điểm cao nhất 💎 50 XP"; // <-- DÒNG 2 PHẢI CÓ Ở ĐÂY
+      
+      // (Tùy chọn) Xóa con trỏ 'pointer' để không thể nhấp lại
+      chestImage.style.cursor = 'default';
+      chestImage.style.transform = 'scale(1)'; // Reset hiệu ứng hover
+    }
+  });
+
+  // Hàm hiển thị thông báo
+  function showToast(message) {
+    // Đặt nội dung thông báo
+    toast.textContent = message;
+
+    // Thêm class 'show' để hiển thị
+    toast.classList.add('show');
+
+    // Tự động ẩn sau 3 giây
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000); // 3000ms = 3 giây
+  }
+
+</script>
+
 </body>
 </html>
