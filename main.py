@@ -104,7 +104,7 @@ def login():
 def serve_index():
     """Phục vụ file index.html (hoặc index copy.html)"""
     # Đổi 'index copy.html' thành 'index.html' nếu bạn dùng file đó
-    return send_from_directory(BASE_DIR, "index copy.html")
+    return send_from_directory(BASE_DIR, "index.html")
 
 
 @app.route("/<path:filename>")
