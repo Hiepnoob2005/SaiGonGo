@@ -1156,3 +1156,25 @@ body {
   margin-right: 10px;
   font-weight: 600;
 }
+
+
+.back-button {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.back-button:hover {
+  background-color: #f5f5f5;
+  transform: translateX(-2px);
+}
