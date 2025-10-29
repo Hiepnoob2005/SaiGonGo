@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Đổi Voucher - Bảo Tàng Khám Phá</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-image: url('https://via.placeholder.com/1920x1080?text=Shop+Background'); /* Thay đổi URL này bằng hình nền của bạn */
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center center;
+        }
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+        header {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: white;
+            padding: 1.5em 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+        .banner {
+            text-align: center;
+            padding: 80px 20px;
+            color: white;
+            background-image: url('https://via.placeholder.com/1200x300?text=Voucher+Shop+Banner'); /* Thay đổi URL này bằng banner của bạn */
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+        }
+        .banner h2 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+        .banner p {
+            font-size: 1.5em;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px 0;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .voucher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 30px;
+        }
+        .voucher-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .voucher-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        .voucher-card img {
+            max-width: 100%;
+            height: 200px; /* Chiều cao cố định cho ảnh */
+            object-fit: contain; /* Giữ tỷ lệ khung hình, không cắt ảnh */
+            background-color: #f8f8f8; /* Nền nhẹ cho ảnh logo */
+            padding: 10px; /* Đệm xung quanh logo */
+            border-bottom: 1px solid #eee;
+        }
+        .voucher-card h4 {
+            font-size: 1.5em;
+            color: #333;
+            margin: 15px 0 10px;
+        }
+        .voucher-card p {
+            padding: 0 15px 15px;
+            color: #666;
+            font-size: 0.95em;
+        }
+        .voucher-card .points {
+            font-size: 1.3em;
+            color: #e67e22;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .voucher-card .redeem-btn {
+            display: block;
+            background-color: #f39c12;
+            color: white;
+            padding: 12px 0;
+            text-decoration: none;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        .redeem-btn:hover {
+            background-color: #e08e0b;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: white;
+            background-color: rgba(51, 51, 51, 0.7);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <header>
+            <h1>Shop Đổi Voucher</h1>
+            <p>Sử dụng điểm khám phá của bạn để nhận những ưu đãi đặc biệt!</p>
+        </header>
+
+        <div class="banner">
+            <h2>Ưu Đãi Độc Quyền Dành Cho Nhà Thám Hiểm</h2>
+            <p>Đổi điểm, nhận voucher từ các thương hiệu yêu thích!</p>
+        </div>
+
+        <div class="container">
+            <h3>Các Voucher Hiện Có</h3>
+            <div class="voucher-grid">
+                <div class="voucher-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/MoMo_Logo.svg/1200px-MoMo_Logo.svg.png" alt="MoMo Voucher">
+                    <h4>Voucher MoMo 50K</h4>
+                    <p>Giảm 50.000 VNĐ cho giao dịch tối thiểu 100.000 VNĐ trên MoMo.</p>
+                    <div class="points">700 Điểm</div>
+                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                </div>
+
+                <div class="voucher-card">
+                    <img src="https://down-vn.img.susercontent.com/file/vn-11134207-7r9nl-lp7l4l2r17d544" alt="Shopee Food Voucher">
+                    <h4>Voucher ShopeeFood 40K</h4>
+                    <p>Giảm 40.000 VNĐ cho đơn hàng ShopeeFood tối thiểu 80.000 VNĐ.</p>
+                    <div class="points">600 Điểm</div>
+                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                </div>
+
+                <div class="voucher-card">
+                    <img src="https://assets.grab.com/images/various/original/grab_logo_02.png" alt="GrabFood Voucher">
+                    <h4>Voucher GrabFood 60K</h4>
+                    <p>Giảm 60.000 VNĐ cho đơn hàng GrabFood tối thiểu 120.000 VNĐ.</p>
+                    <div class="points">800 Điểm</div>
+                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                </div>
+
+                <div class="voucher-card">
+                    <img src="https://static.topcv.vn/company_logos/be-group-jsc-5a1a1e4a19c72.jpg" alt="BeFood Voucher">
+                    <h4>Voucher BeFood 30K</h4>
+                    <p>Giảm 30.000 VNĐ cho đơn hàng BeFood tối thiểu 60.000 VNĐ.</p>
+                    <div class="points">500 Điểm</div>
+                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                </div>
+
+                <div class="voucher-card">
+                    <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/02/Logo-Highlands-Coffee-V.png" alt="Highlands Coffee Voucher">
+                    <h4>Voucher Highlands Coffee</h4>
+                    <p>Tặng 1 đồ uống cỡ trung khi mua bất kỳ đồ uống khác.</p>
+                    <div class="points">900 Điểm</div>
+                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                </div>
+
+                <div class="voucher-card">
+                    <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-Katinat-Saigon-Kafe.png" alt="Katinat Saigon Kafe Voucher">
+                    <h4>Voucher Katinat 20%</h4>
+                    <p>Giảm 20% tổng hóa đơn tại Katinat Saigon Kafe.</p>
+                    <div class="points">750 Điểm</div>
+                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 40px; font-style: italic;">Bạn cần đăng nhập để đổi điểm.</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2023 Bảo Tàng Khám Phá. Tất cả bản quyền được bảo lưu.</p>
+            <a href="baotang.html" style="color: white; text-decoration: none;">Quay lại Trang Bảo Tàng</a>
+        </footer>
+    </div>
+</body>
+</html>

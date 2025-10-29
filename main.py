@@ -15,19 +15,10 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 # --- API Routes (Phần xử lý backend) ---
 
 @app.route('/api/register', methods=['POST'])
-def register_secure():
-<<<<<<< HEAD
-    """
-    Tuyến đường (route) để xử lý đăng ký tài khoản MỘT CÁCH AN TOÀN.
-    """
-    try:
-        data = request.get_json()
-        
-=======
+def register_secure():        
     """Tuyến đường để xử lý đăng ký tài khoản."""
     try:
         data = request.get_json()
->>>>>>> 4397f2b30f346d69a67ec7ec9fe445a0d3f4f317
         if not data or 'username' not in data or 'email' not in data or 'password' not in data:
             return jsonify({"message": "Thiếu username, email, hoặc password"}), 400
 
@@ -35,7 +26,6 @@ def register_secure():
         email = data.get('email')
         password = data.get('password') # Lấy mật khẩu gốc
 
-<<<<<<< HEAD
         # --- KIỂM TRA TRÙNG LẶP ---
         if os.path.exists(USER_FILE):
             with open(USER_FILE, "r", encoding="utf-8") as f:
@@ -55,7 +45,7 @@ def register_secure():
         user_line = f"{username};{email};{hashed_password}\n"
 
         # 3. Ghi vào file
-=======
+
         # --- Kiểm tra email tồn tại ---
         if os.path.exists(USER_FILE):
             with open(USER_FILE, "r", encoding="utf-8") as f:
@@ -70,7 +60,6 @@ def register_secure():
         # Bạn nên dùng bcrypt.generate_password_hash(password).decode('utf-8')
         user_line = f"{username};{email};{password}\n"
 
->>>>>>> 4397f2b30f346d69a67ec7ec9fe445a0d3f4f317
         with open(USER_FILE, "a", encoding="utf-8") as f:
             f.write(user_line)
 
@@ -200,14 +189,12 @@ def serve_static(filename):
 
 # --- Chạy máy chủ ---
 if __name__ == '__main__':
-<<<<<<< HEAD
+
     # Chạy máy chủ Flask ở cổng 5000
     # debug=True có nghĩa là máy chủ sẽ tự khởi động lại khi bạn thay đổi code
-=======
     # Đảm bảo file user tồn tại với tiêu đề
     if not os.path.exists(USER_FILE):
         with open(USER_FILE, "w", encoding="utf-8") as f:
             f.write("username;email;password\n") # Thêm dòng tiêu đề
 
->>>>>>> 4397f2b30f346d69a67ec7ec9fe445a0d3f4f317
     app.run(port=5000, debug=True)
