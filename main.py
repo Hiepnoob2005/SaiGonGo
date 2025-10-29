@@ -147,4 +147,3 @@ if __name__ == '__main__':
     # Chạy máy chủ Flask ở cổng 5000
     # debug=True có nghĩa là máy chủ sẽ tự khởi động lại khi bạn thay đổi code
     app.run(port=5000, debug=True)
-
