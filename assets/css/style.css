@@ -1156,3 +1156,60 @@ body {
   margin-right: 10px;
   font-weight: 600;
 }
+
+
+.back-button {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.back-button:hover {
+  background-color: #f5f5f5;
+  transform: translateX(-2px);
+}
+    /* CSS cho hình ảnh rương */
+    #treasure-chest {
+      cursor: pointer;
+      width: 120px; /* Kích thước rương, đã điều chỉnh */
+      height: 120px; /* Kích thước rương, đã điều chỉnh */
+      object-fit: cover; /* Đảm bảo ảnh vừa vặn, không bị méo */
+      border-radius: 10px;
+      transition: transform 0.2s ease;
+      display: block; /* Quan trọng: để margin auto hoạt động */
+      margin: 0 auto; /* Căn giữa rương */
+    }
+    /* CSS cho Thông báo Đẩy (Toast Notification) */
+  #toast-notification {
+    visibility: hidden; /* Ẩn ban đầu */
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 16px;
+    position: fixed; /* Hiển thị đè lên mọi thứ */
+    z-index: 1000;
+    right: 30px;
+    top: 30px;
+    font-size: 17px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+  }
+
+  /* Lớp 'show' này sẽ được thêm bằng JavaScript */
+  #toast-notification.show {
+    visibility: visible;
+    opacity: 1;
+  }
