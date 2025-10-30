@@ -1,0 +1,5 @@
+flask
+flask_bcrypt
+flask_cors
+dotenv
+openai

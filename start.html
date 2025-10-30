@@ -97,10 +97,13 @@
 <div class="back-button" onclick="goBack()">
   ← Quay lại
 </div>
-    <script>
+<script>
+  // ⚙️ Cấu hình: bật/tắt kiểm tra vị trí GPS
+  const LOCATION_CHECK_ENABLED = false; // ← đổi thành true nếu muốn bật lại kiểm tra
+
   // Tọa độ của Bảo tàng Chiến tích Chiến tranh
-    const targetLat = 10.7797839;
-    const targetLng = 106.6893418;
+  const targetLat = 10.7797839;
+  const targetLng = 106.6893418;
 
   // Hàm tính khoảng cách giữa 2 tọa độ (đơn vị: mét)
   function getDistance(lat1, lon1, lat2, lon2) {
@@ -110,17 +113,26 @@
     const φ2 = toRad(lat2);
     const Δφ = toRad(lat2 - lat1);
     const Δλ = toRad(lon2 - lon1);
-
     const a = Math.sin(Δφ / 2) ** 2 +
               Math.cos(φ1) * Math.cos(φ2) *
               Math.sin(Δλ / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return R * c; // khoảng cách (m)
+    return R * c;
   }
 
   // Gọi API lấy vị trí hiện tại
   function checkUserLocation() {
+    const startButton = document.querySelector(".start-btn");
+
+    // Nếu tắt kiểm tra vị trí
+    if (!LOCATION_CHECK_ENABLED) {
+      console.log("⚙️ Chế độ kiểm tra vị trí: TẮT. Cho phép nhấn tiếp tục.");
+      startButton.disabled = false;
+      startButton.style.opacity = "1";
+      return;
+    }
+
+    // Nếu bật kiểm tra vị trí
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -132,12 +144,12 @@
 
           if (distance < 100) {
             alert("🎉 Bạn đã đến đúng điểm xuất phát! Hành trình có thể bắt đầu.");
-            document.querySelector(".start-btn").disabled = false;
-            document.querySelector(".start-btn").style.opacity = "1";
+            startButton.disabled = false;
+            startButton.style.opacity = "1";
           } else {
             alert("📍 Bạn đang cách điểm xuất phát khoảng " + Math.round(distance) + " mét. Hãy tiến gần hơn!");
-            document.querySelector(".start-btn").disabled = true;
-            document.querySelector(".start-btn").style.opacity = "0.5";
+            startButton.disabled = true;
+            startButton.style.opacity = "0.5";
           }
         },
         (error) => {
@@ -153,6 +165,7 @@
   // Khi mở trang thì tự động kiểm tra vị trí
   window.onload = checkUserLocation;
 </script>
+
   <div class="container">
     <h1>Điểm xuất phát</h1>
     <p>Bạn hãy đến đây để bắt đầu hành trình.</p>
@@ -169,7 +182,7 @@
   </div>
 
   <div class="bottom-btn">
-    <button class="start-btn" onclick="window.location.href='next.html'">Tiếp tục</button>
+    <button class="start-btn" onclick="window.location.href='destination.html'">Tiếp tục</button>
   </div>
 <script>
   function goBack() {

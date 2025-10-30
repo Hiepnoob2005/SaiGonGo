@@ -1,7 +1,14 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from io import BytesIO
+from dotenv import load_dotenv
 import os
+import base64
+import openai  # ✅ Thêm dòng này
+
+# 🔑 Khai báo API key
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # --- Khởi tạo ứng dụng ---
 app = Flask(__name__)
@@ -16,14 +23,8 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 @app.route('/api/register', methods=['POST'])
 def register_secure():
-<<<<<<< HEAD
-    """
-    Tuyến đường (route) để xử lý đăng ký tài khoản MỘT CÁCH AN TOÀN.
-    """
-    try:
-        data = request.get_json()
+
         
-=======
     """Tuyến đường để xử lý đăng ký tài khoản."""
     try:
         data = request.get_json()
@@ -34,7 +35,7 @@ def register_secure():
         email = data.get('email')
         password = data.get('password') # Lấy mật khẩu gốc
 
-<<<<<<< HEAD
+
         # --- KIỂM TRA TRÙNG LẶP ---
         if os.path.exists(USER_FILE):
             with open(USER_FILE, "r", encoding="utf-8") as f:
@@ -54,7 +55,6 @@ def register_secure():
         user_line = f"{username};{email};{hashed_password}\n"
 
         # 3. Ghi vào file
-=======
         # --- Kiểm tra email tồn tại ---
         if os.path.exists(USER_FILE):
             with open(USER_FILE, "r", encoding="utf-8") as f:
@@ -68,8 +68,6 @@ def register_secure():
         # LƯU Ý: Đây là cách làm KHÔNG AN TOÀN cho sản phẩm thực tế.
         # Bạn nên dùng bcrypt.generate_password_hash(password).decode('utf-8')
         user_line = f"{username};{email};{password}\n"
-
->>>>>>> 4397f2b30f346d69a67ec7ec9fe445a0d3f4f317
         with open(USER_FILE, "a", encoding="utf-8") as f:
             f.write(user_line)
 
@@ -182,6 +180,64 @@ def login():
         print(f"Lỗi máy chủ khi đăng nhập: {e}")
         return jsonify({"message": "Đã xảy ra lỗi nội bộ máy chủ"}), 500
 
+# --- Route xác thực hình ảnh bằng OpenAI Vision ---
+
+@app.route("/verify-image", methods=["POST"])
+def verify_image():
+    """
+    Xác thực ảnh người chơi chụp với địa điểm yêu cầu bằng OpenAI GPT-4o Vision.
+    """
+    try:
+        # Lấy file ảnh và tên địa điểm
+        if 'image' not in request.files or 'location' not in request.form:
+            return jsonify({"message": "Thiếu dữ liệu hình ảnh hoặc tên địa điểm"}), 400
+
+        file = request.files["image"]
+        location_name = request.form["location"]
+
+        # Đọc và encode base64
+        image_bytes = file.read()
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+
+        # Biến bật/tắt AI (debug)
+        AI_CHECK_ENABLED = True
+        if not AI_CHECK_ENABLED:
+            return jsonify({"message": "✅ (Demo) AI kiểm tra đã tắt, coi như hợp lệ."}), 200
+
+        # 🧠 Gọi OpenAI GPT-4o
+        response = openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Bạn là trợ lý giúp xác định xem hình người dùng chụp có đúng với địa điểm mô tả không."
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'. Trả lời ngắn gọn: 'Đúng địa điểm' hoặc 'Không đúng địa điểm'."
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ]
+        )
+
+        # ✅ Lấy nội dung phản hồi đúng cú pháp
+        result = response.choices[0].message.content
+        return jsonify({"message": f"🤖 Kết quả AI: {result}"}), 200
+
+    except Exception as e:
+        print(f"Lỗi AI Vision: {e}")
+        return jsonify({"message": f"❌ Lỗi xử lý: {str(e)}"}), 500
+
 # --- File Serving (Phần phục vụ frontend) ---
 
 @app.route("/")
@@ -199,7 +255,6 @@ def serve_static(filename):
 
 # --- Chạy máy chủ ---
 if __name__ == '__main__':
-<<<<<<< HEAD
     # Chạy máy chủ Flask ở cổng 5000
     # debug=True có nghĩa là máy chủ sẽ tự khởi động lại khi bạn thay đổi code
     # Đảm bảo file user tồn tại với tiêu đề

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xác thực hình ảnh điểm đến</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .preview {
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      margin-top: 20px;
+      display: none;
+    }
+    button {
+      margin-top: 20px;
+      background: #ff6600;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:disabled {
+      background: gray;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <h1>Xác thực địa điểm</h1>
+  <p>Hãy chụp một tấm ảnh tại địa điểm bạn đang đứng và nhập tên địa điểm để hệ thống kiểm tra.</p>
+
+  <input type="text" id="locationName" placeholder="Nhập tên địa điểm..." style="padding:10px;width:80%;max-width:400px;" />
+
+  <input type="file" id="photo" accept="image/*" capture="camera" style="margin-top:20px;" />
+  <img id="preview" class="preview" />
+
+  <button id="uploadBtn" disabled>Xác thực bằng AI</button>
+
+  <div id="result"></div>
+
+  <script>
+    const photoInput = document.getElementById("photo");
+    const preview = document.getElementById("preview");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const resultBox = document.getElementById("result");
+
+    photoInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+        uploadBtn.disabled = false;
+      }
+    });
+
+    uploadBtn.addEventListener("click", async () => {
+      const file = photoInput.files[0];
+      const locationName = document.getElementById("locationName").value.trim();
+
+      if (!file || !locationName) {
+        alert("Vui lòng nhập tên địa điểm và chọn ảnh!");
+        return;
+      }
+
+      resultBox.textContent = "⏳ Đang gửi hình ảnh để AI xử lý...";
+
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("location", locationName);
+
+      try {
+        const res = await fetch("/verify-image", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        resultBox.textContent = data.message;
+      } catch (err) {
+        console.error(err);
+        resultBox.textContent = "❌ Lỗi kết nối với server.";
+      }
+    });
+  </script>
+</body>
+</html>
