@@ -6,93 +6,337 @@
   <title>Xác thực hình ảnh điểm đến</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
   <style>
+    /* CSS Tùy chỉnh để căn giữa và tạo giao diện nhất quán */
     body {
       font-family: "Poppins", sans-serif;
+      background-color: #f8f8f8; /* Màu nền nhẹ */
+    }
+
+    .main-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       text-align: center;
-      padding: 20px;
     }
+
     .preview {
-      width: 90%;
-      max-width: 400px;
-      border-radius: 10px;
-      margin-top: 20px;
       display: none;
+      width: 90%;
+      max-width: 380px;
+      height: auto;
+      border-radius: 10px;
+      margin: 25px auto; /* Căn giữa ảnh */
+      border: 4px solid var(--orange-soda); /* Dùng màu chủ đạo từ index */
+      box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
     }
+    
+    /* Thiết kế Input/Button theo style chung */
+    input[type="text"] {
+        padding: 12px;
+        width: 80%;
+        max-width: 400px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      margin-top: 15px;
+      display: block;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     button {
-      margin-top: 20px;
-      background: #ff6600;
-      color: white;
-      padding: 12px 30px;
+      background-color: var(--orange-soda); /* Màu cam chủ đạo */
+      color: black; /* ĐÃ THAY ĐỔI MÀU CHỮ THÀNH ĐEN */
+      padding: 14px 40px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      margin-top: 30px;
     }
+
+    button:hover:enabled {
+      background-color: #e65c00;
+      color: black; /* Đảm bảo màu chữ vẫn là đen khi hover */
+    }
+    
     button:disabled {
-      background: gray;
+        background-color: #ccc;
+        color: black; /* Đảm bảo màu chữ là đen khi disabled */
+        cursor: not-allowed;
+    }
+    
+    /* CSS cho câu hỏi */
+    .question-section {
+        margin-top: 40px;
+        padding: 30px 15px;
+        border-top: 2px dashed #ff6600;
+        text-align: left;
+    }
+    .question-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    .answer-option {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        margin: 12px auto;
+        max-width: 450px;
+        background-color: #fff8f5; /* Màu nền nhẹ */
+        border: 2px solid #ff9955;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+        font-size: 1rem;
+    }
+    .answer-option:hover {
+        background-color: #fff0e7;
+        border-color: var(--orange-soda);
+        transform: translateY(-1px);
+    }
+    .answer-option.selected {
+        background-color: #ff6600; /* Màu cam đầy */
+        color: white;
+        border-color: #ff3300;
+        font-weight: 600;
+    }
+    .answer-option input[type="radio"] {
+        margin-right: 15px;
+        accent-color: white; /* Đổi màu radio button */
+    }
+    .answer-option.selected input[type="radio"] {
+        accent-color: white;
+    }
+    #submitQuizBtn {
+        display: block;
+        margin: 30px auto 10px auto;
     }
     #result {
-      margin-top: 30px;
-      font-size: 1.2rem;
-      font-weight: 500;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+    
+    /* CSS cho nút Tiếp tục */
+    #nextDestinationBtn {
+        display: none; /* Mặc định ẩn */
+        margin: 30px auto 10px auto;
+        background-color: #007bff; /* Màu xanh nổi bật */
+    }
+    #nextDestinationBtn:hover {
+        background-color: #0056b3;
     }
   </style>
 </head>
-<body>
-  <h1>Xác thực địa điểm</h1>
-  <p>Hãy chụp một tấm ảnh tại địa điểm bạn đang đứng và nhập tên địa điểm để hệ thống kiểm tra.</p>
+<body id="top">
+    <header class="header" data-header>
+      <div class="container">
+        <a href="index.html">
+          <h1 class="logo">SaiGonGo</h1>
+        </a>
 
-  <input type="text" id="locationName" placeholder="Nhập tên địa điểm..." style="padding:10px;width:80%;max-width:400px;" />
+        <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
+          <ion-icon name="menu-outline" class="open"></ion-icon>
+          <ion-icon name="close-outline" class="close"></ion-icon>
+        </button>
 
-  <input type="file" id="photo" accept="image/*" capture="camera" style="margin-top:20px;" />
-  <img id="preview" class="preview" />
+        <nav class="navbar">
+          <ul class="navbar-list">
+            <li><a href="index.html" class="navbar-link">Home</a></li>
+            <li><a href="#" class="navbar-link">Tours</a></li>
+            <li><a href="#" class="navbar-link">Destinations</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-  <button id="uploadBtn" disabled>Xác thực bằng AI</button>
+    <main class="main-container">
+        <h2>Xác thực điểm đến & Câu đố</h2>
+        <p>Bước 1: Hãy chụp một tấm ảnh tại Bảo tàng Chiến tích Chiến tranh và xác thực bằng AI.</p>
 
-  <div id="result"></div>
+        <a href="start.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Quay lại điểm xuất phát</a>
 
-  <script>
-    const photoInput = document.getElementById("photo");
-    const preview = document.getElementById("preview");
-    const uploadBtn = document.getElementById("uploadBtn");
-    const resultBox = document.getElementById("result");
+        <input type="text" id="locationName" value="Bảo tàng Chiến tích Chiến tranh" readonly />
 
-    photoInput.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = "block";
-        uploadBtn.disabled = false;
-      }
-    });
+        <input type="file" id="photo" accept="image/*" capture="camera" />
+        <img id="preview" class="preview" />
 
-    uploadBtn.addEventListener("click", async () => {
-      const file = photoInput.files[0];
-      const locationName = document.getElementById("locationName").value.trim();
+        <button id="uploadBtn" disabled>Xác thực bằng AI</button>
 
-      if (!file || !locationName) {
-        alert("Vui lòng nhập tên địa điểm và chọn ảnh!");
-        return;
-      }
+        <div id="result"></div>
+        
+        <section class="question-section" style="display: none;" id="questionSection">
+            <h3 class="question-title">Câu hỏi: Bảo tàng Chiến tích Chiến tranh được xây dựng từ năm nào</h3>
 
-      resultBox.textContent = "⏳ Đang gửi hình ảnh để AI xử lý...";
+            <label class="answer-option" data-answer="A">
+                <input type="radio" name="quiz" value="A"> A. 1970
+            </label>
+            <label class="answer-option" data-answer="B">
+                <input type="radio" name="quiz" value="B"> B. 1975
+            </label>
+            <label class="answer-option" data-answer="C">
+                <input type="radio" name="quiz" value="C"> C. 1990
+            </label>
+            <label class="answer-option" data-answer="D">
+                <input type="radio" name="quiz" value="D"> D. 1995
+            </label>
+            
+            <button id="submitQuizBtn" disabled>Trả lời</button>
+            <div id="quizResult" style="margin-top: 15px; font-size: 1.1rem; font-weight: 600;"></div>
+        </section>
+        
+        <button id="nextDestinationBtn" onclick="window.location.href='dinhdoclap.html'">Tiếp tục: Dinh Độc Lập →</button>
+        
+    </main>
 
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("location", locationName);
+    <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+      <div class="container">
+        <div class="footer-bottom">
+          <a href="#" class="logo">SaiGonGo</a>
 
-      try {
-        const res = await fetch("/verify-image", {
-          method: "POST",
-          body: formData,
-        });
-        const data = await res.json();
-        resultBox.textContent = data.message;
-      } catch (err) {
-        console.error(err);
-        resultBox.textContent = "❌ Lỗi kết nối với server.";
-      }
-    });
-  </script>
+          <p class="copyright">
+            &copy; 2022 <a href="#" class="copyright-link">codewithsadee</a>.
+            All Rights Reserved
+          </p>
+        </div>
+      </div>
+    </footer>
+
+
+    <script>
+      const photoInput = document.getElementById("photo");
+      const preview = document.getElementById("preview");
+      const uploadBtn = document.getElementById("uploadBtn");
+      const resultBox = document.getElementById("result");
+      const questionSection = document.getElementById("questionSection");
+      const submitQuizBtn = document.getElementById("submitQuizBtn");
+      const quizResultBox = document.getElementById("quizResult");
+      const nextDestinationBtn = document.getElementById("nextDestinationBtn"); 
+      const answerOptions = document.querySelectorAll('.answer-option');
+      const CORRECT_ANSWER = "B"; // Đáp án đúng: 1975
+
+      // Lắng nghe sự kiện click trên các label đáp án
+      answerOptions.forEach(option => {
+          option.addEventListener('click', function() {
+              const radio = this.querySelector('input[type="radio"]');
+              if (radio && !radio.disabled) {
+                  radio.checked = true;
+
+                  answerOptions.forEach(opt => opt.classList.remove('selected'));
+                  this.classList.add('selected');
+                  submitQuizBtn.disabled = false;
+              }
+          });
+      });
+
+
+      // Cập nhật logic: Bật nút Xác thực ngay khi chọn ảnh
+      photoInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          preview.src = URL.createObjectURL(file);
+          preview.style.display = "block";
+          // Kích hoạt nút Xác thực
+          uploadBtn.disabled = false; 
+          
+          resultBox.textContent = ""; 
+          questionSection.style.display = 'none'; // Ẩn câu hỏi khi tải ảnh mới
+          nextDestinationBtn.style.display = 'none'; // Ẩn nút tiếp tục
+        } else {
+          // Vô hiệu hóa nút Xác thực nếu không có file
+          uploadBtn.disabled = true; 
+          preview.style.display = "none";
+        }
+      });
+
+      uploadBtn.addEventListener("click", async () => {
+        const file = photoInput.files[0];
+        const locationName = document.getElementById("locationName").value.trim();
+
+        if (uploadBtn.disabled) { // Kiểm tra lần nữa để đảm bảo đã có ảnh
+             alert("Vui lòng chọn ảnh trước khi xác thực!");
+             return;
+        }
+        
+        // Vô hiệu hóa nút khi đang xử lý
+        resultBox.textContent = "⏳ Đang gửi hình ảnh để AI xử lý...";
+        uploadBtn.disabled = true; 
+        
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("location", locationName);
+
+        try {
+          const res = await fetch("/verify-image", {
+            method: "POST",
+            body: formData,
+          });
+          const data = await res.json();
+          
+          resultBox.textContent = data.message;
+          
+          // Bật lại nút Xác thực sau khi nhận phản hồi
+          uploadBtn.disabled = false; 
+          
+          // Giả định nếu AI xác thực thành công (có chứa "Đúng địa điểm" hoặc "✅")
+          if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
+              questionSection.style.display = 'block';
+              resultBox.style.color = 'green';
+          } else {
+              // Nếu AI không đúng, chỉ hiển thị kết quả và không hiển thị câu hỏi
+              questionSection.style.display = 'none';
+              resultBox.style.color = 'red';
+          }
+
+        } catch (err) {
+          console.error(err);
+          resultBox.textContent = "❌ Lỗi kết nối với server.";
+          uploadBtn.disabled = false;
+          questionSection.style.display = 'none';
+        }
+      });
+
+
+      submitQuizBtn.addEventListener('click', () => {
+          const selectedOption = document.querySelector('input[name="quiz"]:checked');
+          if (!selectedOption) {
+              alert("Vui lòng chọn một đáp án!");
+              return;
+          }
+
+          const userAnswer = selectedOption.value;
+
+          if (userAnswer === CORRECT_ANSWER) {
+              quizResultBox.innerHTML = "<span style='color: green;'>✅ **Chính xác!** Bạn đã nhận được điểm XP và Voucher!</span>";
+              nextDestinationBtn.style.display = 'block'; // HIỂN THỊ NÚT TIẾP TỤC
+          } else {
+              quizResultBox.innerHTML = `<span style='color: red;'>❌ **Sai rồi!** Đáp án đúng là ${CORRECT_ANSWER}. Hãy tìm hiểu kỹ hơn.</span>`;
+              nextDestinationBtn.style.display = 'none'; // ẨN NÚT TIẾP TỤC nếu sai
+          }
+          
+          submitQuizBtn.disabled = true;
+          // Vô hiệu hóa các lựa chọn sau khi trả lời
+          document.querySelectorAll('input[name="quiz"]').forEach(radio => radio.disabled = true);
+          answerOptions.forEach(option => option.style.cursor = 'default');
+      });
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

@@ -217,7 +217,7 @@ def verify_image():
                     "content": [
                         {
                             "type": "text",
-                            "text": f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'. Trả lời ngắn gọn: 'Đúng địa điểm' hoặc 'Không đúng địa điểm'."
+                            "text": f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'. Trả lời ngắn gọn: 'Đúng địa điểm, bạn đã được cộng điểm XP' hoặc 'Không đúng địa điểm'."
                         },
                         {
                             "type": "image_url",
