@@ -20,46 +20,47 @@
 
     .container {
       text-align: center;
-      padding: 40px 20px;
+      padding: 60px 25px;
     }
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 2.2rem;
       font-weight: 700;
-      color: #222;
+      color: #111;
+      margin-bottom: 10px;
     }
 
     p {
-      font-size: 1rem;
-      color: #666;
-      margin-top: 8px;
-      margin-bottom: 40px;
+      font-size: 1.2rem;
+      color: #555;
+      margin-top: 10px;
+      margin-bottom: 50px;
     }
 
     .location-icon {
-      font-size: 80px;
+      font-size: 100px;
       color: #007bff;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
     }
 
     .place-name {
-      font-size: 1.3rem;
-      font-weight: 600;
+      font-size: 1.6rem;
+      font-weight: 700;
       color: #111;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
     }
 
     .place-address {
-      font-size: 1rem;
-      color: #555;
-      margin-bottom: 15px;
+      font-size: 1.15rem;
+      color: #444;
+      margin-bottom: 18px;
     }
 
     .map-link {
       color: #007bff;
       text-decoration: none;
-      font-weight: 500;
-      font-size: 1.05rem;
+      font-weight: 600;
+      font-size: 1.2rem;
     }
 
     .map-link:hover {
@@ -69,7 +70,7 @@
     .bottom-btn {
       width: 100%;
       text-align: center;
-      padding: 20px;
+      padding: 25px;
       background: #fff;
       position: fixed;
       bottom: 0;
@@ -81,90 +82,129 @@
       background-color: #ff6600;
       color: white;
       border: none;
-      border-radius: 10px;
-      padding: 14px 60px;
-      font-size: 1.1rem;
+      border-radius: 12px;
+      padding: 18px 80px;
+      font-size: 1.3rem;
       cursor: pointer;
       transition: 0.2s;
+      font-weight: 700;
     }
 
     .start-btn:hover {
       background-color: #e65c00;
+      transform: scale(1.03);
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 1.2rem;
+      color: #007bff;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .back-button:hover {
+      text-decoration: underline;
+    }
+
+    /* 🔹 Style cho hộp hiển thị khoảng cách */
+    .distance-info {
+      margin-top: 25px;
+      font-size: 1.2rem;
+      color: #333;
+      font-weight: 600;
+      background: #f0f8ff;
+      border-radius: 10px;
+      display: inline-block;
+      padding: 10px 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+
+    .distance-info.ok {
+      background-color: #eaffea;
+      color: #0a8a0a;
+    }
+
+    .distance-info.far {
+      background-color: #fff4e5;
+      color: #cc6600;
     }
   </style>
 </head>
 <body>
-<div class="back-button" onclick="goBack()">
-  ← Quay lại
-</div>
-<script>
-  // ⚙️ Cấu hình: bật/tắt kiểm tra vị trí GPS
-  const LOCATION_CHECK_ENABLED = false; // ← đổi thành true nếu muốn bật lại kiểm tra
+  <div class="back-button" onclick="goBack()">← Quay lại</div>
 
-  // Tọa độ của Bảo tàng Chiến tích Chiến tranh
-  const targetLat = 10.7797839;
-  const targetLng = 106.6893418;
+  <script>
+    // ⚙️ Cấu hình: bật/tắt kiểm tra vị trí GPS
+    const LOCATION_CHECK_ENABLED = false; // ← đổi thành true để bật định vị thật
 
-  // Hàm tính khoảng cách giữa 2 tọa độ (đơn vị: mét)
-  function getDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371e3; // bán kính Trái Đất (m)
-    const toRad = (deg) => deg * Math.PI / 180;
-    const φ1 = toRad(lat1);
-    const φ2 = toRad(lat2);
-    const Δφ = toRad(lat2 - lat1);
-    const Δλ = toRad(lon2 - lon1);
-    const a = Math.sin(Δφ / 2) ** 2 +
-              Math.cos(φ1) * Math.cos(φ2) *
-              Math.sin(Δλ / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
+    // Tọa độ của Bảo tàng Chiến tích Chiến tranh
+    const targetLat = 10.7797839;
+    const targetLng = 106.6893418;
 
-  // Gọi API lấy vị trí hiện tại
-  function checkUserLocation() {
-    const startButton = document.querySelector(".start-btn");
-
-    // Nếu tắt kiểm tra vị trí
-    if (!LOCATION_CHECK_ENABLED) {
-      console.log("⚙️ Chế độ kiểm tra vị trí: TẮT. Cho phép nhấn tiếp tục.");
-      startButton.disabled = false;
-      startButton.style.opacity = "1";
-      return;
+    // Hàm tính khoảng cách giữa 2 tọa độ (m)
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3;
+      const toRad = deg => deg * Math.PI / 180;
+      const φ1 = toRad(lat1);
+      const φ2 = toRad(lat2);
+      const Δφ = toRad(lat2 - lat1);
+      const Δλ = toRad(lon2 - lon1);
+      const a = Math.sin(Δφ / 2) ** 2 +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
     }
 
-    // Nếu bật kiểm tra vị trí
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLat = position.coords.latitude;
-          const userLng = position.coords.longitude;
-          const distance = getDistance(userLat, userLng, targetLat, targetLng);
+    // ✅ Hiển thị khoảng cách ngay trên trang
+    function checkUserLocation() {
+      const infoBox = document.getElementById("distance-info");
+      const startButton = document.querySelector(".start-btn");
 
-          console.log("Khoảng cách tới bảo tàng:", Math.round(distance), "m");
+      if (!LOCATION_CHECK_ENABLED) {
+        infoBox.textContent = "🔧 Kiểm tra vị trí đang tắt (chế độ thử nghiệm).";
+        startButton.disabled = false;
+        return;
+      }
 
-          if (distance < 100) {
-            alert("🎉 Bạn đã đến đúng điểm xuất phát! Hành trình có thể bắt đầu.");
-            startButton.disabled = false;
-            startButton.style.opacity = "1";
-          } else {
-            alert("📍 Bạn đang cách điểm xuất phát khoảng " + Math.round(distance) + " mét. Hãy tiến gần hơn!");
-            startButton.disabled = true;
-            startButton.style.opacity = "0.5";
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            const distance = getDistance(userLat, userLng, targetLat, targetLng);
+            const distText = Math.round(distance);
+
+            if (distance < 100) {
+              infoBox.textContent = `🎉 Bạn đã ở điểm xuất phát! (Cách ${distText}m)`;
+              infoBox.className = "distance-info ok";
+              startButton.disabled = false;
+              startButton.style.opacity = "1";
+            } else {
+              infoBox.textContent = `📍 Cách điểm xuất phát khoảng ${distText} mét`;
+              infoBox.className = "distance-info far";
+              startButton.disabled = true;
+              startButton.style.opacity = "0.5";
+            }
+          },
+          (error) => {
+            infoBox.textContent = "❌ Không thể lấy vị trí. Hãy bật GPS hoặc cho phép truy cập vị trí.";
+            infoBox.className = "distance-info far";
+            console.error(error);
           }
-        },
-        (error) => {
-          alert("Không thể lấy vị trí. Hãy bật GPS hoặc cho phép truy cập vị trí.");
-          console.error(error);
-        }
-      );
-    } else {
-      alert("Trình duyệt của bạn không hỗ trợ định vị GPS.");
+        );
+      } else {
+        infoBox.textContent = "⚠️ Trình duyệt không hỗ trợ định vị GPS.";
+      }
     }
-  }
 
-  // Khi mở trang thì tự động kiểm tra vị trí
-  window.onload = checkUserLocation;
-</script>
+    window.onload = checkUserLocation;
+  </script>
 
   <div class="container">
     <h1>Điểm xuất phát</h1>
@@ -176,24 +216,28 @@
       <div class="place-name">Bảo tàng Chiến tích Chiến tranh</div>
       <div class="place-address">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</div>
       <a class="map-link" href="https://www.google.com/maps?q=Bảo+tàng+Chiến+tích+Chiến+tranh,+28+Võ+Văn+Tần,+Quận+3,+TPHCM" target="_blank">
-        Xem bản đồ
+        🗺️ Xem bản đồ
       </a>
     </div>
+
+    <!-- 🔹 Vị trí hiển thị thông báo khoảng cách -->
+    <div id="distance-info" class="distance-info">Đang xác định vị trí...</div>
   </div>
 
   <div class="bottom-btn">
-    <button class="start-btn" onclick="window.location.href='destination.html'">Tiếp tục</button>
+    <button class="start-btn" onclick="window.location.href='destination.html'">
+      Tiếp tục
+    </button>
   </div>
-<script>
-  function goBack() {
-    // Quay lại trang trước (hoặc về baotang.html nếu người dùng truy cập trực tiếp)
-    if (document.referrer) {
-      window.history.back();
-    } else {
-      window.location.href = "baotang.html";
-    }
-  }
-</script>
 
+  <script>
+    function goBack() {
+      if (document.referrer) {
+        window.history.back();
+      } else {
+        window.location.href = "baotang.html";
+      }
+    }
+  </script>
 </body>
 </html>
