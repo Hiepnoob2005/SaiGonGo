@@ -119,9 +119,9 @@
             />
 
             <div class="hero-content">
-              <p class="section-subtitle">Explore Your Travel</p>
+              <p class="section-subtitle">Our journey to</p>
 
-              <h2 class="hero-title">Trusted Travel Agency</h2>
+              <h2 class="hero-title">Explore HCMC in a different way</h2>
 
               <p class="hero-text">
                 I travel not to go anywhere, but to go. I travel for travel's
@@ -884,37 +884,66 @@
     <!-- 
     - custom js link
   -->
-    <script>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
+    // Tìm vị trí thanh điều hướng và nút Login gốc
     const navbar = document.querySelector(".navbar");
-    const loggedInUser = localStorage.getItem("loggedInUser");
+    const originalLoginButton = navbar.querySelector('a[href="login.html"]');
 
-    if (loggedInUser) {
-      // Ẩn nút Login
-      const loginBtn = navbar.querySelector(".btn.btn-primary");
-      if (loginBtn) loginBtn.remove();
+    if (!originalLoginButton) return; 
 
-      // Thêm phần chào mừng và nút Logout
-      const userDiv = document.createElement("div");
-      userDiv.innerHTML = `
-        <span class="navbar-user">Welcome, ${loggedInUser}</span>
-        <button class="btn btn-outline" id="logoutBtn">Logout</button>
-      `;
-      navbar.appendChild(userDiv);
+    // 1. Gọi API /api/status để kiểm tra xem ai đã đăng nhập
+    fetch("/api/status", {
+      method: "GET",
+      // Rất quan trọng: gửi cookie session để Flask-Login nhận diện
+      credentials: "include", 
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.logged_in) {
+          // ----- ĐÃ ĐĂNG NHẬP -----
 
-      // Xử lý logout
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        localStorage.removeItem("loggedInUser");
-        window.location.reload();
+          // Tạo một div mới để chứa lời chào và nút Logout
+          const userSection = document.createElement("div");
+          userSection.style.display = "flex"; 
+          userSection.style.alignItems = "center";
+
+          userSection.innerHTML = `
+            <span style="color: white; margin-right: 15px;">Chào, ${data.username}!</span>
+            <button class="btn btn-outline" id="logoutBtn">Logout</button>
+          `;
+
+          // Thay thế nút "Login" bằng phần "userSection"
+          originalLoginButton.replaceWith(userSection);
+
+          // 2. Thêm sự kiện click cho nút Logout (nút vừa tạo)
+          document.getElementById("logoutBtn").addEventListener("click", () => {
+            // 3. Gọi API /api/logout
+            fetch("/api/logout", {
+              method: "POST",
+              credentials: "include", // Gửi cookie để biết ai đang logout
+            })
+              .then(() => {
+                // Sau khi logout thành công, tải lại trang
+                window.location.reload();
+              })
+              .catch((err) => console.error("Logout failed:", err));
+          });
+
+        } else {
+          // ----- CHƯA ĐĂNG NHẬP -----
+          // Không làm gì cả, giữ nguyên nút "Login"
+        }
+      })
+      .catch((err) => {
+        console.error("Không thể kiểm tra trạng thái đăng nhập:", err);
       });
-    }
   });
 </script>
-    <script src="./assets/js/script.js"></script>
 
-    <!-- 
-    - ionicon link
-  -->
+<script src="./assets/js/script.js"></script>
+
+    <!--- ionicon link-->
     <script
       type="module"
       src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
