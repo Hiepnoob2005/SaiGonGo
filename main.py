@@ -36,23 +36,40 @@ bcrypt = Bcrypt(app) # Kích hoạt Bcrypt
 USER_FILE = "user_accounts.txt"
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-STATIC_START_LAT = 10.7797839
-STATIC_START_LON = 106.6893418
+STATIC_START_LAT = 10.779544121871611
+STATIC_START_LON = 106.69216069325068
 
-DINH_DOC_LAP_LAT = 10.779038
-DINH_DOC_LAP_LON = 106.696111
+DINH_DOC_LAP_LAT = 10.778217
+DINH_DOC_LAP_LON = 106.696470
 
 # ... (Phần trên của file main.py giữ nguyên) ...
 USE_STATIC_START_LOCATION = True
 
+def get_vietnamese_instruction(maneuver_type, street_name):
+    """Dịch mã thao tác rẽ của OSRM sang tiếng Việt."""
+    vn_type = {
+        "depart": "Bắt đầu đi theo",
+        "turn": "Rẽ",
+        "new name": "Tiếp tục đi thẳng (đổi tên đường)",
+        "continue": "Tiếp tục đi thẳng",
+        "merge": "Nhập vào đường",
+        "fork": "Rẽ nhánh",
+        "end": "Đã đến nơi (Kết thúc lộ trình)"
+    }.get(maneuver_type, "Tiếp tục đi thẳng")
+
+    if street_name:
+        if vn_type == "Rẽ":
+             return f"{vn_type} vào đường {street_name}"
+        return f"{vn_type} đường {street_name}"
+    
+    # Nếu không có tên đường, chỉ trả về thao tác
+    return vn_type
+
 @app.route("/get-dynamic-directions", methods=["POST"])
 def get_dynamic_directions():
     """
-    Lấy tọa độ, gọi OSRM để lấy dữ liệu lộ trình thô, và dùng Gemini để chuyển hóa thành văn bản rõ ràng.
+    Lấy tọa độ, gọi OSRM để lấy lộ trình đi bộ, và dùng Python để dịch sang văn bản rõ ràng.
     """
-    if not client:
-        return jsonify({"route_text": "❌ Lỗi: Gemini Client chưa được khởi tạo."}), 500
-
     try:
         data = request.get_json()
         current_lat = data.get("current_lat")
@@ -63,17 +80,18 @@ def get_dynamic_directions():
             start_lat = STATIC_START_LAT
             start_lon = STATIC_START_LON
             start_info = "Bảo tàng Chiến tích Chiến tranh (Vị trí tĩnh)"
+        # ... (logic dynamic location giữ nguyên) ...
         else:
             if not current_lat or not current_lon:
                 return jsonify({"route_text": "❌ Không nhận được tọa độ GPS từ thiết bị."}), 400
             start_lat = current_lat
             start_lon = current_lon
-            start_info = f"Vị trí hiện tại ({start_lat:.4f},{start_lon:.4f})"
+            start_info = f"Vị trí hiện tại ({start_lat:.4f},{current_lon:.4f})"
         
         start_coord = f"{start_lon},{start_lat}"
         end_coord = f"{DINH_DOC_LAP_LON},{DINH_DOC_LAP_LAT}"
         
-        # 1. GỌI OSRM ĐỂ LẤY LỘ TRÌNH THÔ (MIỄN PHÍ)
+        # 1. GỌI OSRM ĐỂ LẤY LỘ TRÌNH THÔ
         OSRM_URL = f"http://router.project-osrm.org/route/v1/foot/{start_coord};{end_coord}?overview=false&steps=true&alternatives=false"
         
         response = requests.get(OSRM_URL)
@@ -91,44 +109,38 @@ def get_dynamic_directions():
         total_distance_m = route_info['distance']
         total_distance_km = f"{total_distance_m / 1000:.2f} km"
         
-        # <<< TRÍCH XUẤT DỮ LIỆU CÓ CẤU TRÚC VÀ ĐẦY ĐỦ HƠN CHO GEMINI >>>
-        route_text_for_gemini = []
+        # 2. XỬ LÝ VÀ DỊCH DỮ LIỆU THÔ BẰNG PYTHON (LOẠI BỎ GEMINI)
+        route_instructions = []
         for i, step in enumerate(steps):
-            # Lấy thông tin chỉ dẫn (instruction)
-            instruction = step.get('maneuver', {}).get('instruction', 'Tiếp tục đi thẳng')
-            instruction = instruction.replace("'", "")
-            distance = step['distance']
+            maneuver = step.get('maneuver', {})
+            maneuver_type = maneuver.get('type')
             
-            # Ghi lại thông tin chi tiết: [Số thứ tự. Hướng dẫn, Khoảng cách]
-            route_text_for_gemini.append(
-                f"{i + 1}. {instruction}, {int(distance)} mét."
-            )
-        
-        route_data_string = "\n".join(route_text_for_gemini)
+            # Lấy tên đường (name) và hướng rẽ (modifier)
+            street_name = step.get('name', '')
+            
+            # Dịch mã thao tác rẽ sang tiếng Việt
+            vn_instruction = get_vietnamese_instruction(maneuver_type, street_name)
+            
+            distance = int(step.get('distance', 0))
+            
+            # Định dạng bước chỉ dẫn
+            if maneuver_type == 'arrive': # Đã đến nơi
+                instruction_line = f"✅ Bước {i + 1}: {vn_instruction} {street_name}."
+            else:
+                 instruction_line = f"Bước {i + 1}: {vn_instruction}, đi tiếp {distance} mét."
 
-        # 2. GỌI GEMINI ĐỂ CHUYỂN DỮ LIỆU THÔ THÀNH VĂN BẢN RÕ RÀNG
-        # <<< PROMPT NGHIÊM NGẶT HƠN VỚI LỆNH TÁI CẤU TRÚC CHI TIẾT >>>
-        gemini_prompt = (
-            f"Bạn là trợ lý chỉ đường đi bộ. "
-            f"Hãy dịch danh sách hướng dẫn sau thành các bước chỉ dẫn bằng tiếng Việt rõ ràng, "
-            f"sử dụng định dạng [Số thứ tự]. [Hướng rẽ], [Tên đường], [Khoảng cách]. "
-            f"Bạn phải LIỆT KÊ TỪNG BƯỚC một, TUYỆT ĐỐI không gộp các bước hoặc tính toán lại khoảng cách. "
-            f"Độ dài lộ trình là {total_distance_km}. "
-            f"Các bước chỉ dẫn:\n{route_data_string}"
-        )
+            route_instructions.append(instruction_line)
         
-        gemini_response = client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=[gemini_prompt]
-        )
-        
-        final_instructions = gemini_response.text.strip()
-        
-        # 3. Kết quả cuối cùng
-        # Thêm thông báo tổng quan lên trên cùng để khớp với hình ảnh
+        route_data_string = "\n".join(route_instructions)
+
+        # 3. Định dạng kết quả cuối cùng
         final_output = (
-            f"Lộ trình từ {start_info} đến Dinh Độc Lập ({total_distance_km}):\n\n"
-            f"{final_instructions}"
+            f"Chào bạn!\n"
+            f"Lộ trình đi bộ từ {start_info} đến Dinh Độc Lập ({total_distance_km}):\n"
+            f"Tổng quãng đường: {total_distance_km}\n"
+            f"\n--- CHỈ DẪN CHI TIẾT ---\n"
+            f"{route_data_string}\n"
+            f"--- KẾT THÚC LỘ TRÌNH ---"
         )
         
         return jsonify({
@@ -139,7 +151,7 @@ def get_dynamic_directions():
         }), 200
 
     except Exception as e:
-        print(f"Lỗi xử lý Định tuyến OSRM: {e}")
+        print(f"Lỗi xử lý Định tuyến Python: {e}")
         return jsonify({"route_text": f"❌ Lỗi server khi tạo lộ trình: {str(e)}"}), 500
 
 # --- API Routes (Chỉ hiển thị hàm thay thế) ---
