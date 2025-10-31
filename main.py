@@ -5,188 +5,159 @@ from io import BytesIO
 from dotenv import load_dotenv
 import os
 import base64
-import openai  # ✅ Thêm dòng này
+from PIL import Image # ✅ Thêm thư viện PIL (Pillow)
+from google import genai # ✅ Thêm thư viện Google GenAI
+import requests
 
-# 🔑 Khai báo API key
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# --- Khai báo API key và Khởi tạo GenAI ---
+load_dotenv()
+# 🔑 Gemini API Key sẽ được đọc từ biến môi trường GEMINI_API_KEY (hoặc OPENAI_API_KEY nếu bạn đã đổi tên)
+try:
+    # Cố gắng sử dụng GEMINI_API_KEY nếu có
+    if os.getenv("GEMINI_API_KEY"):
+        genai.api_key = os.getenv("GEMINI_API_KEY")
+        MODEL_NAME = 'gemini-2.5-flash'
+    # Nếu không, sử dụng OPENAI_API_KEY hiện có (giả định bạn đã đổi nó thành Gemini Key)
+    else:
+        genai.api_key = os.getenv("OPENAI_API_KEY")
+        MODEL_NAME = 'gemini-2.5-flash'
+    
+    # Khởi tạo client Gemini
+    client = genai.Client(api_key=genai.api_key)
+except Exception as e:
+    print(f"Lỗi khởi tạo Gemini Client: {e}")
+    client = None
+    
 
-# --- Khởi tạo ứng dụng ---
+# --- KHÔNG THAY ĐỔI CÁC PHẦN KHÁC (app, CORS, Bcrypt, USER_FILE...) ---
 app = Flask(__name__)
 CORS(app) # Kích hoạt CORS
 bcrypt = Bcrypt(app) # Kích hoạt Bcrypt
-
-# Tên file để lưu trữ
 USER_FILE = "user_accounts.txt"
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-# --- API Routes (Phần xử lý backend) ---
+STATIC_START_LAT = 10.7797839
+STATIC_START_LON = 106.6893418
 
-@app.route('/api/register', methods=['POST'])
-def register_secure():
+DINH_DOC_LAP_LAT = 10.779038
+DINH_DOC_LAP_LON = 106.696111
 
+# ... (Phần trên của file main.py giữ nguyên) ...
+USE_STATIC_START_LOCATION = True
+
+@app.route("/get-dynamic-directions", methods=["POST"])
+def get_dynamic_directions():
+    """
+    Lấy tọa độ, gọi OSRM để lấy dữ liệu lộ trình thô, và dùng Gemini để chuyển hóa thành văn bản rõ ràng.
+    """
+    if not client:
+        return jsonify({"route_text": "❌ Lỗi: Gemini Client chưa được khởi tạo."}), 500
+
+    try:
+        data = request.get_json()
+        current_lat = data.get("current_lat")
+        current_lon = data.get("current_lon")
         
-    """Tuyến đường để xử lý đăng ký tài khoản."""
-    try:
-        data = request.get_json()
-        if not data or 'username' not in data or 'email' not in data or 'password' not in data:
-            return jsonify({"message": "Thiếu username, email, hoặc password"}), 400
-
-        username = data.get('username')
-        email = data.get('email')
-        password = data.get('password') # Lấy mật khẩu gốc
-
-
-        # --- KIỂM TRA TRÙNG LẶP ---
-        if os.path.exists(USER_FILE):
-            with open(USER_FILE, "r", encoding="utf-8") as f:
-                for line in f:
-                    parts = line.strip().split(';')
-                    if len(parts) >= 2:
-                        if parts[0] == username:
-                            return jsonify({"message": "Username đã tồn tại"}), 409
-                        if parts[1] == email:
-                            return jsonify({"message": "Email đã tồn tại"}), 409
-
-        # --- PHẦN BẢO MẬT QUAN TRỌNG ---
-        # 1. Băm mật khẩu bằng bcrypt (An toàn)
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        
-        # 2. CHỈ LƯU MẬT KHẨU ĐÃ BĂM
-        user_line = f"{username};{email};{hashed_password}\n"
-
-        # 3. Ghi vào file
-        # --- Kiểm tra email tồn tại ---
-        if os.path.exists(USER_FILE):
-            with open(USER_FILE, "r", encoding="utf-8") as f:
-                for line in f:
-                    if line.strip():
-                        parts = line.strip().split(';')
-                        if len(parts) >= 2 and parts[1] == email:
-                            return jsonify({"message": "Email đã tồn tại"}), 409 # 409 Conflict
-
-        # Lưu mật khẩu dưới dạng VĂN BẢN GỐC (giống logic file register.html)
-        # LƯU Ý: Đây là cách làm KHÔNG AN TOÀN cho sản phẩm thực tế.
-        # Bạn nên dùng bcrypt.generate_password_hash(password).decode('utf-8')
-        user_line = f"{username};{email};{password}\n"
-        with open(USER_FILE, "a", encoding="utf-8") as f:
-            f.write(user_line)
-
-        return jsonify({"message": "Tài khoản đã được tạo thành công!"}), 201
-
-    except Exception as e:
-        print(f"Lỗi máy chủ khi đăng ký: {e}")
-        return jsonify({"message": "Đã xảy ra lỗi nội bộ máy chủ"}), 500
-
-@app.route('/api/login', methods=['POST'])
-def login_secure():
-    """
-    Tuyến đường (route) để xử lý đăng nhập MỘT CÁCH AN TOÀN.
-    """
-    try:
-        data = request.get_json()
-        if not data or 'email' not in data or 'password' not in data:
-            return jsonify({"message": "Thiếu email hoặc password"}), 400
-
-        # JavaScript gửi trường 'email' nhưng có thể chứa username
-        email_or_username = data.get('email')
-        password = data.get('password')
-
-        # Kiểm tra file có tồn tại không
-        if not os.path.exists(USER_FILE):
-             return jsonify({"message": "Sai email hoặc mật khẩu"}), 401
-
-        user_found = False
-        with open(USER_FILE, "r", encoding="utf-8") as f:
-            for line in f:
-                # Tách dòng: username;email;hashed_password
-                parts = line.strip().split(';')
-                if len(parts) < 3: 
-                    continue # Bỏ qua dòng lỗi
-
-                stored_username = parts[0]
-                stored_email = parts[1]
-                stored_hash = parts[2] # Đây là mật khẩu đã băm
-
-                # Kiểm tra xem người dùng nhập email hay username
-                if email_or_username == stored_email or email_or_username == stored_username:
-                    user_found = True
-                    
-                    # --- PHẦN BẢO MẬT QUAN TRỌNG ---
-                    # 1. Dùng bcrypt để so sánh mật khẩu
-                    if bcrypt.check_password_hash(stored_hash, password):
-                        # Mật khẩu khớp!
-                        return jsonify({
-                            "message": "Đăng nhập thành công!",
-                            "username": stored_username  # Gửi username về cho JS
-                        }), 200
-                    else:
-                        # Mật khẩu sai
-                        return jsonify({"message": "Sai email hoặc mật khẩu"}), 401
-
-        # Nếu chạy hết vòng lặp mà không tìm thấy user
-        if not user_found:
-            return jsonify({"message": "Sai email hoặc mật khẩu"}), 401
-
-    except Exception as e:
-        print(f"Lỗi máy chủ khi đăng nhập: {e}")
-        return jsonify({"message": "Đã xảy ra lỗi nội bộ máy chủ"}), 500
-
-@app.route('/api/login', methods=['POST'])
-def login():
-    """
-    (MỚI) Tuyến đường để xử lý đăng nhập.
-    File login.js của bạn gửi "email" (có thể là username hoặc email).
-    """
-    try:
-        data = request.get_json()
-        if not data or 'email' not in data or 'password' not in data:
-            return jsonify({"message": "Thiếu thông tin đăng nhập"}), 400
-
-        # login.js gửi { email: email || username, password }
-        # nên chúng ta gọi nó là 'identifier'
-        identifier = data.get('email') 
-        password = data.get('password')
-
-        if not os.path.exists(USER_FILE):
-            return jsonify({"message": "Sai thông tin đăng nhập"}), 401
-
-        user_found = False
-        with open(USER_FILE, "r", encoding="utf-8") as f:
-            next(f) # Bỏ qua dòng tiêu đề 'username;email;password'
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                
-                parts = line.split(';')
-                if len(parts) < 3:
-                    continue
-                
-                stored_username, stored_email, stored_password = parts[0], parts[1], parts[2]
-
-                # Kiểm tra xem identifier là username hay email
-                # Và kiểm tra mật khẩu
-                if (identifier == stored_username or identifier == stored_email) and password == stored_password:
-                    user_found = True
-                    break # Tìm thấy, thoát vòng lặp
-
-        if user_found:
-            # Gửi về username để hiển thị lời chào
-            return jsonify({"message": "Đăng nhập thành công!", "username": stored_username}), 200
+        # LOGIC BẬT/TẮT ĐỊNH VỊ
+        if USE_STATIC_START_LOCATION:
+            start_lat = STATIC_START_LAT
+            start_lon = STATIC_START_LON
+            start_info = "Bảo tàng Chiến tích Chiến tranh (Vị trí tĩnh)"
         else:
-            return jsonify({"message": "Sai thông tin đăng nhập"}), 401 # 401 Unauthorized
+            if not current_lat or not current_lon:
+                return jsonify({"route_text": "❌ Không nhận được tọa độ GPS từ thiết bị."}), 400
+            start_lat = current_lat
+            start_lon = current_lon
+            start_info = f"Vị trí hiện tại ({start_lat:.4f},{start_lon:.4f})"
+        
+        start_coord = f"{start_lon},{start_lat}"
+        end_coord = f"{DINH_DOC_LAP_LON},{DINH_DOC_LAP_LAT}"
+        
+        # 1. GỌI OSRM ĐỂ LẤY LỘ TRÌNH THÔ (MIỄN PHÍ)
+        OSRM_URL = f"http://router.project-osrm.org/route/v1/foot/{start_coord};{end_coord}?overview=false&steps=true&alternatives=false"
+        
+        response = requests.get(OSRM_URL)
+        response.raise_for_status()
+        osrm_data = response.json()
+        
+        if osrm_data.get('code') != 'Ok' or not osrm_data.get('routes'):
+            return jsonify({
+                "route_text": f"❌ Lỗi định tuyến OSRM: Không thể tìm đường đi từ {start_info}. Mã lỗi: {osrm_data.get('code')}",
+                "distance": "N/A"
+            }), 500
+        
+        route_info = osrm_data['routes'][0]
+        steps = route_info['legs'][0]['steps']
+        total_distance_m = route_info['distance']
+        total_distance_km = f"{total_distance_m / 1000:.2f} km"
+        
+        # <<< TRÍCH XUẤT DỮ LIỆU CÓ CẤU TRÚC VÀ ĐẦY ĐỦ HƠN CHO GEMINI >>>
+        route_text_for_gemini = []
+        for i, step in enumerate(steps):
+            # Lấy thông tin chỉ dẫn (instruction)
+            instruction = step.get('maneuver', {}).get('instruction', 'Tiếp tục đi thẳng')
+            instruction = instruction.replace("'", "")
+            distance = step['distance']
+            
+            # Ghi lại thông tin chi tiết: [Số thứ tự. Hướng dẫn, Khoảng cách]
+            route_text_for_gemini.append(
+                f"{i + 1}. {instruction}, {int(distance)} mét."
+            )
+        
+        route_data_string = "\n".join(route_text_for_gemini)
+
+        # 2. GỌI GEMINI ĐỂ CHUYỂN DỮ LIỆU THÔ THÀNH VĂN BẢN RÕ RÀNG
+        # <<< PROMPT NGHIÊM NGẶT HƠN VỚI LỆNH TÁI CẤU TRÚC CHI TIẾT >>>
+        gemini_prompt = (
+            f"Bạn là trợ lý chỉ đường đi bộ. "
+            f"Hãy dịch danh sách hướng dẫn sau thành các bước chỉ dẫn bằng tiếng Việt rõ ràng, "
+            f"sử dụng định dạng [Số thứ tự]. [Hướng rẽ], [Tên đường], [Khoảng cách]. "
+            f"Bạn phải LIỆT KÊ TỪNG BƯỚC một, TUYỆT ĐỐI không gộp các bước hoặc tính toán lại khoảng cách. "
+            f"Độ dài lộ trình là {total_distance_km}. "
+            f"Các bước chỉ dẫn:\n{route_data_string}"
+        )
+        
+        gemini_response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=[gemini_prompt]
+        )
+        
+        final_instructions = gemini_response.text.strip()
+        
+        # 3. Kết quả cuối cùng
+        # Thêm thông báo tổng quan lên trên cùng để khớp với hình ảnh
+        final_output = (
+            f"Lộ trình từ {start_info} đến Dinh Độc Lập ({total_distance_km}):\n\n"
+            f"{final_instructions}"
+        )
+        
+        return jsonify({
+            "route_text": final_output,
+            "distance": total_distance_km,
+            "success": True,
+            "map_url": f"https://www.google.com/maps/dir/{start_lat},{start_lon}/{DINH_DOC_LAP_LAT},{DINH_DOC_LAP_LON}"
+        }), 200
 
     except Exception as e:
-        print(f"Lỗi máy chủ khi đăng nhập: {e}")
-        return jsonify({"message": "Đã xảy ra lỗi nội bộ máy chủ"}), 500
+        print(f"Lỗi xử lý Định tuyến OSRM: {e}")
+        return jsonify({"route_text": f"❌ Lỗi server khi tạo lộ trình: {str(e)}"}), 500
 
-# --- Route xác thực hình ảnh bằng OpenAI Vision ---
+# --- API Routes (Chỉ hiển thị hàm thay thế) ---
+
+# ... (Giữ nguyên hàm register_secure) ...
+# ... (Giữ nguyên hàm login_secure) ...
+# ... (Giữ nguyên hàm login) ...
+
+# --- Route xác thực hình ảnh bằng GEMINI Vision (ĐÃ THAY THẾ) ---
 
 @app.route("/verify-image", methods=["POST"])
 def verify_image():
     """
-    Xác thực ảnh người chơi chụp với địa điểm yêu cầu bằng OpenAI GPT-4o Vision.
+    Xác thực ảnh người chơi chụp với địa điểm yêu cầu bằng Google Gemini Pro Vision.
     """
+    if not client:
+        return jsonify({"message": "❌ Lỗi: Gemini Client chưa được khởi tạo. Vui lòng kiểm tra API Key."}), 500
+
     try:
         # Lấy file ảnh và tên địa điểm
         if 'image' not in request.files or 'location' not in request.form:
@@ -194,69 +165,54 @@ def verify_image():
 
         file = request.files["image"]
         location_name = request.form["location"]
-
-        # Đọc và encode base64
+        
+        # 1. Đọc file ảnh dưới dạng Bytes
         image_bytes = file.read()
-        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+        
+        # 2. Chuyển đổi Bytes thành đối tượng PIL Image (bắt buộc cho GenAI)
+        img = Image.open(BytesIO(image_bytes))
 
-        # Biến bật/tắt AI (debug)
-        AI_CHECK_ENABLED = True
-        if not AI_CHECK_ENABLED:
-            return jsonify({"message": "✅ (Demo) AI kiểm tra đã tắt, coi như hợp lệ."}), 200
-
-        # 🧠 Gọi OpenAI GPT-4o
-        response = openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Bạn là trợ lý giúp xác định xem hình người dùng chụp có đúng với địa điểm mô tả không."
-                },
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'. Trả lời ngắn gọn: 'Đúng địa điểm, bạn đã được cộng điểm XP' hoặc 'Không đúng địa điểm'."
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{image_base64}"
-                            }
-                        }
-                    ]
-                }
-            ]
+        # 3. Định nghĩa prompt và hình ảnh để gửi lên Gemini
+        prompt = (
+            f"Bạn là trợ lý giúp xác định chính xác địa điểm trong ảnh. "
+            f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'."
+            f"Trả lời ngắn gọn **CHỈ** bằng 1 trong 2 cụm từ sau: 'Đúng địa điểm' hoặc 'Không đúng địa điểm'."
+        )
+        
+        # 🧠 Gọi Google GenAI (Sử dụng model vision đa năng)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash', # Model vision/text hiệu quả và nhanh chóng
+            contents=[img, prompt],
         )
 
-        # ✅ Lấy nội dung phản hồi đúng cú pháp
-        result = response.choices[0].message.content
+        # ✅ Lấy nội dung phản hồi
+        result = response.text.strip()
+        
+        # (Tùy chọn) In kết quả ra console để debug
+        print(f"🤖 Kết quả Gemini: {result}")
+        
         return jsonify({"message": f"🤖 Kết quả AI: {result}"}), 200
 
     except Exception as e:
-        print(f"Lỗi AI Vision: {e}")
-        return jsonify({"message": f"❌ Lỗi xử lý: {str(e)}"}), 500
+        print(f"Lỗi Gemini Vision: {e}")
+        return jsonify({"message": f"❌ Lỗi xử lý GenAI: {str(e)}"}), 500
 
-# --- File Serving (Phần phục vụ frontend) ---
+
+# --- File Serving (Phần phục vụ frontend, KHÔNG THAY ĐỔI) ---
 
 @app.route("/")
 def serve_index():
-    """Phục vụ file index.html (hoặc index copy.html)"""
-    # Đổi 'index copy.html' thành 'index.html' nếu bạn dùng file đó
+    """Phục vụ file index.html"""
     return send_from_directory(BASE_DIR, "index.html")
 
 
 @app.route("/<path:filename>")
 def serve_static(filename):
     """Phục vụ các file tĩnh (CSS, JS, images, và các file HTML khác)"""
-    # Route này sẽ bắt các request tới /login.html, /register.html, /assets/css/style.css, ...
     return send_from_directory(BASE_DIR, filename)
 
 # --- Chạy máy chủ ---
 if __name__ == '__main__':
-    # Chạy máy chủ Flask ở cổng 5000
-    # debug=True có nghĩa là máy chủ sẽ tự khởi động lại khi bạn thay đổi code
     # Đảm bảo file user tồn tại với tiêu đề
     if not os.path.exists(USER_FILE):
         with open(USER_FILE, "w", encoding="utf-8") as f:

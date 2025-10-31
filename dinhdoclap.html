@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Điểm đến: Dinh Độc Lập</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <style>
+    /* CSS Tùy chỉnh */
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f8f8f8;
+      text-align: center;
+      padding-top: 50px; 
+    }
+
+    .main-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    .instruction-box {
+        margin: 25px auto;
+        padding: 20px;
+        border: 2px dashed #007bff;
+        background-color: #e6f0ff;
+        border-radius: 8px;
+        text-align: left;
+        white-space: pre-wrap; /* Giữ định dạng xuống dòng từ Gemini */
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: #333;
+        min-height: 100px; 
+    }
+
+    /* Các nút */
+    .btn-action {
+      background-color: var(--orange-soda); 
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+
+    .btn-action:hover {
+      background-color: #e65c00;
+    }
+    
+    .btn-map {
+        background-color: #007bff; /* Màu xanh nổi bật cho trợ giúp */
+    }
+    .btn-map:hover {
+        background-color: #0056b3;
+    }
+    
+    .challenge-section {
+        margin-top: 30px;
+        padding: 20px;
+        border-top: 1px solid #ddd;
+    }
+    
+    /* CSS cho toggle */
+    .toggle-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        color: #555;
+    }
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 45px;
+        height: 25px;
+    }
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 25px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+        transform: translateX(18px);
+    }
+
+  </style>
+</head>
+<body id="top">
+    <header class="header" data-header>
+        <div class="container">
+            <a href="index.html">
+              <h1 class="logo">SaiGonGo</h1>
+            </a>
+            </div>
+    </header>
+
+    <main class="main-container">
+        <h2>Điểm đến Tiếp theo: Dinh Độc Lập</h2>
+        <p>Bước 2: Sử dụng GPS để lấy chỉ dẫn lộ trình đến Dinh Độc Lập.</p>
+
+        <a href="baotang.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về Bảo tàng</a>
+
+        <input type="text" id="locationName" value="Dinh Độc Lập" readonly style="margin-bottom: 20px;" />
+
+        <div class="toggle-container">
+            <span>Sử dụng vị trí thực tế</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="dynamicLocationToggle">
+                <span class="slider"></span>
+            </label>
+            <span id="locationModeLabel">Chế độ Thử nghiệm (Bảo tàng)</span>
+        </div>
+        
+        <button id="getDirectionsBtn" class="btn-action">✅ Yêu cầu Lộ trình GPS</button>
+
+        <div id="loadingStatus" style="margin-top: 15px; color: #ff6600; font-weight: 600;"></div>
+
+        <div id="directionsBox" class="instruction-box">
+            Lộ trình sẽ xuất hiện ở đây sau khi bạn nhấn nút Yêu cầu Lộ trình.
+        </div>
+        
+        <a id="mapLink" class="btn-action btn-map" target="_blank" style="display: none; text-decoration: none;">
+            Mở Map Trợ giúp
+        </a>
+
+        <section class="challenge-section" id="photoChallenge" style="display: none;">
+            <h3>Thử thách trên đường đi</h3>
+            <p>Trước khi đến đích, hãy chụp một tấm ảnh có Công trình nổi bật trên tuyến đường này để nhận thưởng (Ví dụ: Một tượng đài lớn hoặc một tòa nhà biểu tượng).</p>
+            <a href="destination-dinhdoclap.html" class="btn-action" style="text-decoration: none; background-color: green;">
+                Hoàn thành thử thách ảnh →
+            </a>
+        </section>
+    </main>
+    
+    <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+        </footer>
+
+    <script>
+        const getDirectionsBtn = document.getElementById("getDirectionsBtn");
+        const directionsBox = document.getElementById("directionsBox");
+        const loadingStatus = document.getElementById("loadingStatus");
+        const mapLink = document.getElementById("mapLink");
+        const photoChallenge = document.getElementById("photoChallenge");
+        const locationToggle = document.getElementById("dynamicLocationToggle"); // Mới
+        const locationModeLabel = document.getElementById("locationModeLabel"); // Mới
+        const DESTINATION_NAME = document.getElementById("locationName").value;
+
+        let useDynamicLocation = false; // Theo mặc định của Backend: False
+
+        // Cập nhật trạng thái hiển thị của công tắc
+        locationToggle.checked = !useDynamicLocation; // Backend mặc định là STATIC, nên toggle mặc định là checked (cho STATIC)
+        locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
+
+
+        locationToggle.addEventListener('change', () => {
+            useDynamicLocation = !locationToggle.checked;
+            locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
+        });
+
+
+        // Hàm chính để lấy vị trí và yêu cầu lộ trình
+        function getAndSendLocation() {
+            loadingStatus.textContent = "⏳ Chuẩn bị yêu cầu lộ trình...";
+            getDirectionsBtn.disabled = true;
+            
+            // Nếu người chơi chọn chế độ thử nghiệm, gửi tọa độ mặc định (hoặc null)
+            if (!useDynamicLocation) {
+                // Gửi tọa độ mặc định (hoặc null) để Backend dùng STATIC_START_LOCATION
+                fetchDirectionsFromServer(null, null); 
+                return;
+            }
+
+            // Nếu người chơi chọn chế độ động, phải lấy GPS
+            if ("geolocation" in navigator) {
+                loadingStatus.textContent = "⏳ Đang lấy vị trí GPS hiện tại...";
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        loadingStatus.textContent = `✅ Đã lấy vị trí: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+                        
+                        // Gửi vị trí thực tế đến server
+                        fetchDirectionsFromServer(lat, lon);
+                    },
+                    (error) => {
+                        loadingStatus.textContent = "❌ Lỗi: Không thể lấy vị trí. Vui lòng bật GPS.";
+                        getDirectionsBtn.disabled = false;
+                        console.error(error);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            } else {
+                directionsBox.textContent = "Trình duyệt của bạn không hỗ trợ định vị GPS.";
+                getDirectionsBtn.disabled = false;
+            }
+        }
+
+        // Hàm gọi backend để lấy chỉ dẫn động
+        async function fetchDirectionsFromServer(lat, lon) {
+            loadingStatus.textContent = "⏳ Đang gửi tọa độ và yêu cầu AI tạo lộ trình...";
+            
+            try {
+                const res = await fetch("/get-dynamic-directions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    // Gửi vị trí hiện tại (có thể là null nếu dùng chế độ tĩnh)
+                    body: JSON.stringify({ current_lat: lat, current_lon: lon }), 
+                });
+
+                const data = await res.json();
+                
+                if (data.success) {
+                    directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>'); // Thay thế \n thành <br> để xuống dòng
+                    loadingStatus.textContent = `🎉 Lộ trình đến ${DESTINATION_NAME} (${data.distance}) đã sẵn sàng!`;
+                    
+                    // Cập nhật nút Mở Map và Thử thách
+                    mapLink.href = data.map_url;
+                    mapLink.style.display = 'inline-block';
+                    photoChallenge.style.display = 'block';
+
+                } else {
+                    directionsBox.textContent = data.route_text; // Hiển thị lỗi từ server
+                    loadingStatus.textContent = "❌ Lỗi tạo lộ trình.";
+                    mapLink.style.display = 'inline-block'; // Hiển thị map để trợ giúp khi lỗi
+                    mapLink.href = `https://www.google.com/maps/dir/`; // Link chung
+                }
+
+            } catch (error) {
+                console.error("Lỗi Fetch:", error);
+                directionsBox.textContent = "❌ Lỗi kết nối Server. Vui lòng thử lại.";
+                loadingStatus.textContent = "❌ Lỗi kết nối.";
+
+            } finally {
+                getDirectionsBtn.disabled = false;
+            }
+        }
+
+        getDirectionsBtn.addEventListener("click", getAndSendLocation);
+        
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

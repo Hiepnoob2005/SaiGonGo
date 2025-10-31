@@ -55,7 +55,7 @@
 
     button {
       background-color: var(--orange-soda); /* Màu cam chủ đạo */
-      color: black; /* ĐÃ THAY ĐỔI MÀU CHỮ THÀNH ĐEN */
+      color: black;
       padding: 14px 40px;
       border: none;
       border-radius: 8px;
@@ -68,12 +68,12 @@
 
     button:hover:enabled {
       background-color: #e65c00;
-      color: black; /* Đảm bảo màu chữ vẫn là đen khi hover */
+      color: black;
     }
     
     button:disabled {
         background-color: #ccc;
-        color: black; /* Đảm bảo màu chữ là đen khi disabled */
+        color: black;
         cursor: not-allowed;
     }
     
@@ -82,7 +82,7 @@
         margin-top: 40px;
         padding: 30px 15px;
         border-top: 2px dashed #ff6600;
-        text-align: left;
+        text-align: center; /* Căn giữa câu hỏi và nút */
     }
     .question-title {
         font-size: 1.5rem;
@@ -91,37 +91,69 @@
         margin-bottom: 25px;
         text-align: center;
     }
+    
+    /* BỐ CỤC MỚI DÙNG FLEXBOX CHO ĐÁP ÁN */
     .answer-option {
-        display: flex;
+        display: flex; /* Dùng Flexbox */
         align-items: center;
+        justify-content: space-between; /* Đẩy nội dung ra hai bên */
         padding: 15px;
         margin: 12px auto;
         max-width: 450px;
-        background-color: #fff8f5; /* Màu nền nhẹ */
+        background-color: #fff8f5;
         border: 2px solid #ff9955;
         border-radius: 10px;
         cursor: pointer;
         transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
-        font-size: 1rem;
+        font-size: 1.1rem; /* Tăng cỡ chữ đáp án */
+        text-align: left;
     }
+    
+    .answer-content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+    }
+    
+    .answer-letter {
+        font-weight: bold;
+        margin-right: 15px;
+        min-width: 25px; /* Giữ chữ cái ổn định */
+    }
+    
     .answer-option:hover {
         background-color: #fff0e7;
         border-color: var(--orange-soda);
         transform: translateY(-1px);
     }
     .answer-option.selected {
-        background-color: #ff6600; /* Màu cam đầy */
+        background-color: #ff6600;
         color: white;
         border-color: #ff3300;
         font-weight: 600;
     }
     .answer-option input[type="radio"] {
-        margin-right: 15px;
-        accent-color: white; /* Đổi màu radio button */
+        /* Ẩn nút radio mặc định */
+        display: none; 
     }
-    .answer-option.selected input[type="radio"] {
-        accent-color: white;
+    
+    /* Vòng tròn checkmark (tùy chọn) */
+    .check-circle {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        margin-left: 10px;
+        transition: border-color 0.2s;
     }
+
+    .answer-option.selected .check-circle {
+        border-color: white;
+        background-color: white;
+        box-shadow: 0 0 0 4px #ff6600; /* Màu nền cam */
+    }
+    /* KẾT THÚC BỐ CỤC MỚI */
+    
     #submitQuizBtn {
         display: block;
         margin: 30px auto 10px auto;
@@ -184,16 +216,36 @@
             <h3 class="question-title">Câu hỏi: Bảo tàng Chiến tích Chiến tranh được xây dựng từ năm nào</h3>
 
             <label class="answer-option" data-answer="A">
-                <input type="radio" name="quiz" value="A"> A. 1970
+                <input type="radio" name="quiz" value="A"> 
+                <div class="answer-content">
+                    <span class="answer-letter">A.</span>
+                    <span>1970</span>
+                </div>
+                <div class="check-circle"></div>
             </label>
             <label class="answer-option" data-answer="B">
-                <input type="radio" name="quiz" value="B"> B. 1975
+                <input type="radio" name="quiz" value="B"> 
+                <div class="answer-content">
+                    <span class="answer-letter">B.</span>
+                    <span>1975</span>
+                </div>
+                <div class="check-circle"></div>
             </label>
             <label class="answer-option" data-answer="C">
-                <input type="radio" name="quiz" value="C"> C. 1990
+                <input type="radio" name="quiz" value="C"> 
+                <div class="answer-content">
+                    <span class="answer-letter">C.</span>
+                    <span>1990</span>
+                </div>
+                <div class="check-circle"></div>
             </label>
             <label class="answer-option" data-answer="D">
-                <input type="radio" name="quiz" value="D"> D. 1995
+                <input type="radio" name="quiz" value="D"> 
+                <div class="answer-content">
+                    <span class="answer-letter">D.</span>
+                    <span>1995</span>
+                </div>
+                <div class="check-circle"></div>
             </label>
             
             <button id="submitQuizBtn" disabled>Trả lời</button>
