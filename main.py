@@ -280,6 +280,14 @@ def serve_static(filename):
     # Route này sẽ bắt /login.html, /forgot_password.html, ...
     return send_from_directory(BASE_DIR, filename)
 
+def send_email_in_thread(app_context, msg):
+    with app_context:
+        try:
+            mail.send(msg)
+            print("Email OTP đã gửi!") # <--- Nếu thành công
+        except Exception as e:
+            print(f"Lỗi gửi mail: {e}") # <--- Nếu thất bại
+
 # --- Chạy máy chủ (Giữ nguyên) ---
 if __name__ == '__main__':
     if not os.path.exists(USER_FILE):
