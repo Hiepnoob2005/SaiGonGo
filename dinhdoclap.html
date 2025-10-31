@@ -25,37 +25,50 @@
     }
     
     .instruction-box {
-        margin: 25px auto;
-        padding: 20px;
-        border: 2px dashed #007bff;
-        background-color: #e6f0ff;
-        border-radius: 8px;
-        text-align: left;
-        white-space: pre-wrap; /* Giữ định dạng xuống dòng từ Gemini */
-        font-size: 1.05rem;
-        font-weight: 500;
-        color: #333;
-        min-height: 100px; 
-    }
+  margin: 30px auto;
+  padding: 30px 35px;
+  border: 3px solid #e63946; /* Viền đỏ nổi bật */
+  background: linear-gradient(180deg, #fff6f6, #ffeaea); /* nền đỏ nhạt sang trọng */
+  border-radius: 16px;
+  text-align: left;
+  white-space: pre-wrap; /* Giữ xuống dòng */
+  font-size: 1.3rem; /* 🔹 chữ to hơn rõ ràng */
+  line-height: 1.8;  /* 🔹 giãn dòng dễ đọc */
+  font-weight: 600;
+  color: #222; /* chữ đậm vừa phải */
+  box-shadow: 0 6px 18px rgba(230, 57, 70, 0.2);
+  min-height: 130px;
+  max-width: 800px;
+  transition: all 0.3s ease;
+}
+
+.instruction-box.show {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(230, 57, 70, 0.35);
+}
 
     /* Các nút */
     .btn-action {
-      background-color: var(--orange-soda); 
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: background-color 0.3s;
-      margin-top: 15px;
-      margin-bottom: 10px;
-    }
+  background-color: #d62828;       /* 🔴 đỏ đậm */
+  color: #fff;                     /* chữ trắng */
+  padding: 18px 50px;              /* nút to hơn */
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.4rem;               /* chữ lớn hơn */
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  transition: all 0.25s ease;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 14px rgba(214, 40, 40, 0.4); /* đổ bóng đỏ nhẹ */
+}
 
-    .btn-action:hover {
-      background-color: #e65c00;
-    }
+.btn-action:hover {
+  background-color: #e63946;       /* đỏ sáng hơn khi hover */
+  transform: translateY(-3px);     /* hiệu ứng nổi */
+  box-shadow: 0 6px 18px rgba(230, 57, 70, 0.5);
+}
     
     .btn-map {
         background-color: #007bff; /* Màu xanh nổi bật cho trợ giúp */
@@ -251,6 +264,7 @@
                 
                 if (data.success) {
                     directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>'); // Thay thế \n thành <br> để xuống dòng
+                    directionsBox.classList.add("show");
                     loadingStatus.textContent = `🎉 Lộ trình đến ${DESTINATION_NAME} (${data.distance}) đã sẵn sàng!`;
                     
                     // Cập nhật nút Mở Map và Thử thách

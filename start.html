@@ -232,12 +232,20 @@
 
   <script>
     function goBack() {
-      if (document.referrer) {
-        window.history.back();
-      } else {
-        window.location.href = "baotang.html";
-      }
-    }
+  const ref = document.referrer;
+
+  // Nếu đến từ baotang.html hoặc từ trang chính → quay lại baotang
+  if (!ref || ref.includes("baotang.html") || ref.includes("index.html")) {
+    window.location.href = "baotang.html";
+  } 
+  // Nếu đến từ destination → vẫn cho quay lại baotang (không vòng lặp)
+  else if (ref.includes("destination.html")) {
+    window.location.href = "baotang.html";
+  } 
+  else {
+    window.history.back();
+  }
+}
   </script>
 </body>
 </html>
