@@ -1,1 +1,1 @@
-flask flask_bcrypt flask_cors dotenv google-genai pillow google.generativeai flask_login flask_mail
+flask flask_bcrypt flask_cors dotenv google-genai pillow google.generativeai flask_login flask_mail requests
