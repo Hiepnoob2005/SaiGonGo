@@ -5,65 +5,90 @@ from io import BytesIO
 from dotenv import load_dotenv
 import os
 import base64
-from PIL import Image # ✅ Thêm thư viện PIL (Pillow)
-from google import genai # ✅ Thêm thư viện Google GenAI
+from PIL import Image 
+from google import genai 
 import requests
 
 # --- Khai báo API key và Khởi tạo GenAI ---
 load_dotenv()
-# 🔑 Gemini API Key sẽ được đọc từ biến môi trường GEMINI_API_KEY (hoặc OPENAI_API_KEY nếu bạn đã đổi tên)
 try:
-    # Cố gắng sử dụng GEMINI_API_KEY nếu có
     if os.getenv("GEMINI_API_KEY"):
         genai.api_key = os.getenv("GEMINI_API_KEY")
         MODEL_NAME = 'gemini-2.5-flash'
-    # Nếu không, sử dụng OPENAI_API_KEY hiện có (giả định bạn đã đổi nó thành Gemini Key)
     else:
         genai.api_key = os.getenv("OPENAI_API_KEY")
         MODEL_NAME = 'gemini-2.5-flash'
     
-    # Khởi tạo client Gemini
     client = genai.Client(api_key=genai.api_key)
 except Exception as e:
     print(f"Lỗi khởi tạo Gemini Client: {e}")
     client = None
-    
 
-# --- KHÔNG THAY ĐỔI CÁC PHẦN KHÁC (app, CORS, Bcrypt, USER_FILE...) ---
+# --- KHÔNG THAY ĐỔI CÁC PHẦN KHÁC ---
 app = Flask(__name__)
-CORS(app) # Kích hoạt CORS
-bcrypt = Bcrypt(app) # Kích hoạt Bcrypt
+CORS(app) 
+bcrypt = Bcrypt(app) 
 USER_FILE = "user_accounts.txt"
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-STATIC_START_LAT = 10.779544121871611
-STATIC_START_LON = 106.69216069325068
+# ----------------------------------------------
+# --- CẤU HÌNH VỊ TRÍ VÀ HÀM DỊCH OSRM ---
+# ----------------------------------------------
 
-DINH_DOC_LAP_LAT = 10.778217
-DINH_DOC_LAP_LON = 106.696470
+# Tọa độ cố định (Dùng cho chế độ thử nghiệm)
+STATIC_START_LAT = 10.7797839 # Bảo tàng
+STATIC_START_LON = 106.6893418 # Bảo tàng
+DINH_DOC_LAP_LAT = 10.779038 # Dinh Độc Lập
+DINH_DOC_LAP_LON = 106.696111 # Dinh Độc Lập
 
-# ... (Phần trên của file main.py giữ nguyên) ...
-USE_STATIC_START_LOCATION = True
+# Chuyển thành True để luôn coi Bảo tàng là điểm bắt đầu (cho mục đích thử nghiệm)
+USE_STATIC_START_LOCATION = True 
 
 def get_vietnamese_instruction(maneuver_type, street_name):
     """Dịch mã thao tác rẽ của OSRM sang tiếng Việt."""
+    
+    # Bổ sung các loại thao tác OSRM thường gặp và cách dịch rõ ràng
     vn_type = {
         "depart": "Bắt đầu đi theo",
-        "turn": "Rẽ",
+        "turn": "Rẽ", # Sẽ được bổ sung hướng (trái/phải)
         "new name": "Tiếp tục đi thẳng (đổi tên đường)",
         "continue": "Tiếp tục đi thẳng",
         "merge": "Nhập vào đường",
-        "fork": "Rẽ nhánh",
-        "end": "Đã đến nơi (Kết thúc lộ trình)"
+        "fork": "Chọn nhánh",
+        "roundabout": "Vào vòng xuyến",
+        "end": "Tới nơi",
+        "uturn": "Quay đầu",
+        "ramp": "Đi lên/xuống dốc",
+        "rotary": "Vào bùng binh",
     }.get(maneuver_type, "Tiếp tục đi thẳng")
 
     if street_name:
-        if vn_type == "Rẽ":
-             return f"{vn_type} vào đường {street_name}"
-        return f"{vn_type} đường {street_name}"
+        return f"{vn_type} {street_name}"
     
-    # Nếu không có tên đường, chỉ trả về thao tác
     return vn_type
+
+def get_direction_modifier(modifier):
+    """Dịch mã hướng rẽ sang tiếng Việt."""
+    vn_modifier = {
+        "left": "trái",
+        "right": "phải",
+        "sharp left": "gắt bên trái",
+        "sharp right": "gắt bên phải",
+        "slight left": "hơi chếch trái",
+        "slight right": "hơi chếch phải",
+        "uturn": "quay đầu",
+    }.get(modifier, "")
+    return vn_modifier
+
+# ----------------------------------------------
+# --- CÁC API CŨ (Giữ nguyên) ---
+# ----------------------------------------------
+
+# ... (Giữ nguyên các hàm register_secure, login_secure, login) ...
+
+# ----------------------------------------------
+# --- API MỚI: XỬ LÝ ĐỊNH TUYẾN CHÍNH XÁC BẰNG PYTHON ---
+# ----------------------------------------------
 
 @app.route("/get-dynamic-directions", methods=["POST"])
 def get_dynamic_directions():
@@ -75,15 +100,15 @@ def get_dynamic_directions():
         current_lat = data.get("current_lat")
         current_lon = data.get("current_lon")
         
-        # LOGIC BẬT/TẮT ĐỊNH VỊ
+        # <<< LOGIC BẬT/TẮT ĐỊNH VỊ VÀ SỬA LỖI >>>
         if USE_STATIC_START_LOCATION:
             start_lat = STATIC_START_LAT
             start_lon = STATIC_START_LON
             start_info = "Bảo tàng Chiến tích Chiến tranh (Vị trí tĩnh)"
-        # ... (logic dynamic location giữ nguyên) ...
         else:
+            # Sửa lỗi: Nếu không dùng STATIC, phải dùng tọa độ động từ client
             if not current_lat or not current_lon:
-                return jsonify({"route_text": "❌ Không nhận được tọa độ GPS từ thiết bị."}), 400
+                return jsonify({"route_text": "❌ Không nhận được tọa độ GPS từ thiết bị (Chế độ động).", "distance": "N/A"}), 400
             start_lat = current_lat
             start_lon = current_lon
             start_info = f"Vị trí hiện tại ({start_lat:.4f},{current_lon:.4f})"
@@ -109,28 +134,39 @@ def get_dynamic_directions():
         total_distance_m = route_info['distance']
         total_distance_km = f"{total_distance_m / 1000:.2f} km"
         
-        # 2. XỬ LÝ VÀ DỊCH DỮ LIỆU THÔ BẰNG PYTHON (LOẠI BỎ GEMINI)
+        # 2. XỬ LÝ VÀ DỊCH DỮ LIỆU THÔ BẰNG PYTHON (Đảm bảo độ chính xác)
         route_instructions = []
         for i, step in enumerate(steps):
             maneuver = step.get('maneuver', {})
             maneuver_type = maneuver.get('type')
-            
-            # Lấy tên đường (name) và hướng rẽ (modifier)
-            street_name = step.get('name', '')
-            
-            # Dịch mã thao tác rẽ sang tiếng Việt
-            vn_instruction = get_vietnamese_instruction(maneuver_type, street_name)
-            
+            modifier = maneuver.get('modifier')
             distance = int(step.get('distance', 0))
-            
-            # Định dạng bước chỉ dẫn
-            if maneuver_type == 'arrive': # Đã đến nơi
-                instruction_line = f"✅ Bước {i + 1}: {vn_instruction} {street_name}."
-            else:
-                 instruction_line = f"Bước {i + 1}: {vn_instruction}, đi tiếp {distance} mét."
+            street_name = step.get('name', 'đường không tên') # Đảm bảo luôn có tên đường
 
-            route_instructions.append(instruction_line)
-        
+            # Dịch mã thao tác rẽ cơ bản
+            base_instruction = get_vietnamese_instruction(maneuver_type, street_name)
+            
+            # Xử lý các thao tác rẽ chi tiết (turn)
+            if maneuver_type == 'turn' and modifier:
+                direction = get_direction_modifier(modifier)
+                # Ghép: Rẽ [hướng] vào [tên đường]
+                instruction_line = f"Rẽ {direction} vào đường {street_name}"
+            elif maneuver_type == 'depart' or maneuver_type == 'continue':
+                 instruction_line = f"{base_instruction}"
+            else:
+                 instruction_line = base_instruction
+
+            # Định dạng bước chỉ dẫn cuối cùng
+            if maneuver_type == 'arrive': # Đã đến nơi
+                route_instructions.append(f"✅ Bước {i + 1}: {base_instruction}.")
+            elif distance > 0:
+                # Định dạng: [Hành động], đi tiếp [Khoảng cách] mét.
+                route_instructions.append(f"Bước {i + 1}: {instruction_line}, đi tiếp {distance} mét.")
+            else:
+                 # Các bước rẽ nhỏ không có khoảng cách
+                 route_instructions.append(f"Bước {i + 1}: {instruction_line}.")
+
+
         route_data_string = "\n".join(route_instructions)
 
         # 3. Định dạng kết quả cuối cùng
@@ -154,14 +190,9 @@ def get_dynamic_directions():
         print(f"Lỗi xử lý Định tuyến Python: {e}")
         return jsonify({"route_text": f"❌ Lỗi server khi tạo lộ trình: {str(e)}"}), 500
 
-# --- API Routes (Chỉ hiển thị hàm thay thế) ---
-
-# ... (Giữ nguyên hàm register_secure) ...
-# ... (Giữ nguyên hàm login_secure) ...
-# ... (Giữ nguyên hàm login) ...
-
-# --- Route xác thực hình ảnh bằng GEMINI Vision (ĐÃ THAY THẾ) ---
-
+# ----------------------------------------------
+# --- API XÁC THỰC HÌNH ẢNH (Giữ nguyên) ---
+# ----------------------------------------------
 @app.route("/verify-image", methods=["POST"])
 def verify_image():
     """
@@ -169,19 +200,16 @@ def verify_image():
     """
     if not client:
         return jsonify({"message": "❌ Lỗi: Gemini Client chưa được khởi tạo. Vui lòng kiểm tra API Key."}), 500
-
     try:
         # Lấy file ảnh và tên địa điểm
         if 'image' not in request.files or 'location' not in request.form:
             return jsonify({"message": "Thiếu dữ liệu hình ảnh hoặc tên địa điểm"}), 400
-
+        # 1. Đọc file ảnh dưới dạng Bytes
         file = request.files["image"]
         location_name = request.form["location"]
-        
-        # 1. Đọc file ảnh dưới dạng Bytes
+
         image_bytes = file.read()
         
-        # 2. Chuyển đổi Bytes thành đối tượng PIL Image (bắt buộc cho GenAI)
         img = Image.open(BytesIO(image_bytes))
 
         # 3. Định nghĩa prompt và hình ảnh để gửi lên Gemini
@@ -193,41 +221,45 @@ def verify_image():
         
         # 🧠 Gọi Google GenAI (Sử dụng model vision đa năng)
         response = client.models.generate_content(
-            model='gemini-2.5-flash', # Model vision/text hiệu quả và nhanh chóng
+            model='gemini-2.5-flash', 
             contents=[img, prompt],
         )
-
         # ✅ Lấy nội dung phản hồi
         result = response.text.strip()
         
-        # (Tùy chọn) In kết quả ra console để debug
         print(f"🤖 Kết quả Gemini: {result}")
-        
         return jsonify({"message": f"🤖 Kết quả AI: {result}"}), 200
 
     except Exception as e:
         print(f"Lỗi Gemini Vision: {e}")
         return jsonify({"message": f"❌ Lỗi xử lý GenAI: {str(e)}"}), 500
 
+# ----------------------------------------------
+# --- API ĐĂNG KÝ/ĐĂNG NHẬP VÀ FILE SERVING (Giữ nguyên) ---
+# ----------------------------------------------
+# ... (Giữ nguyên các hàm register_secure, login_secure, login) ...
+# ... (Giữ nguyên các hàm serve_index, serve_static) ...
 
-# --- File Serving (Phần phục vụ frontend, KHÔNG THAY ĐỔI) ---
+# ----------------------------------------------
+# --- FILE SERVING (Phần phục vụ frontend) ---
+# ----------------------------------------------
 
 @app.route("/")
 def serve_index():
     """Phục vụ file index.html"""
+    # Đảm bảo file index.html nằm ngang hàng với main.py
     return send_from_directory(BASE_DIR, "index.html")
 
 
 @app.route("/<path:filename>")
 def serve_static(filename):
     """Phục vụ các file tĩnh (CSS, JS, images, và các file HTML khác)"""
+    # Route này sẽ bắt các request tới /login.html, /assets/css/style.css, ...
     return send_from_directory(BASE_DIR, filename)
 
 # --- Chạy máy chủ ---
 if __name__ == '__main__':
-    # Đảm bảo file user tồn tại với tiêu đề
     if not os.path.exists(USER_FILE):
         with open(USER_FILE, "w", encoding="utf-8") as f:
-            f.write("username;email;password\n") # Thêm dòng tiêu đề
-
+            f.write("username;email;password\n") 
     app.run(port=5000, debug=True)
