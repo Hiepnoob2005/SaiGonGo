@@ -225,7 +225,7 @@
   </div>
 
   <div class="bottom-btn">
-    <button class="start-btn" onclick="window.location.href='destination.html'">
+    <button class="start-btn" onclick="window.location.href='baotang.html'">
       Tiếp tục
     </button>
   </div>
@@ -234,13 +234,13 @@
     function goBack() {
   const ref = document.referrer;
 
-  // Nếu đến từ baotang.html hoặc từ trang chính → quay lại baotang
-  if (!ref || ref.includes("baotang.html") || ref.includes("index.html")) {
-    window.location.href = "baotang.html";
+  // Nếu đến từ batdau1 hoặc từ trang chính → quay lại lotrinh1
+  if (!ref || ref.includes("batdau1.html") || ref.includes("index.html")) {
+    window.location.href = "lotrinh1.html";
   } 
-  // Nếu đến từ destination → vẫn cho quay lại baotang (không vòng lặp)
-  else if (ref.includes("destination.html")) {
-    window.location.href = "baotang.html";
+  // Nếu đến từ baotang → vẫn cho quay lại baotang (không vòng lặp)
+  else if (ref.includes("baotang.html")) {
+    window.location.href = "lotrinh1.html";
   } 
   else {
     window.history.back();

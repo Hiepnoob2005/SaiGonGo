@@ -1,381 +1,394 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bảo tàng Chiến tích Chiến tranh</title>
-    <link rel="stylesheet" href="./assets/css/style.css" />
-    <style>
-        /* Thêm CSS cho nút shop */
-        .shop-button-container {
-            text-align: center;
-            margin-top: 30px; /* Khoảng cách từ rương */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xác thực hình ảnh điểm đến</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <style>
+    /* CSS Tùy chỉnh để căn giữa và tạo giao diện nhất quán */
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f8f8f8; /* Màu nền nhẹ */
+    }
 
-        .btn-shop {
-            display: inline-block;
-            background-color: #007bff; /* Màu xanh dương */
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3); /* Bóng đổ nhẹ */
-        }
+    .main-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
 
-        .btn-shop:hover {
-            background-color: #0056b3; /* Màu xanh đậm hơn khi hover */
-            transform: translateY(-2px); /* Nút nhích lên nhẹ */
-            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
-        }
+    .preview {
+      display: none;
+      width: 90%;
+      max-width: 380px;
+      height: auto;
+      border-radius: 10px;
+      margin: 25px auto; /* Căn giữa ảnh */
+      border: 4px solid var(--orange-soda); /* Dùng màu chủ đạo từ index */
+      box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+    }
+    
+    /* Thiết kế Input/Button theo style chung */
+    input[type="text"] {
+        padding: 12px;
+        width: 80%;
+        max-width: 400px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
 
-        /* CSS cho toast notification (nếu chưa có trong style.css) */
-        #toast-notification {
-            visibility: hidden; /* Ẩn theo mặc định */
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 30px;
-            font-size: 17px;
-            opacity: 0;
-            transition: opacity 0.5s, bottom 0.5s;
-        }
+    input[type="file"] {
+      margin-top: 15px;
+      display: block;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-        #toast-notification.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 50px;
-        }
-    </style>
+    button {
+      background-color: var(--orange-soda); /* Màu cam chủ đạo */
+      color: black;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      margin-top: 30px;
+    }
+
+    button:hover:enabled {
+      background-color: #e65c00;
+      color: black;
+    }
+    
+    button:disabled {
+        background-color: #ccc;
+        color: black;
+        cursor: not-allowed;
+    }
+    
+    /* CSS cho câu hỏi */
+    .question-section {
+        margin-top: 40px;
+        padding: 30px 15px;
+        border-top: 2px dashed #ff6600;
+        text-align: center; /* Căn giữa câu hỏi và nút */
+    }
+    .question-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    
+    /* BỐ CỤC MỚI DÙNG FLEXBOX CHO ĐÁP ÁN */
+    .answer-option {
+        display: flex; /* Dùng Flexbox */
+        align-items: center;
+        justify-content: space-between; /* Đẩy nội dung ra hai bên */
+        padding: 15px;
+        margin: 12px auto;
+        max-width: 450px;
+        background-color: #fff8f5;
+        border: 2px solid #ff9955;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+        font-size: 1.1rem; /* Tăng cỡ chữ đáp án */
+        text-align: left;
+    }
+    
+    .answer-content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+    }
+    
+    .answer-letter {
+        font-weight: bold;
+        margin-right: 15px;
+        min-width: 25px; /* Giữ chữ cái ổn định */
+    }
+    
+    .answer-option:hover {
+        background-color: #fff0e7;
+        border-color: var(--orange-soda);
+        transform: translateY(-1px);
+    }
+    .answer-option.selected {
+        background-color: #ff6600;
+        color: white;
+        border-color: #ff3300;
+        font-weight: 600;
+    }
+    .answer-option input[type="radio"] {
+        /* Ẩn nút radio mặc định */
+        display: none; 
+    }
+    
+    /* Vòng tròn checkmark (tùy chọn) */
+    .check-circle {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        margin-left: 10px;
+        transition: border-color 0.2s;
+    }
+
+    .answer-option.selected .check-circle {
+        border-color: white;
+        background-color: white;
+        box-shadow: 0 0 0 4px #ff6600; /* Màu nền cam */
+    }
+    /* KẾT THÚC BỐ CỤC MỚI */
+    
+    #submitQuizBtn {
+        display: block;
+        margin: 30px auto 10px auto;
+    }
+    #result {
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+    
+    /* CSS cho nút Tiếp tục */
+    #nextDestinationBtn {
+        display: none; /* Mặc định ẩn */
+        margin: 30px auto 10px auto;
+        background-color: #007bff; /* Màu xanh nổi bật */
+    }
+    #nextDestinationBtn:hover {
+        background-color: #0056b3;
+    }
+  </style>
 </head>
-<body>
-    <header class="header">
-        <div class="container">
-            <h1>Bảo tàng Chiến tích Chiến tranh</h1>
-            <a href="index.html" class="btn btn-outline">← Quay lại trang chính</a>
-        </div>
+<body id="top">
+    <header class="header" data-header>
+      <div class="container">
+        <a href="index.html">
+          <h1 class="logo">SaiGonGo</h1>
+        </a>
+
+        <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
+          <ion-icon name="menu-outline" class="open"></ion-icon>
+          <ion-icon name="close-outline" class="close"></ion-icon>
+        </button>
+
+        <nav class="navbar">
+          <ul class="navbar-list">
+            <li><a href="index.html" class="navbar-link">Home</a></li>
+            <li><a href="#" class="navbar-link">Tours</a></li>
+            <li><a href="#" class="navbar-link">Destinations</a></li>
+          </ul>
+        </nav>
+      </div>
     </header>
 
-    <main class="container">
-        <section class="museum-section" style="display: flex; align-items: center; justify-content: center; gap: 40px; margin: 50px auto; max-width: 1100px; flex-wrap: wrap;">
-            <div class="museum-image" style="flex: 1; text-align: center;">
-                <img
-                    src="./assets/images/BTCTCT.png"
-                    alt="Bảo tàng Chiến tích Chiến tranh"
-                    style="
-                        width: 100%;
-                        max-width: 480px;
-                        border-radius: 12px;
-                        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-                    "
-                />
-            </div>
+    <main class="main-container">
+        <h2>Xác thực điểm đến & Câu đố</h2>
+        <p>Bước 1: Hãy chụp một tấm ảnh tại Bảo tàng Chiến tích Chiến tranh và xác thực bằng AI.</p>
 
-            <div class="museum-info" style="flex: 1; min-width: 320px;">
-                <h2 style="font-size: 2.2rem; color: #1b1b1b; margin-bottom: 20px;">Giới thiệu sơ lược</h2>
+        <a href="batdau1.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Quay lại điểm xuất phát</a>
 
-                <p style="font-size: 1.4rem; color: #444; line-height: 1.8; text-align: justify;">
-                    Nằm tại số <b>28 Võ Văn Tần, Quận 3, TP. Hồ Chí Minh</b>, Bảo tàng Chiến tích Chiến tranh là một trong những địa điểm du lịch
-                    được yêu thích nhất, thu hút hàng triệu lượt khách trong và ngoài nước mỗi năm. 
-                    <br><br>
-                    Nơi đây trưng bày hơn 20.000 hiện vật, hình ảnh và tư liệu quý giá về chiến tranh Việt Nam,
-                    phản ánh chân thực những mất mát, hy sinh và khát vọng hòa bình của dân tộc.
-                    <br><br>
-                    Bên ngoài khuôn viên, du khách có thể chiêm ngưỡng các khí tài quân sự thật như máy bay, xe tăng, pháo
-                    — tất cả tạo nên một không gian lịch sử sống động và sâu sắc.
-                </p>
-            </div>
+        <input type="text" id="locationName" value="Bảo tàng Chiến tích Chiến tranh" readonly />
+
+        <input type="file" id="photo" accept="image/*" capture="camera" />
+        <img id="preview" class="preview" />
+
+        <button id="uploadBtn" disabled>Xác thực bằng AI</button>
+
+        <div id="result"></div>
+        
+        <section class="question-section" style="display: none;" id="questionSection">
+            <h3 class="question-title">Câu hỏi: Bảo tàng Chiến tích Chiến tranh được xây dựng từ năm nào</h3>
+
+            <label class="answer-option" data-answer="A">
+                <input type="radio" name="quiz" value="A"> 
+                <div class="answer-content">
+                    <span class="answer-letter">A.</span>
+                    <span>1970</span>
+                </div>
+                <div class="check-circle"></div>
+            </label>
+            <label class="answer-option" data-answer="B">
+                <input type="radio" name="quiz" value="B"> 
+                <div class="answer-content">
+                    <span class="answer-letter">B.</span>
+                    <span>1975</span>
+                </div>
+                <div class="check-circle"></div>
+            </label>
+            <label class="answer-option" data-answer="C">
+                <input type="radio" name="quiz" value="C"> 
+                <div class="answer-content">
+                    <span class="answer-letter">C.</span>
+                    <span>1990</span>
+                </div>
+                <div class="check-circle"></div>
+            </label>
+            <label class="answer-option" data-answer="D">
+                <input type="radio" name="quiz" value="D"> 
+                <div class="answer-content">
+                    <span class="answer-letter">D.</span>
+                    <span>1995</span>
+                </div>
+                <div class="check-circle"></div>
+            </label>
+            
+            <button id="submitQuizBtn" disabled>Trả lời</button>
+            <div id="quizResult" style="margin-top: 15px; font-size: 1.1rem; font-weight: 600;"></div>
         </section>
-
-        <section class="next-destinations" style="text-align: center; margin-top: 60px;">
-  <h2 style="font-size: 2.2rem; color: #222; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 35px;">
-    Những địa điểm trong lộ trình sắp tới
-  </h2>
-
-  <div class="destination-grid" style="
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    justify-items: center;
-    align-items: start;
-    max-width: 900px;
-    margin: 0 auto;
-  ">
-
-    <!-- Dinh Độc Lập -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/DinhDocLap.jpg" alt="Dinh Độc Lập" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Dinh Độc Lập</p>
-    </div>
-
-    <!-- Công viên 30/4 -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/cv30th4.jpg" alt="Công viên 30/4" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Công viên 30/4</p>
-    </div>
-
-    <!-- Nhà thờ Đức Bà -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/NhaThoDucBa.jpg" alt="Nhà thờ Đức Bà" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Nhà thờ Đức Bà</p>
-    </div>
-
-    <!-- Bưu điện Thành phố -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/BuuDienTP.png" alt="Bưu điện Thành phố" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Bưu điện Thành phố</p>
-    </div>
-
-    <!-- Đường sách Nguyễn Văn Bình -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/DuongSachNVB.jpg" alt="Đường sách Nguyễn Văn Bình" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Đường sách Nguyễn Văn Bình</p>
-    </div>
-
-    <!-- Hồ Con Rùa -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/HoConRua.jpg" alt="Hồ Con Rùa" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Hồ Con Rùa</p>
-    </div>
-
-  </div>
-</section>
-
-        <section class="map-and-ranking"
-         style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 40px; margin-top: 60px;">
-    
-  <!-- Cột bên trái: Bản đồ -->
-  <div class="start-point" style="flex: 1 1 500px; max-width: 600px; text-align: center;">
-    <h2 style="font-size: 1.6rem; color: #222; margin-bottom: 20px;">Điểm xuất phát</h2>
-    <div style="width: 100%; border-radius: 12px; overflow: hidden;">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7838.822421986659!2d106.689342!3d10.779784!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f30a23708cf%3A0x7cd94adf2b1474aa!2zQuG6o28gdMOgbmcgQ2jhu6luZyB0w61jaCBDaGnhur9uIHRyYW5o!5e0!3m2!1svi!2sus!4v1761832010042!5m2!1svi!2sus"
-              width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
-    <div style="margin-top: 15px;">
-      <h3 style="font-size: 1.2rem; font-weight: 800;">Bảo tàng Chiến tích Chiến tranh</h3>
-      <p style="color: #555;">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</p>
-    </div>
-  </div>
-
-  <!-- Cột bên phải: Xếp hạng -->
-  <div class="ranking" style="flex: 1 1 300px; max-width: 400px; text-align: center;">
-    <h2 style="font-size: 1.5rem; color: #222;">Xếp hạng</h2>
-    <p id="xp-score" style="color: #ff6b00; font-weight: 600; font-size: 1.1rem; margin-top: 10px;">
-      Điểm cao nhất 💎 0 XP
-    </p>
-
-    <div style="margin-top: 20px;">
-      <img 
-        id="treasure-chest"
-        src="./assets/images/Ruong_dong.png"
-        alt="Rương kho báu đóng"
-        data-closed-src="./assets/images/Ruong_dong.png"
-        data-open-src="./assets/images/Ruong.jpeg"
-        style="max-width: 250px;"
-      />
-    </div>
-
-    <div class="shop-button-container" style="margin-top: 25px;">
-      <a href="shop.html" class="btn-shop"
-         style="display: inline-block; background-color: #007bff; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 600;">
-        🛍️ Đổi Voucher
-      </a>
-    </div>
-  </div>
-</section>
-
-        <hr style="margin: 40px 0; border: 0.5px solid #ddd;">
-
-        <section class="support" 
-                 style="
-                   position: fixed;
-                   bottom: 20px;
-                   left: 20px;
-                   background-color: #007bff;
-                   color: white;
-                   padding: 15px 20px;
-                   border-radius: 12px;
-                   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-                   font-size: 0.95rem;
-                   line-height: 1.6;
-                   z-index: 100;
-                 ">
-            <h3 style="margin: 0 0 5px 0; font-size: 1.05rem; font-weight: 700;">📞 Hỗ trợ</h3>
-            <p style="margin: 0;">
-              Email: <a href="mailto:hello@ontripquest.com" style="color: #fff; font-weight: 600; text-decoration: underline;">hello@ontripquest.com</a><br>
-              Hotline: <a href="tel:0906488443" style="color: #fff; font-weight: 600; text-decoration: underline;">0906 488 443</a>
-            </p>
-        </section>
-
-         <div style="
-          position: fixed;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 99;
-          text-align: center;
-        ">
-            <a href="start.html" class="btn btn-primary"
-               style="
-                 background-color: #ff6600;
-                 color: white;
-                 padding: 20px 70px;
-                 border-radius: 14px;
-                 text-decoration: none;
-                 font-size: 1.4rem;
-                 font-weight: 700;
-                 box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-                 transition: all 0.25s ease;
-                 display: inline-block;
-               "
-               onmouseover="this.style.transform='translateY(-4px)'"
-               onmouseout="this.style.transform='translateY(0)'"
-            >
-                🚀 Bắt đầu
-            </a>
-        </div>
+        
+        <button id="nextDestinationBtn" onclick="window.location.href='ltdinhdoclap.html'">Tiếp tục: Dinh Độc Lập →</button>
+        
     </main>
 
-    <div id="toast-notification">Đây là thông báo của bạn!</div>
+    <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+      <div class="container">
+        <div class="footer-bottom">
+          <a href="#" class="logo">SaiGonGo</a>
+
+          <p class="copyright">
+            &copy; 2022 <a href="#" class="copyright-link">codewithsadee</a>.
+            All Rights Reserved
+          </p>
+        </div>
+      </div>
+    </footer>
+
+
     <script>
-        // Lấy các phần tử DOM
-        const chestImage = document.getElementById('treasure-chest');
-        const toast = document.getElementById('toast-notification');
-        const xpScoreElement = document.getElementById('xp-score');
+      const photoInput = document.getElementById("photo");
+      const preview = document.getElementById("preview");
+      const uploadBtn = document.getElementById("uploadBtn");
+      const resultBox = document.getElementById("result");
+      const questionSection = document.getElementById("questionSection");
+      const submitQuizBtn = document.getElementById("submitQuizBtn");
+      const quizResultBox = document.getElementById("quizResult");
+      const nextDestinationBtn = document.getElementById("nextDestinationBtn"); 
+      const answerOptions = document.querySelectorAll('.answer-option');
+      const CORRECT_ANSWER = "B"; // Đáp án đúng: 1975
 
-        // --- BẠN CÓ THỂ TÙY CHỈNH DÒNG THÔNG BÁO TẠI ĐÂY ---
-        const customMessage = "Bạn đã mở rương! +50 XP!";
-        // ----------------------------------------------------
+      // Lắng nghe sự kiện click trên các label đáp án
+      answerOptions.forEach(option => {
+          option.addEventListener('click', function() {
+              const radio = this.querySelector('input[type="radio"]');
+              if (radio && !radio.disabled) {
+                  radio.checked = true;
 
-        // Lấy URL hình ảnh từ thuộc tính data
-        const closedSrc = chestImage.getAttribute('data-closed-src');
-        const openSrc = chestImage.getAttribute('data-open-src');
+                  answerOptions.forEach(opt => opt.classList.remove('selected'));
+                  this.classList.add('selected');
+                  submitQuizBtn.disabled = false;
+              }
+          });
+      });
 
-        let isChestOpen = false; // Trạng thái rương
 
-        // Thêm sự kiện click vào rương
-        chestImage.addEventListener('click', () => {
-            // Chỉ thực hiện nếu rương chưa mở
-            if (!isChestOpen) {
-                // 1. Thay đổi hình ảnh
-                chestImage.src = openSrc;
-                isChestOpen = true; // Đánh dấu là rương đã mở
-
-                // 2. Hiển thị thông báo đẩy
-                showToast(customMessage);
-
-                // 3. CẬP NHẬT ĐIỂM SỐ
-                xpScoreElement.textContent = "Điểm cao nhất 💎 50 XP"; 
-                
-                // (Tùy chọn) Xóa con trỏ 'pointer' để không thể nhấp lại
-                chestImage.style.cursor = 'default';
-                chestImage.style.transform = 'scale(1)'; // Reset hiệu ứng hover
-            }
-        });
-
-        // Hàm hiển thị thông báo
-        function showToast(message) {
-            // Đặt nội dung thông báo
-            toast.textContent = message;
-
-            // Thêm class 'show' để hiển thị
-            toast.classList.add('show');
-
-            // Tự động ẩn sau 3 giây
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000); // 3000ms = 3 giây
+      // Cập nhật logic: Bật nút Xác thực ngay khi chọn ảnh
+      photoInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          preview.src = URL.createObjectURL(file);
+          preview.style.display = "block";
+          // Kích hoạt nút Xác thực
+          uploadBtn.disabled = false; 
+          
+          resultBox.textContent = ""; 
+          questionSection.style.display = 'none'; // Ẩn câu hỏi khi tải ảnh mới
+          nextDestinationBtn.style.display = 'none'; // Ẩn nút tiếp tục
+        } else {
+          // Vô hiệu hóa nút Xác thực nếu không có file
+          uploadBtn.disabled = true; 
+          preview.style.display = "none";
         }
+      });
 
+      uploadBtn.addEventListener("click", async () => {
+        const file = photoInput.files[0];
+        const locationName = document.getElementById("locationName").value.trim();
+
+        if (uploadBtn.disabled) { // Kiểm tra lần nữa để đảm bảo đã có ảnh
+             alert("Vui lòng chọn ảnh trước khi xác thực!");
+             return;
+        }
+        
+        // Vô hiệu hóa nút khi đang xử lý
+        resultBox.textContent = "⏳ Đang gửi hình ảnh để AI xử lý...";
+        uploadBtn.disabled = true; 
+        
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("location", locationName);
+
+        try {
+          const res = await fetch("/verify-image", {
+            method: "POST",
+            body: formData,
+          });
+          const data = await res.json();
+          
+          resultBox.textContent = data.message;
+          
+          // Bật lại nút Xác thực sau khi nhận phản hồi
+          uploadBtn.disabled = false; 
+          
+          // Giả định nếu AI xác thực thành công (có chứa "Đúng địa điểm" hoặc "✅")
+          if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
+              questionSection.style.display = 'block';
+              resultBox.style.color = 'green';
+          } else {
+              // Nếu AI không đúng, chỉ hiển thị kết quả và không hiển thị câu hỏi
+              questionSection.style.display = 'none';
+              resultBox.style.color = 'red';
+          }
+
+        } catch (err) {
+          console.error(err);
+          resultBox.textContent = "❌ Lỗi kết nối với server.";
+          uploadBtn.disabled = false;
+          questionSection.style.display = 'none';
+        }
+      });
+
+
+      submitQuizBtn.addEventListener('click', () => {
+          const selectedOption = document.querySelector('input[name="quiz"]:checked');
+          if (!selectedOption) {
+              alert("Vui lòng chọn một đáp án!");
+              return;
+          }
+
+          const userAnswer = selectedOption.value;
+
+          if (userAnswer === CORRECT_ANSWER) {
+              quizResultBox.innerHTML = "<span style='color: green;'>✅ **Chính xác!** Bạn đã nhận được điểm XP và Voucher!</span>";
+              nextDestinationBtn.style.display = 'block'; // HIỂN THỊ NÚT TIẾP TỤC
+          } else {
+              quizResultBox.innerHTML = `<span style='color: red;'>❌ **Sai rồi!** Đáp án đúng là ${CORRECT_ANSWER}. Hãy tìm hiểu kỹ hơn.</span>`;
+              nextDestinationBtn.style.display = 'none'; // ẨN NÚT TIẾP TỤC nếu sai
+          }
+          
+          submitQuizBtn.disabled = true;
+          // Vô hiệu hóa các lựa chọn sau khi trả lời
+          document.querySelectorAll('input[name="quiz"]').forEach(radio => radio.disabled = true);
+          answerOptions.forEach(option => option.style.cursor = 'default');
+      });
     </script>
 
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
