@@ -280,10 +280,10 @@ def reset_password():
 # Các hàm OSRM và Gemini từ bước trước được giữ nguyên và tích hợp vào đây.
 
 USE_STATIC_START_LOCATION = True 
-STATIC_START_LAT = 10.7797839 
-STATIC_START_LON = 106.6893418 
-DINH_DOC_LAP_LAT = 10.779038 
-DINH_DOC_LAP_LON = 106.696111 
+STATIC_START_LAT = 10.779544664004435
+STATIC_START_LON = 106.69208222854601
+DINH_DOC_LAP_LAT = 10.778226
+DINH_DOC_LAP_LON = 106.696445
 
 # Hàm hỗ trợ dịch OSRM (Đã lược bớt để code gọn hơn)
 def get_vietnamese_instruction(maneuver_type, street_name):
