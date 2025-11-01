@@ -2,3 +2,4 @@ username;email;password
 24127020;oizooi12345@gmail.com;$2b$12$qivop04Tau2p7W3j5N7bKeXLLtjjuSQ1osa4OiPKGnSz45b9tsO/S
 dphuoc;lnphuoc1608@gmail.com;$2b$12$eqQIlxl2GbRkXBIaEI/z7e.nAk29NHPBkxXsWObMpJgjqqN54o/W2
 duyphuoc;lndphuoc2424@clc.fitus.edu.vn;$2b$12$jhc8Rrz5p1UZCpE.zbOTOeXVSobxJzDMsWRDuNCUcDet8c9wSFIEC
+Kiwi11052006;lekienquoc1105@gmail.com;$2b$12$Rl.F4msAzcUQu0DkvFXI7OuYiP26CSEcI4la4VdLDQfXUgzoziFue
