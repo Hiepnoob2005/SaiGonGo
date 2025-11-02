@@ -170,7 +170,7 @@
         </div>
         
         <a id="mapLink" class="btn-action btn-map" target="_blank" style="display: none; text-decoration: none;">
-            Mở Map Trợ giúp
+            <button onclick="openGoogleMap()">🗺️ Mở Map Trợ giúp</button>
         </a>
 
         <section class="challenge-section" id="photoChallenge" style="display: none;">
@@ -295,5 +295,18 @@
 
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<script>
+  function openGoogleMap() {
+    // ⚙️ Điểm bắt đầu và đích (bạn có thể đổi tuỳ nơi)
+    const start = "Bảo tàng Chiến tích Chiến tranh, 28 Võ Văn Tần, Quận 3, TP.HCM";
+    const destination = "Dinh Độc Lập, 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP.HCM";
+
+    // 🗺️ Tạo link Google Maps với mode = walking
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+
+    // 🚀 Mở Google Maps trong tab mới
+    window.open(url, "_blank");
+  }
+</script>
 </body>
 </html>
