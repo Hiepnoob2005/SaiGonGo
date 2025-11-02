@@ -419,7 +419,7 @@ def verify_image():
         print(f"Lỗi Gemini Vision: {e}")
         return jsonify({"message": f"❌ Lỗi xử lý GenAI: {str(e)}"}), 500
 
-# ----------------------------------------------
+# ----------------------------------------------    
 # --- V. FILE SERVING (Phục vụ Frontend) ---
 # ----------------------------------------------
 
