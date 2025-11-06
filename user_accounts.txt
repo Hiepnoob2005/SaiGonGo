@@ -3,3 +3,4 @@ username;email;password
 dphuoc;lnphuoc1608@gmail.com;$2b$12$eqQIlxl2GbRkXBIaEI/z7e.nAk29NHPBkxXsWObMpJgjqqN54o/W2
 duyphuoc;lndphuoc2424@clc.fitus.edu.vn;$2b$12$jhc8Rrz5p1UZCpE.zbOTOeXVSobxJzDMsWRDuNCUcDet8c9wSFIEC
 Kiwi11052006;lekienquoc1105@gmail.com;$2b$12$Rl.F4msAzcUQu0DkvFXI7OuYiP26CSEcI4la4VdLDQfXUgzoziFue
+1234;lkquoc2416@clc.fitus.edu.vn;$2b$12$.FQVMeY7Hb88ouUjFt184.cHEkfZYzd9oOkZrE7l.g0z3Z2MvDSZi

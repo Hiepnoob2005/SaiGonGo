@@ -11,8 +11,7 @@ from dotenv import load_dotenv
 from PIL import Image 
 import requests
 # Đã sửa lỗi: Dùng import mới nhất và chính xác cho Gemini
-from google import genai 
-
+from google import genai
 import random
 import string
 import json
@@ -361,7 +360,7 @@ def get_dynamic_directions():
                 direction = get_direction_modifier(modifier)
                 instruction_line = f"Rẽ {direction} vào đường {street_name}"
             elif maneuver_type == 'arrive': 
-                instruction_line = f"✅ Tới đích: Dinh Độc Lập"
+                instruction_line = f"✅ Tới đích"
             elif distance > 0:
                 instruction_line = f"{base_instruction}, đi tiếp {distance} mét."
             else:

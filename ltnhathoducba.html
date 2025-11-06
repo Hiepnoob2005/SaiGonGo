@@ -145,12 +145,12 @@
     </header>
 
     <main class="main-container">
-        <h2>Điểm đến Tiếp theo: Dinh Độc Lập</h2>
-        <p>Bước 2: Sử dụng GPS để lấy chỉ dẫn lộ trình đến Dinh Độc Lập.</p>
+        <h2>Điểm đến Tiếp theo: Nhà thờ Đức Bà</h2>
+        <p>Bước 2: Sử dụng GPS để lấy chỉ dẫn lộ trình đến Nhà thờ Đức Bà.</p>
 
         <a href="batdau1.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về điểm bắt đầu</a>
 
-        <input type="text" id="locationName" value="Dinh Độc Lập" readonly style="margin-bottom: 20px;" />
+        <input type="text" id="locationName" value="Nhà thờ Đức Bà" readonly style="margin-bottom: 20px;" />
 
         <div class="toggle-container">
             <span>Sử dụng vị trí thực tế</span>
@@ -174,10 +174,8 @@
         </a>
 
         <section class="challenge-section" id="photoChallenge" style="display: none;">
-            <h3>Thử thách trên đường đi</h3>
-            <p>Trước khi đến đích, hãy chụp một tấm ảnh có Công trình nổi bật trên tuyến đường này để nhận thưởng (Ví dụ: Một tượng đài lớn hoặc một tòa nhà biểu tượng).</p>
-            <a href="dinhdoclap.html" class="btn-action" style="text-decoration: none; background-color: green;">
-                Hoàn thành thử thách ảnh →
+            <a href="nhathoducba.html" class="btn-action" style="text-decoration: none; background-color: green;">
+                Hoàn thành thử thách →
             </a>
         </section>
     </main>
@@ -298,8 +296,8 @@
 <script>
   function openGoogleMap() {
     // ⚙️ Điểm bắt đầu và đích (bạn có thể đổi tuỳ nơi)
-    const start = "Bảo tàng Chiến tích Chiến tranh, 28 Võ Văn Tần, Quận 3, TP.HCM";
-    const destination = "Dinh Độc Lập, 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP.HCM";
+    const start = "Dinh Độc Lập, 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP.HCM";
+    const destination = "Nhà thờ Đức Bà, 1 Công xã Paris, Quận 1, TP.HCM";
 
     // 🗺️ Tạo link Google Maps với mode = walking
     const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
