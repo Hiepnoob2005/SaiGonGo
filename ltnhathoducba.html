@@ -147,7 +147,23 @@
     <main class="main-container">
         <h2>Điểm đến Tiếp theo: Nhà thờ Đức Bà</h2>
         <p>Bước 2: Sử dụng GPS để lấy chỉ dẫn lộ trình đến Nhà thờ Đức Bà.</p>
-
+        <div id="distanceProgress" style="
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0056b3;
+  background-color: #e8f2ff;
+  border: 2px solid #bcd8ff;
+  border-radius: 15px;
+  padding: 20px 30px;
+  text-align: center;
+  margin: 25px auto;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+">
+  📍 Đang xác định vị trí...
+</div>
         <a href="batdau1.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về điểm bắt đầu</a>
 
         <input type="text" id="locationName" value="Nhà thờ Đức Bà" readonly style="margin-bottom: 20px;" />
@@ -305,6 +321,66 @@
     // 🚀 Mở Google Maps trong tab mới
     window.open(url, "_blank");
   }
+</script>
+<script>
+// 🎯 Tọa độ của điểm đến (ví dụ: Dinh Độc Lập)
+const DEST_LAT = 10.779783;   // vĩ độ
+const DEST_LON = 106.699018;  // kinh độ
+
+const distanceBox = document.getElementById("distanceProgress");
+
+// Hàm tính khoảng cách giữa 2 tọa độ (mét)
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371e3; // bán kính Trái Đất (m)
+  const toRad = deg => deg * Math.PI / 180;
+  const φ1 = toRad(lat1);
+  const φ2 = toRad(lat2);
+  const Δφ = toRad(lat2 - lat1);
+  const Δλ = toRad(lon2 - lon1);
+  const a = Math.sin(Δφ / 2) ** 2 +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// 🔄 Hàm cập nhật tiến độ
+function updateDistance() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+        const distance = getDistance(userLat, userLon, DEST_LAT, DEST_LON);
+        const km = (distance / 1000).toFixed(2);
+
+        if (distance < 50) {
+          distanceBox.textContent = "🎉 Bạn đã đến điểm đến rồi!";
+          distanceBox.style.backgroundColor = "#e8ffe8";
+          distanceBox.style.color = "#0a8a0a";
+          distanceBox.style.border = "2px solid #9be59b";
+        } else {
+          distanceBox.textContent = `📍 Cách điểm đến: ${km} km`;
+          distanceBox.style.backgroundColor = "#e8f2ff";
+          distanceBox.style.color = "#0056b3";
+          distanceBox.style.border = "2px solid #bcd8ff";
+        }
+      },
+      (error) => {
+        distanceBox.textContent = "⚠️ Không thể xác định vị trí. Hãy bật GPS.";
+        distanceBox.style.backgroundColor = "#fff4e5";
+        distanceBox.style.color = "#cc6600";
+        distanceBox.style.border = "2px solid #f3c38d";
+      }
+    );
+  } else {
+    distanceBox.textContent = "❌ Trình duyệt không hỗ trợ GPS.";
+  }
+}
+
+// Gọi ngay và cập nhật mỗi 10 giây
+updateDistance();
+setInterval(updateDistance, 10000);
 </script>
 </body>
 </html>
