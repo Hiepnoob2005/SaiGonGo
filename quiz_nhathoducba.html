@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trắc nghiệm - Bảo tàng Chiến tích Chiến tranh</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f8f8f8;
+    }
+
+    .main-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--orange-soda);
+      margin-bottom: 20px;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    .question p {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .option {
+      margin: 6px 0;
+      display: block;
+    }
+
+    .option input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    button {
+      background-color: var(--orange-soda);
+      color: black;
+      padding: 12px 35px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: 0.3s;
+      display: block;
+      margin: 25px auto;
+    }
+
+    button:hover:enabled {
+      background-color: #e65c00;
+      color: black;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    #result {
+      text-align: center;
+      font-weight: 600;
+      margin-top: 15px;
+    }
+
+    #nextDestinationBtn {
+      display: none;
+      background-color: #007bff;
+    }
+
+    #nextDestinationBtn:hover {
+      background-color: #0056b3;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #555;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body id="top">
+  <header class="header" data-header>
+    <div class="container">
+      <a href="index.html">
+        <h1 class="logo">SaiGonGo</h1>
+      </a>
+
+      <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
+        <ion-icon name="menu-outline" class="open"></ion-icon>
+        <ion-icon name="close-outline" class="close"></ion-icon>
+      </button>
+
+      <nav class="navbar">
+        <ul class="navbar-list">
+          <li><a href="index.html" class="navbar-link">Home</a></li>
+          <li><a href="#" class="navbar-link">Tours</a></li>
+          <li><a href="#" class="navbar-link">Destinations</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <a href="nhathoducba.html" class="back-btn">← Quay lại</a>
+    <h2>🧠 Trắc nghiệm: Nhà thờ Đức Bà</h2>
+    <p>Hãy trả lời 5 câu hỏi dưới đây. Khi hoàn thành, bạn sẽ thấy kết quả và có thể tiếp tục hành trình.</p>
+
+    <form id="quizForm">
+      <div class="question">
+        <p>1️⃣ Nhà thờ Đức Bà được xây dựng bởi nước nào?</p>
+        <label class="option"><input type="radio" name="q1" value="A">A. Pháp</label>
+        <label class="option"><input type="radio" name="q1" value="B">B. Đức</label>
+        <label class="option"><input type="radio" name="q1" value="C">C. Anh</label>
+        <label class="option"><input type="radio" name="q1" value="D">D. Mỹ</label>
+      </div>
+
+      <div class="question">
+        <p>2️⃣ Nhà thờ Đức Bà bắt đầu xây dựng vào năm nào?</p>
+        <label class="option"><input type="radio" name="q2" value="A">A. 1877</label>
+        <label class="option"><input type="radio" name="q2" value="B">B. 1880</label>
+        <label class="option"><input type="radio" name="q2" value="C">C. 1882</label>
+        <label class="option"><input type="radio" name="q2" value="D">D. 1890</label>
+      </div>
+
+      <div class="question">
+        <p>3️⃣ Tượng Đức Mẹ Hòa Bình được đặt trước khuôn viên nhà thờ từ năm nào?</p>
+        <label class="option"><input type="radio" name="q3" value="A">A. 1967</label>
+        <label class="option"><input type="radio" name="q3" value="B">B. 1960</label>
+        <label class="option"><input type="radio" name="q3" value="C">C. 1959</label>
+        <label class="option"><input type="radio" name="q3" value="D">D. 1969</label>
+      </div>
+
+      <div class="question">
+        <p>4️⃣  Nhà thờ Đức Bà phong tặng nhà thờ danh hiệu "Vương cung thánh đường" vào năm nào</p>
+        <label class="option"><input type="radio" name="q4" value="A">A. 1960</label>
+        <label class="option"><input type="radio" name="q4" value="B">B. 1962</label>
+        <label class="option"><input type="radio" name="q4" value="C">C. 1967</label>
+        <label class="option"><input type="radio" name="q4" value="D">D. 1969</label>
+      </div>
+
+      <div class="question">
+        <p>5️⃣ Nhà thờ Đức Bà bắt đầu quá trình đại trùng tu lớn bắt đầu từ năm nào?</p>
+        <label class="option"><input type="radio" name="q5" value="A">A. 2010</label>
+        <label class="option"><input type="radio" name="q5" value="B">B. 2015</label>
+        <label class="option"><input type="radio" name="q5" value="C">C. 2017</label>
+        <label class="option"><input type="radio" name="q5" value="D">D. 2020</label>
+      </div>
+    </form>
+
+    <button id="submitBtn" disabled>Xem kết quả</button>
+    <div id="result"></div>
+    <button id="nextDestinationBtn" onclick="window.location.href='ltnhathoducba.html'">Tiếp tục: Bưu điện Thành Phố →</button>
+  </main>
+
+  <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+    <div class="container">
+      <div class="footer-bottom">
+        <a href="#" class="logo">SaiGonGo</a>
+        <p class="copyright">
+          &copy; 2022 <a href="#" class="copyright-link">codewithsadee</a>.
+          All Rights Reserved
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById("quizForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const resultBox = document.getElementById("result");
+    const nextDestinationBtn = document.getElementById("nextDestinationBtn");
+
+    const correctAnswers = { q1: "A", q2: "A", q3: "C", q4: "B", q5: "C" };
+
+    form.addEventListener("change", () => {
+      const allAnswered = Object.keys(correctAnswers).every(
+        (q) => form.querySelector(`input[name="${q}"]:checked`)
+      );
+      submitBtn.disabled = !allAnswered;
+    });
+
+    submitBtn.addEventListener("click", () => {
+      let score = 0;
+      Object.keys(correctAnswers).forEach((q) => {
+        const selected = form.querySelector(`input[name="${q}"]:checked`);
+        if (selected && selected.value === correctAnswers[q]) {
+          score++;
+          selected.parentElement.style.color = "green";
+        } else if (selected) {
+          selected.parentElement.style.color = "red";
+        }
+      });
+
+      resultBox.innerHTML = `✅ Bạn trả lời đúng <b>${score}/5</b> câu.<br><small>Đáp án: 1A, 2A, 3C, 4B, 5C</small>`;
+      nextDestinationBtn.style.display = "block";
+      submitBtn.disabled = true;
+    });
+  </script>
+
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
