@@ -64,19 +64,20 @@ Dưới đây là các bước để cài đặt và chạy dự án này trên 
     ```
     *(Ghi chú: Dựa trên các file lỗi, có vẻ bạn cũng dùng `psycopg2` và `beautifulsoup4`. Nếu `psycopg2` là bắt buộc, bạn cần cài đặt PostgreSQL server).*
 
-4.  **Thiết lập Biến môi trường:**
+4.  **Thiết lập Biến môi trường (nếu trong folder không có file .env):**
     Dự án sử dụng `dotenv` để quản lý các khóa API. Tạo một tệp tên là `.env` trong thư mục gốc và thêm các khóa của bạn vào đó:
 
     ```ini
-    # Dành cho Google Gemini API
-    GEMINI_API_KEY="API_KEY_CUA_BAN_O_DAY"
-
-    # Dành cho Flask-Mail (ví dụ dùng Gmail)
-    MAIL_SERVER="smtp.gmail.com"
-    MAIL_PORT=465
-    MAIL_USE_SSL=True
-    MAIL_USERNAME="email_cua_ban@gmail.com"
-    MAIL_PASSWORD="mat_khau_ung_dung_cua_ban"
+      # API Key cho Gemini
+      GEMINI_API_KEY="AIzaSyDBoWF3Ou6kq0w7igqgnp4UWK9ZNJ9m1Is"
+      
+      MAIL_SERVER=smtp.gmail.com
+      MAIL_PORT=587
+      MAIL_USE_TLS=true
+      
+      MAIL_USERNAME=lnphuoc1608@gmail.com
+      
+      MAIL_PASSWORD=ixkjazmsncnibgmg
     ```
 
 ### 3. Chạy ứng dụng
@@ -87,3 +88,4 @@ Sau khi cài đặt xong, khởi chạy máy chủ Flask:
 flask run
 # Hoặc
 python main.py
+
