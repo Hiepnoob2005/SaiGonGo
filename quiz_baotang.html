@@ -4,64 +4,125 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trắc nghiệm - Bảo tàng Chiến tích Chiến tranh</title>
-  <link rel="stylesheet" href="./assets/css/style.css" />
+
   <style>
+    :root {
+      --primary: #ff7043;
+      --accent: #ffe0b2;
+      --correct: #81c784;
+      --wrong: #e57373;
+      --text-dark: #333;
+    }
+
     body {
       font-family: "Poppins", sans-serif;
-      background-color: #f8f8f8;
+      background: linear-gradient(135deg, #fffaf0, #ffe0b2);
+      margin: 0;
+      padding: 0;
     }
 
     .main-container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 30px;
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      text-align: left;
+      max-width: 850px;
+      margin: 60px auto;
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 40px 50px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h2 {
       text-align: center;
-      color: var(--orange-soda);
-      margin-bottom: 20px;
-    }
-
-    .question {
-      margin-bottom: 20px;
-    }
-
-    .question p {
-      font-weight: 600;
+      color: var(--primary);
+      font-size: 28px;
       margin-bottom: 10px;
     }
 
-    .option {
-      margin: 6px 0;
-      display: block;
+    p {
+      color: var(--text-dark);
+      line-height: 1.6;
+      text-align: center;
     }
 
-    .option input[type="radio"] {
-      margin-right: 10px;
-    }
-
-    button {
-      background-color: var(--orange-soda);
-      color: black;
-      padding: 12px 35px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
+    /* --- Câu hỏi --- */
+    .question {
+      background-color: var(--accent);
+      border-left: 6px solid var(--primary);
+      border-radius: 14px;
+      padding: 20px 25px;
+      margin: 25px 0;
       transition: 0.3s;
+    }
+
+    .question p {
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      color: #000000;             /* màu cam đất nổi bật nhưng vẫn hài hòa */
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+
+    /* --- Đáp án (bỏ radio, dùng button-like style) --- */
+    .option {
       display: block;
-      margin: 25px auto;
+      background: #fff;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-weight: 500;
+    }
+
+    .option:hover {
+      background-color: #fff3e0;
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .option.selected {
+      background-color: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      transform: scale(1.02);
+    }
+
+    .option.correct {
+      background-color: var(--correct);
+      color: #fff;
+      border-color: var(--correct);
+    }
+
+    .option.wrong {
+      background-color: var(--wrong);
+      color: #fff;
+      border-color: var(--wrong);
+    }
+
+    /* --- Nút và kết quả --- */
+    button {
+      background-color: var(--primary);
+      color: white;
+      padding: 12px 40px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: block;
+      margin: 30px auto 10px;
+      transition: 0.3s;
     }
 
     button:hover:enabled {
-      background-color: #e65c00;
-      color: black;
+      background-color: #ff5722;
+      transform: translateY(-2px);
     }
 
     button:disabled {
@@ -72,7 +133,9 @@
     #result {
       text-align: center;
       font-weight: 600;
-      margin-top: 15px;
+      font-size: 1.1rem;
+      color: #444;
+      margin-top: 20px;
     }
 
     #nextDestinationBtn {
@@ -87,9 +150,10 @@
     .back-btn {
       display: inline-block;
       margin-bottom: 20px;
-      color: #555;
+      color: var(--primary);
       text-decoration: none;
       font-weight: 600;
+      transition: 0.3s;
     }
 
     .back-btn:hover {
@@ -98,72 +162,51 @@
   </style>
 </head>
 
-<body id="top">
-  <header class="header" data-header>
-    <div class="container">
-      <a href="index.html">
-        <h1 class="logo">SaiGonGo</h1>
-      </a>
-
-      <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
-        <ion-icon name="menu-outline" class="open"></ion-icon>
-        <ion-icon name="close-outline" class="close"></ion-icon>
-      </button>
-
-      <nav class="navbar">
-        <ul class="navbar-list">
-          <li><a href="index.html" class="navbar-link">Home</a></li>
-          <li><a href="#" class="navbar-link">Tours</a></li>
-          <li><a href="#" class="navbar-link">Destinations</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
+<body>
   <main class="main-container">
     <a href="baotang.html" class="back-btn">← Quay lại</a>
     <h2>🧠 Trắc nghiệm: Bảo tàng Chiến tích Chiến tranh</h2>
-    <p>Hãy trả lời 5 câu hỏi dưới đây. Khi hoàn thành, bạn sẽ thấy kết quả và có thể tiếp tục hành trình.</p>
+    <p>Chọn đáp án đúng cho từng câu hỏi dưới đây và xem kết quả của bạn!</p>
 
     <form id="quizForm">
       <div class="question">
         <p>1️⃣ Bảo tàng Chiến tích Chiến tranh nằm ở đường nào của TP. Hồ Chí Minh?</p>
-        <label class="option"><input type="radio" name="q1" value="A">A. Lê Duẩn</label>
-        <label class="option"><input type="radio" name="q1" value="B">B. Võ Văn Tần</label>
-        <label class="option"><input type="radio" name="q1" value="C">C. Nguyễn Thị Minh Khai</label>
-        <label class="option"><input type="radio" name="q1" value="D">D. Nam Kỳ Khởi Nghĩa</label>
+        <div class="option" data-value="A">A. Lê Duẩn</div>
+        <div class="option" data-value="B">B. Võ Văn Tần</div>
+        <div class="option" data-value="C">C. Nguyễn Thị Minh Khai</div>
+        <div class="option" data-value="D">D. Nam Kỳ Khởi Nghĩa</div>
       </div>
 
       <div class="question">
         <p>2️⃣ Bảo tàng Chiến tích Chiến tranh được mở cửa cho công chúng vào năm nào?</p>
-        <label class="option"><input type="radio" name="q2" value="A">A. 1975</label>
-        <label class="option"><input type="radio" name="q2" value="B">B. 1980</label>
-        <label class="option"><input type="radio" name="q2" value="C">C. 1990</label>
-        <label class="option"><input type="radio" name="q2" value="D">D. 1995</label>
+        <div class="option" data-value="A">A. 1975</div>
+        <div class="option" data-value="B">B. 1980</div>
+        <div class="option" data-value="C">C. 1990</div>
+        <div class="option" data-value="D">D. 1995</div>
       </div>
 
       <div class="question">
         <p>3️⃣ Chủ đề chính của Bảo tàng Chiến tích Chiến tranh là gì?</p>
-        <label class="option"><input type="radio" name="q3" value="A">A. Lịch sử triều Nguyễn</label>
-        <label class="option"><input type="radio" name="q3" value="B">B. Văn hóa miền Nam</label>
-        <label class="option"><input type="radio" name="q3" value="C">C. Chiến tranh và hậu quả</label>
-        <label class="option"><input type="radio" name="q3" value="D">D. Nghệ thuật Việt Nam</label>
+        <div class="option" data-value="A">A. Lịch sử triều Nguyễn</div>
+        <div class="option" data-value="B">B. Văn hóa miền Nam</div>
+        <div class="option" data-value="C">C. Chiến tranh và hậu quả</div>
+        <div class="option" data-value="D">D. Nghệ thuật Việt Nam</div>
       </div>
 
       <div class="question">
         <p>4️⃣ Bảo tàng Chiến tích Chiến tranh trưng bày loại hiện vật nào nổi bật nhất?</p>
-        <label class="option"><input type="radio" name="q4" value="A">A. Vũ khí và hình ảnh chiến tranh</label>
-        <label class="option"><input type="radio" name="q4" value="B">B. Trang phục dân tộc</label>
-        <label class="option"><input type="radio" name="q4" value="C">C. Cổ vật Champa</label>
-        <label class="option"><input type="radio" name="q4" value="D">D. Bản đồ cổ Việt Nam</label>
+        <div class="option" data-value="A">A. Vũ khí và hình ảnh chiến tranh</div>
+        <div class="option" data-value="B">B. Trang phục dân tộc</div>
+        <div class="option" data-value="C">C. Cổ vật Champa</div>
+        <div class="option" data-value="D">D. Bản đồ cổ Việt Nam</div>
       </div>
 
       <div class="question">
         <p>5️⃣ Bảo tàng Chiến tích Chiến tranh từng mang tên gì trước năm 1995?</p>
-        <label class="option"><input type="radio" name="q5" value="A">A. Bảo tàng Hồ Chí Minh</label>
-        <label class="option"><input type="radio" name="q5" value="B">B. Nhà trưng bày tội ác Mỹ - Ngụy</label>
-        <label class="option"><input type="radio" name="q5" value="C">C. Bảo tàng Dân tộc học</label>
-        <label class="option"><input type="radio" name="q5" value="D">D. Bảo tàng Cách mạng</label>
+        <div class="option" data-value="A">A. Bảo tàng Hồ Chí Minh</div>
+        <div class="option" data-value="B">B. Nhà trưng bày tội ác Mỹ - Ngụy</div>
+        <div class="option" data-value="C">C. Bảo tàng Dân tộc học</div>
+        <div class="option" data-value="D">D. Bảo tàng Cách mạng</div>
       </div>
     </form>
 
@@ -172,52 +215,55 @@
     <button id="nextDestinationBtn" onclick="window.location.href='ltdinhdoclap.html'">Tiếp tục: Dinh Độc Lập →</button>
   </main>
 
-  <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
-    <div class="container">
-      <div class="footer-bottom">
-        <a href="#" class="logo">SaiGonGo</a>
-        <p class="copyright">
-          &copy; 2022 <a href="#" class="copyright-link">codewithsadee</a>.
-          All Rights Reserved
-        </p>
-      </div>
-    </div>
-  </footer>
-
   <script>
-    const form = document.getElementById("quizForm");
+    const correctAnswers = { q1: "B", q2: "A", q3: "C", q4: "A", q5: "B" };
+    const questions = document.querySelectorAll(".question");
     const submitBtn = document.getElementById("submitBtn");
     const resultBox = document.getElementById("result");
     const nextDestinationBtn = document.getElementById("nextDestinationBtn");
 
-    const correctAnswers = { q1: "B", q2: "A", q3: "C", q4: "A", q5: "B" };
+    const userAnswers = {};
 
-    form.addEventListener("change", () => {
-      const allAnswered = Object.keys(correctAnswers).every(
-        (q) => form.querySelector(`input[name="${q}"]:checked`)
-      );
-      submitBtn.disabled = !allAnswered;
+    questions.forEach((q, i) => {
+      const opts = q.querySelectorAll(".option");
+      const qKey = "q" + (i + 1);
+
+      opts.forEach(opt => {
+        opt.addEventListener("click", () => {
+          // Bỏ chọn các option khác
+          opts.forEach(o => o.classList.remove("selected"));
+          opt.classList.add("selected");
+          userAnswers[qKey] = opt.dataset.value;
+
+          // Kích hoạt nút "Xem kết quả" khi đã chọn hết
+          const allAnswered = Object.keys(correctAnswers).every(k => userAnswers[k]);
+          submitBtn.disabled = !allAnswered;
+        });
+      });
     });
 
     submitBtn.addEventListener("click", () => {
       let score = 0;
-      Object.keys(correctAnswers).forEach((q) => {
-        const selected = form.querySelector(`input[name="${q}"]:checked`);
-        if (selected && selected.value === correctAnswers[q]) {
+      Object.keys(correctAnswers).forEach((qKey, idx) => {
+        const question = questions[idx];
+        const selected = question.querySelector(".selected");
+        if (!selected) return;
+
+        if (selected.dataset.value === correctAnswers[qKey]) {
+          selected.classList.add("correct");
           score++;
-          selected.parentElement.style.color = "green";
-        } else if (selected) {
-          selected.parentElement.style.color = "red";
+        } else {
+          selected.classList.add("wrong");
+          // highlight đúng đáp án
+          const correctOpt = question.querySelector(`[data-value="${correctAnswers[qKey]}"]`);
+          correctOpt.classList.add("correct");
         }
       });
 
-      resultBox.innerHTML = `✅ Bạn trả lời đúng <b>${score}/5</b> câu.<br><small>Đáp án: 1B, 2A, 3C, 4A, 5B</small>`;
+      resultBox.innerHTML = `✅ Bạn trả lời đúng <b>${score}/5</b> câu.<br><small>Đáp án đúng: 1B, 2A, 3C, 4A, 5B</small>`;
       nextDestinationBtn.style.display = "block";
       submitBtn.disabled = true;
     });
   </script>
-
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Xác thực hình ảnh điểm đến</title>
+  <title>Xác thực hình ảnh điểm đến - Dinh Độc Lập</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: "Poppins", sans-serif;
+      font-family: "Be Vietnam Pro", sans-serif;
       background-color: #f8f8f8;
     }
 
@@ -52,11 +53,11 @@
     }
 
     button {
-      background-color: var(--orange-soda);
-      color: black;
+      background-color: #007bff;
+      color: white;
       padding: 14px 40px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       font-size: 1.1rem;
       font-weight: 600;
@@ -65,8 +66,7 @@
     }
 
     button:hover:enabled {
-      background-color: #e65c00;
-      color: black;
+      background-color: #0056b3;
     }
 
     button:disabled {
@@ -79,16 +79,18 @@
       padding: 10px;
       border-radius: 5px;
       font-weight: 600;
+      font-size: 1.2rem;
+      margin-top: 20px;
     }
 
     #nextDestinationBtn {
       display: none;
       margin: 30px auto 10px auto;
-      background-color: #007bff;
+      background-color: #ff6600;
     }
 
     #nextDestinationBtn:hover {
-      background-color: #0056b3;
+      background-color: #e65c00;
     }
   </style>
 </head>
@@ -116,23 +118,123 @@
   </header>
 
   <main class="main-container">
-    <h2>Xác thực điểm đến</h2>
-    <p>Bước 1: Hãy chụp một tấm ảnh tại Dinh Độc Lập và xác thực bằng AI.</p>
+    <section style="
+      background-color: #f0f7ff;
+      border: 3px solid #007bff;
+      border-radius: 16px;
+      padding: 35px 45px;
+      max-width: 800px;
+      margin: 40px auto;
+      box-shadow: 0 6px 18px rgba(0, 123, 255, 0.15);
+      text-align: center;
+    ">
 
-    <a href="ltdinhdoclap.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Quay lại</a>
+      <h2 style="
+        font-size: 2.2rem;
+        color: #0056b3;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      ">
+        🏛️ Xác thực điểm đến
+      </h2>
 
-    <input type="text" id="locationName" value="Dinh Độc Lập" readonly />
+      <p style="
+        font-size: 1.4rem;
+        color: #333;
+        line-height: 1.8;
+        margin-bottom: 25px;
+      ">
+        Bước 1: Hãy chụp một tấm ảnh tại <b>Dinh Độc Lập</b> và xác thực bằng hệ thống AI.
+      </p>
 
-    <input type="file" id="photo" accept="image/*" capture="camera" />
-    <img id="preview" class="preview" />
+      <a href="ltdinhdoclap.html" class="btn btn-outline"
+         style="position: absolute; top: 10px; left: 25px;">← Quay lại</a>
 
-    <button id="uploadBtn" disabled>Xác thực bằng AI</button>
+      <div style="margin-bottom: 20px;">
+        <input type="text" id="locationName"
+               value="Dinh Độc Lập" readonly
+               style="
+                 font-size: 1.1rem;
+                 padding: 10px;
+                 border: 1.5px solid #ccc;
+                 border-radius: 8px;
+                 text-align: center;
+                 color: #333;
+                 background-color: #fafafa;
+                 width: 80%;
+                 max-width: 400px;
+               "/>
+      </div>
 
-    <div id="result"></div>
+      <div style="margin-bottom: 25px;">
+        <input type="file" id="photo" accept="image/*" capture="camera"
+               style="font-size: 1rem; border: none; background: none;" />
+      </div>
 
-    <button id="nextDestinationBtn" onclick="window.location.href='quiz_dinhdoclap.html'">
-      Tiếp tục đến với các câu hỏi →
-    </button>
+      <img id="preview" class="preview" />
+
+      <button id="uploadBtn" disabled>
+        Xác thực bằng AI
+      </button>
+
+      <div id="result"></div>
+
+      <button id="nextDestinationBtn" onclick="window.location.href='quiz_dinhdoclap.html'">
+        Tiếp tục đến với các câu hỏi →
+      </button>
+
+    </section>
+
+    <!-- 🏰 Thông tin Dinh Độc Lập -->
+    <section id="info" style="
+      display: none;
+      margin: 60px auto;
+      max-width: 900px;
+      background-color: #f8fbff;
+      border: 3px solid #007bff;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.15);
+      padding: 40px 50px;
+      text-align: center;
+    ">
+      <h2 style="
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #0056b3;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      ">
+        🏰 Giới thiệu về Dinh Độc Lập
+      </h2>
+
+      <img src="./assets/images/dinhdoclap.jpg" alt="Dinh Độc Lập" style="
+        width: 100%;
+        max-width: 600px;
+        border-radius: 14px;
+        margin: 25px auto 35px auto;
+        display: block;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      " />
+
+      <p style="
+        font-size: 1.6rem;
+        color: #333;
+        line-height: 2;
+        text-align: justify;
+        padding: 0 10px;
+      ">
+        <b>Dinh Độc Lập</b> (nay là Hội trường Thống Nhất) nằm tại <b>số 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP. Hồ Chí Minh</b>.
+        Đây là một trong những công trình lịch sử quan trọng nhất của Việt Nam – biểu tượng của hòa bình, thống nhất và độc lập dân tộc.
+        <br><br>
+        Dinh được khởi công xây dựng vào năm <b>1962</b> và hoàn thành vào năm <b>1966</b> trên nền của Dinh Norodom cũ.
+        Ngày <b>30/4/1975</b>, lá cờ chiến thắng tung bay trên nóc Dinh, đánh dấu sự kiện giải phóng miền Nam và thống nhất đất nước.
+        <br><br>
+        Hiện nay, Dinh Độc Lập là một trong những điểm du lịch nổi tiếng nhất Sài Gòn,
+        thu hút hàng triệu lượt khách tham quan mỗi năm.
+      </p>
+    </section>
   </main>
 
   <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
@@ -196,9 +298,11 @@
         if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
           resultBox.style.color = "green";
           nextDestinationBtn.style.display = "block";
+          document.getElementById("info").style.display = "block";
         } else {
           resultBox.style.color = "red";
           nextDestinationBtn.style.display = "none";
+          document.getElementById("info").style.display = "none";
         }
       } catch (err) {
         console.error(err);
