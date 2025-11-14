@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lộ trình đến Dinh Độc Lập</title>
+  <title>Lộ trình đến Bưu điện Thành Phố</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
   <style>
     /* CSS Tùy chỉnh */
@@ -147,7 +147,7 @@
     </header>
 
     <main class="main-container">
-        <h2>Điểm đến Tiếp theo: Dinh Độc Lập</h2>
+        <h2>Điểm đến Tiếp theo: Bưu điện Thành Phố</h2>
         <div id="distanceProgress" style="
   font-size: 1.6rem;
   font-weight: 800;
@@ -165,9 +165,9 @@
 ">
   📍 Đang xác định vị trí...
 </div>
-        <a href="baotang.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về</a>
+        <a href="nhathoducba.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về</a>
 
-        <input type="text" id="locationName" value="Dinh Độc Lập" readonly style="margin-bottom: 20px;" />
+        <input type="text" id="locationName" value="Bưu điện Thành Phố" readonly style="margin-bottom: 20px;" />
 
         <div class="toggle-container">
             <span>Sử dụng vị trí thực tế</span>
@@ -175,7 +175,7 @@
                 <input type="checkbox" id="dynamicLocationToggle">
                 <span class="slider"></span>
             </label>
-            <span id="locationModeLabel">Chế độ Thử nghiệm (Bảo tàng)</span>
+            <span id="locationModeLabel">Chế độ Thử nghiệm (Nhà thờ Đức Bà)</span>
         </div>
         
         <button id="getDirectionsBtn" class="btn-action">✅ Yêu cầu Lộ trình GPS</button>
@@ -191,7 +191,7 @@
         </a>
 
         <section class="challenge-section" id="photoChallenge" style="display: none;">
-            <a href="dinhdoclap.html" class="btn-action" style="text-decoration: none; background-color: green;">
+            <a href="buudientp.html" class="btn-action" style="text-decoration: none; background-color: green;">
                 Hoàn thành thử thách →
             </a>
         </section>
@@ -202,8 +202,8 @@
 
     <script>
         // --- CẤU HÌNH ĐỊA ĐIỂM ---
-        const START_KEY = "bao_tang_chien_tich";
-        const END_KEY = "dinh_doc_lap";
+        const START_KEY = "nha_tho_duc_ba";
+        const END_KEY = "buu_dien_thanh_pho";
         // -------------------------
 
         const getDirectionsBtn = document.getElementById("getDirectionsBtn");
@@ -218,12 +218,12 @@
         let useDynamicLocation = false;
 
         locationToggle.checked = !useDynamicLocation;
-        locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
+        locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Nhà thờ Đức Bà)" : "Sử dụng vị trí thực tế";
 
 
         locationToggle.addEventListener('change', () => {
             useDynamicLocation = !locationToggle.checked;
-            locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
+            locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Nhà thờ Đức Bà)" : "Sử dụng vị trí thực tế";
         });
 
 
@@ -317,8 +317,8 @@
 <script>
   function openGoogleMap() {
     // ⚙️ Điểm bắt đầu và đích (bạn có thể đổi tuỳ nơi)
-    const start = "Bảo tàng Chiến tích Chiến tranh, 28 Võ Văn Tần, Quận 3, TP.HCM";
-    const destination = "Dinh Độc Lập, 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP.HCM";
+    const start = "Nhà thờ Đức Bà, 1 Công xã Paris, Quận 1, TP.HCM";
+    const destination = "Bưu điện TP, 2 Công xã Paris, Quận 1, TP.HCM";
 
     // 🗺️ Tạo link Google Maps với mode = walking
     const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
@@ -328,9 +328,9 @@
   }
 </script>
 <script>
-// 🎯 Tọa độ của điểm đến (ví dụ: Dinh Độc Lập)
-const DEST_LAT = 10.777182;   // vĩ độ
-const DEST_LON = 106.695446;  // kinh độ
+// 🎯 Tọa độ của điểm đến (ví dụ: Bưu điện Thành Phố)
+const DEST_LAT = 10.779902;
+const DEST_LON = 106.699156;
 
 const distanceBox = document.getElementById("distanceProgress");
 

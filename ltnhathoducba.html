@@ -1,9 +1,9 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Điểm đến: Dinh Độc Lập</title>
+  <title>Lộ trình đến Nhà thờ Đức Bà</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
   <style>
     /* CSS Tùy chỉnh */
@@ -27,15 +27,15 @@
     .instruction-box {
   margin: 30px auto;
   padding: 30px 35px;
-  border: 3px solid #e63946; /* Viền đỏ nổi bật */
-  background: linear-gradient(180deg, #fff6f6, #ffeaea); /* nền đỏ nhạt sang trọng */
+  border: 3px solid #e63946; 
+  background: linear-gradient(180deg, #fff6f6, #ffeaea); 
   border-radius: 16px;
   text-align: left;
-  white-space: pre-wrap; /* Giữ xuống dòng */
-  font-size: 1.3rem; /* 🔹 chữ to hơn rõ ràng */
-  line-height: 1.8;  /* 🔹 giãn dòng dễ đọc */
+  white-space: pre-wrap; 
+  font-size: 1rem; 
+  line-height: 1.6;  
   font-weight: 600;
-  color: #222; /* chữ đậm vừa phải */
+  color: #222; 
   box-shadow: 0 6px 18px rgba(230, 57, 70, 0.2);
   min-height: 130px;
   max-width: 800px;
@@ -49,29 +49,31 @@
 
     /* Các nút */
     .btn-action {
-  background-color: #d62828;       /* 🔴 đỏ đậm */
-  color: #fff;                     /* chữ trắng */
-  padding: 18px 50px;              /* nút to hơn */
+  background-color: #d62828;       
+  color: #fff;                     
+  padding: 18px 50px;              
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 1.4rem;               /* chữ lớn hơn */
+  font-size: 1.2rem;               
   font-weight: 800;
   letter-spacing: 0.5px;
   transition: all 0.25s ease;
   margin-top: 25px;
   margin-bottom: 15px;
-  box-shadow: 0 4px 14px rgba(214, 40, 40, 0.4); /* đổ bóng đỏ nhẹ */
+  box-shadow: 0 4px 14px rgba(214, 40, 40, 0.4); 
 }
 
 .btn-action:hover {
-  background-color: #e63946;       /* đỏ sáng hơn khi hover */
-  transform: translateY(-3px);     /* hiệu ứng nổi */
+  background-color: #e63946;       
+  transform: translateY(-3px);     
   box-shadow: 0 6px 18px rgba(230, 57, 70, 0.5);
 }
     
     .btn-map {
-        background-color: #007bff; /* Màu xanh nổi bật cho trợ giúp */
+        background-color: #007bff; 
+        padding: 12px 25px;
+        font-size: 1rem;
     }
     .btn-map:hover {
         background-color: #0056b3;
@@ -146,7 +148,6 @@
 
     <main class="main-container">
         <h2>Điểm đến Tiếp theo: Nhà thờ Đức Bà</h2>
-        <p>Bước 2: Sử dụng GPS để lấy chỉ dẫn lộ trình đến Nhà thờ Đức Bà.</p>
         <div id="distanceProgress" style="
   font-size: 1.6rem;
   font-weight: 800;
@@ -164,7 +165,7 @@
 ">
   📍 Đang xác định vị trí...
 </div>
-        <a href="batdau1.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về điểm bắt đầu</a>
+        <a href="dinhdoclap.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về</a>
 
         <input type="text" id="locationName" value="Nhà thờ Đức Bà" readonly style="margin-bottom: 20px;" />
 
@@ -174,7 +175,7 @@
                 <input type="checkbox" id="dynamicLocationToggle">
                 <span class="slider"></span>
             </label>
-            <span id="locationModeLabel">Chế độ Thử nghiệm (Bảo tàng)</span>
+            <span id="locationModeLabel">Chế độ Thử nghiệm (Dinh Độc Lập)</span>
         </div>
         
         <button id="getDirectionsBtn" class="btn-action">✅ Yêu cầu Lộ trình GPS</button>
@@ -200,41 +201,43 @@
         </footer>
 
     <script>
+        // --- CẤU HÌNH ĐỊA ĐIỂM ---
+        const START_KEY = "dinh_doc_lap";   // điểm bắt đầu mẫu mới
+        const END_KEY = "nha_tho_duc_ba";   // điểm đến đúng
+
+        // -------------------------
+
         const getDirectionsBtn = document.getElementById("getDirectionsBtn");
         const directionsBox = document.getElementById("directionsBox");
         const loadingStatus = document.getElementById("loadingStatus");
         const mapLink = document.getElementById("mapLink");
         const photoChallenge = document.getElementById("photoChallenge");
-        const locationToggle = document.getElementById("dynamicLocationToggle"); // Mới
-        const locationModeLabel = document.getElementById("locationModeLabel"); // Mới
+        const locationToggle = document.getElementById("dynamicLocationToggle"); 
+        const locationModeLabel = document.getElementById("locationModeLabel"); 
         const DESTINATION_NAME = document.getElementById("locationName").value;
 
-        let useDynamicLocation = false; // Theo mặc định của Backend: False
+        let useDynamicLocation = false;
 
-        // Cập nhật trạng thái hiển thị của công tắc
-        locationToggle.checked = !useDynamicLocation; // Backend mặc định là STATIC, nên toggle mặc định là checked (cho STATIC)
-        locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
+        locationToggle.checked = !useDynamicLocation;
+        locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Dinh Độc Lập)" : "Sử dụng vị trí thực tế";
 
 
         locationToggle.addEventListener('change', () => {
             useDynamicLocation = !locationToggle.checked;
-            locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
+            locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Dinh Độc Lập)" : "Sử dụng vị trí thực tế";
         });
 
 
-        // Hàm chính để lấy vị trí và yêu cầu lộ trình
         function getAndSendLocation() {
             loadingStatus.textContent = "⏳ Chuẩn bị yêu cầu lộ trình...";
             getDirectionsBtn.disabled = true;
             
-            // Nếu người chơi chọn chế độ thử nghiệm, gửi tọa độ mặc định (hoặc null)
             if (!useDynamicLocation) {
-                // Gửi tọa độ mặc định (hoặc null) để Backend dùng STATIC_START_LOCATION
+                // Chế độ tĩnh: Chỉ gửi key để backend dùng tọa độ tĩnh
                 fetchDirectionsFromServer(null, null); 
                 return;
             }
 
-            // Nếu người chơi chọn chế độ động, phải lấy GPS
             if ("geolocation" in navigator) {
                 loadingStatus.textContent = "⏳ Đang lấy vị trí GPS hiện tại...";
                 
@@ -260,7 +263,6 @@
             }
         }
 
-        // Hàm gọi backend để lấy chỉ dẫn động
         async function fetchDirectionsFromServer(lat, lon) {
             loadingStatus.textContent = "⏳ Đang gửi tọa độ và yêu cầu AI tạo lộ trình...";
             
@@ -270,27 +272,31 @@
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    // Gửi vị trí hiện tại (có thể là null nếu dùng chế độ tĩnh)
-                    body: JSON.stringify({ current_lat: lat, current_lon: lon }), 
+                    body: JSON.stringify({ 
+                        current_lat: lat, 
+                        current_lon: lon,
+                        // TRUYỀN KEY ĐỊA ĐIỂM LÊN BACKEND
+                        start: START_KEY,
+                        end: END_KEY
+                    }), 
                 });
 
                 const data = await res.json();
                 
                 if (data.success) {
-                    directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>'); // Thay thế \n thành <br> để xuống dòng
+                    directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>'); 
                     directionsBox.classList.add("show");
-                    loadingStatus.textContent = `🎉 Lộ trình đến ${DESTINATION_NAME} (${data.distance}) đã sẵn sàng!`;
+                    loadingStatus.textContent = `🎉 Lộ trình đến ${DESTINATION_NAME} (${data.total_distance_km} km) đã sẵn sàng!`;
                     
-                    // Cập nhật nút Mở Map và Thử thách
                     mapLink.href = data.map_url;
                     mapLink.style.display = 'inline-block';
                     photoChallenge.style.display = 'block';
 
                 } else {
-                    directionsBox.textContent = data.route_text; // Hiển thị lỗi từ server
-                    loadingStatus.textContent = "❌ Lỗi tạo lộ trình.";
-                    mapLink.style.display = 'inline-block'; // Hiển thị map để trợ giúp khi lỗi
-                    mapLink.href = `https://www.google.com/maps/dir/`; // Link chung
+                    directionsBox.innerHTML = data.route_text; 
+                    loadingStatus.textContent = "❌ Lỗi tạo lộ trình: " + data.message;
+                    mapLink.style.display = 'inline-block';
+                    mapLink.href = `https://www.google.com/maps/dir/`; 
                 }
 
             } catch (error) {
@@ -323,9 +329,9 @@
   }
 </script>
 <script>
-// 🎯 Tọa độ của điểm đến (ví dụ: Dinh Độc Lập)
-const DEST_LAT = 10.779783;   // vĩ độ
-const DEST_LON = 106.699018;  // kinh độ
+// 🎯 Tọa độ của điểm đến (ví dụ: Nhà thờ Đức Bà)
+const DEST_LAT = 10.779783; 
+const DEST_LON = 106.699073;
 
 const distanceBox = document.getElementById("distanceProgress");
 
@@ -382,5 +388,6 @@ function updateDistance() {
 updateDistance();
 setInterval(updateDistance, 120000);
 </script>
+
 </body>
 </html>

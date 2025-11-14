@@ -19,6 +19,31 @@ import os
 import time
 import threading
 import base64 # Giữ lại nếu cần cho xử lý ảnh
+import math
+from math import radians, sin, cos, sqrt, atan2
+# 🗺️ Danh sách toạ độ các địa điểm trong hành trình
+LOCATIONS = {
+    "bao_tang_chien_tich": {
+        "name": "Bảo tàng Chiến tích Chiến tranh",
+        "lat": 10.7797839,
+        "lon": 106.6893418
+    },
+    "dinh_doc_lap": {
+        "name": "Dinh Độc Lập",
+        "lat": 10.778226,
+        "lon": 106.696445
+    },
+    "nha_tho_duc_ba": {
+        "name": "Nhà thờ Đức Bà Sài Gòn",
+        "lat": 10.779783,
+        "lon": 106.699018
+    },
+    "cho_ben_thanh": {
+        "name": "Chợ Bến Thành",
+        "lat": 10.772444,
+        "lon": 106.698055
+    }
+}
 
 # --- Khai báo API key và Khởi tạo GenAI ---
 load_dotenv()
@@ -314,76 +339,75 @@ def get_direction_modifier(modifier):
 
 @app.route("/get-dynamic-directions", methods=["POST"])
 def get_dynamic_directions():
+    """
+    Sinh chỉ dẫn lộ trình bằng văn bản với Google Gemini.
+    """
     if not client:
-        return jsonify({"route_text": "❌ Lỗi: Gemini Client chưa được khởi tạo. Vui lòng kiểm tra API Key."}), 500
+        return jsonify({"success": False, "message": "❌ Lỗi: Gemini Client chưa được khởi tạo."}), 500
+
     try:
-        data = request.get_json()
-        current_lat = data.get("current_lat")
-        current_lon = data.get("current_lon")
-        
-        # ... (Toàn bộ logic OSRM/Định tuyến của bạn ở đây) ...
-        # Lấy tọa độ
-        start_lat = STATIC_START_LAT if USE_STATIC_START_LOCATION else current_lat
-        start_lon = STATIC_START_LON if USE_STATIC_START_LOCATION else current_lon
-        
-        start_coord = f"{start_lon},{start_lat}"
-        end_coord = f"{DINH_DOC_LAP_LON},{DINH_DOC_LAP_LAT}"
-        
-        OSRM_URL = f"http://router.project-osrm.org/route/v1/foot/{start_coord};{end_coord}?overview=false&steps=true&alternatives=false"
-        response = requests.get(OSRM_URL)
-        response.raise_for_status()
-        osrm_data = response.json()
-        
-        if osrm_data.get('code') != 'Ok' or not osrm_data.get('routes'):
-            return jsonify({
-                "route_text": f"❌ Lỗi định tuyến OSRM: Không thể tìm đường đi.",
-                "distance": "N/A"
-            }), 500
-        
-        # Xử lý kết quả OSRM
-        route_info = osrm_data['routes'][0]
-        steps = route_info['legs'][0]['steps']
-        total_distance_m = route_info['distance']
-        total_distance_km = f"{total_distance_m / 1000:.2f} km"
-        
-        route_instructions = []
-        for i, step in enumerate(steps):
-            maneuver = step.get('maneuver', {})
-            maneuver_type = maneuver.get('type')
-            modifier = maneuver.get('modifier')
-            distance = int(step.get('distance', 0))
-            street_name = step.get('name', 'đường không tên')
+        data = request.get_json() or {}
+        start_key = data.get("start")
+        end_key = data.get("end")
 
-            base_instruction = get_vietnamese_instruction(maneuver_type, street_name)
-            
-            if maneuver_type == 'turn' and modifier:
-                direction = get_direction_modifier(modifier)
-                instruction_line = f"Rẽ {direction} vào đường {street_name}"
-            elif maneuver_type == 'arrive': 
-                instruction_line = f"✅ Tới đích"
-            elif distance > 0:
-                instruction_line = f"{base_instruction}, đi tiếp {distance} mét."
-            else:
-                 instruction_line = base_instruction
+        if not start_key or not end_key:
+            return jsonify({"success": False, "message": "Thiếu thông tin điểm bắt đầu hoặc kết thúc"}), 400
 
-            route_instructions.append(f"Bước {i + 1}: {instruction_line}")
+        if start_key not in LOCATIONS or end_key not in LOCATIONS:
+            return jsonify({"success": False, "message": "Tên địa điểm không hợp lệ"}), 400
 
-        final_output = (
-            f"Lộ trình đi bộ đến Dinh Độc Lập ({total_distance_km}):\n"
-            f"Tổng quãng đường: {total_distance_km}\n"
-            f"\n--- CHỈ DẪN CHI TIẾT ---\n"
-            f"{' \n'.join(route_instructions)}"
+        start = LOCATIONS[start_key]
+        end = LOCATIONS[end_key]
+
+        # URL Google Map (giữ nguyên)
+        map_url = (
+            f"https://www.google.com/maps/dir/?api=1"
+            f"&origin={start['lat']},{start['lon']}"
+            f"&destination={end['lat']},{end['lon']}"
+            f"&travelmode=walking"
+        )
+
+        # Tính khoảng cách Haversine (giữ nguyên)
+        R = 6371.0
+        dlat = radians(end["lat"] - start["lat"])
+        dlon = radians(end["lon"] - start["lon"])
+        a = sin(dlat / 2)**2 + cos(radians(start["lat"])) * cos(radians(end["lat"])) * sin(dlon / 2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        distance_km = R * c
+
+        # SINH CHỈ DẪN BẰNG GEMINI (ĐÃ SỬA LỖI CÚ PHÁP)
+        
+        # SỬA LỖI: Gọi mô hình qua client.models.get()
+        # Sử dụng model gemini-2.5-flash để đồng nhất và tối ưu tốc độ/chi phí
+        model_name_for_text = "gemini-2.5-flash" 
+        
+        # Tạo prompt
+        prompt = (
+            f"Bạn là hướng dẫn viên du lịch TP.HCM. "
+            f"Hãy mô tả 4–6 bước chỉ đường bằng tiếng Việt, "
+            f"ngắn gọn, dễ hiểu, từ '{start['name']}' đến '{end['name']}'. "
+            f"Tổng khoảng cách là {round(distance_km, 2)} km. "
+            f"Không kèm liên kết hoặc ký hiệu đặc biệt."
         )
         
+        # Gọi generate_content bằng client.models
+        response = client.models.generate_content(
+            model=model_name_for_text,
+            contents=[prompt]
+        )
+
+        route_text = response.text.strip() if response.text else "Không tạo được lộ trình."
+
         return jsonify({
-            "route_text": final_output,
-            "distance": total_distance_km,
             "success": True,
+            "route_text": route_text,
+            "total_distance_km": round(distance_km, 2),
+            "map_url": map_url
         }), 200
 
     except Exception as e:
-        print(f"Lỗi xử lý Định tuyến Python: {e}")
-        return jsonify({"route_text": f"❌ Lỗi server khi tạo lộ trình: {str(e)}"}), 500
+        print("❌ Lỗi Gemini:", e)
+        return jsonify({"success": False, "message": str(e)}), 500
 
 
 @app.route("/verify-image", methods=["POST"])
