@@ -25,8 +25,8 @@ from math import radians, sin, cos, sqrt, atan2
 LOCATIONS = {
     "bao_tang_chien_tich": {
         "name": "Bảo tàng Chiến tích Chiến tranh",
-        "lat": 10.779906977140161,
-        "lon": 106.69199438068075
+        "lat": 10.779552675731349,
+        "lon": 106.69221830657582
     },
     "dinh_doc_lap": {
         "name": "Dinh Độc Lập",
@@ -38,16 +38,16 @@ LOCATIONS = {
         "lat": 10.779783,
         "lon": 106.699018
     },
-    "cho_ben_thanh": {
-        "name": "Chợ Bến Thành",
-        "lat": 10.772444,
-        "lon": 106.698055
+    "buu_dien_thanh_pho": {
+        "name": "Bưu điện Thành Phố",
+        "lat": 10.779839286053278,
+        "lon": 106.70002391994127
     },
     "ho_con_rua": {
         "name": "Hồ Con Rùa",
         "lat": 10.782615630794004,
         "lon": 106.69595372983176
-    }
+    },
 }
 
 # --- Khai báo API key và Khởi tạo GenAI ---

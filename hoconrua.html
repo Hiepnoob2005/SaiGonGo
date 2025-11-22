@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Xác thực hình ảnh điểm đến</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
     body {
       font-family: "Be Vietnam Pro", sans-serif;
@@ -117,7 +119,7 @@
   </header>
 
   <main class="main-container">
-  <section style="
+    <section style="
     background-color: #f0f7ff;
     border: 3px solid #007bff;
     border-radius: 16px;
@@ -128,7 +130,7 @@
     text-align: center;
   ">
 
-    <h2 style="
+      <h2 style="
       font-size: 2.2rem;
       color: #0056b3;
       font-weight: 800;
@@ -136,25 +138,23 @@
       margin-bottom: 20px;
       font-family: 'Be Vietnam Pro', sans-serif;
     ">
-      📍 Xác thực điểm đến
-    </h2>
+        📍 Xác thực điểm đến
+      </h2>
 
-    <p style="
+      <p style="
       font-size: 1.4rem;
       color: #333;
       line-height: 1.8;
       margin-bottom: 25px;
     ">
-      Bước 1: Hãy chụp một tấm ảnh tại <b>Hồ Con Rùa</b> và xác thực bằng hệ thống AI.
-    </p>
+        Bước 1: Hãy chụp một tấm ảnh tại <b>Hồ Con Rùa</b> và xác thực bằng hệ thống AI.
+      </p>
 
-    <a href="lthoconrua.html" class="btn btn-outline"
-       style="position: absolute; top: 10px; left: 25px; display: inline-block;">← Quay lại</a>
+      <a href="lthoconrua.html" class="btn btn-outline"
+        style="position: absolute; top: 10px; left: 25px; display: inline-block;">← Quay lại</a>
 
-    <div style="margin-bottom: 20px;">
-      <input type="text" id="locationName"
-             value="Hồ Con Rùa" readonly
-             style="
+      <div style="margin-bottom: 20px;">
+        <input type="text" id="locationName" value="Hồ Con Rùa" readonly style="
                font-size: 1.1rem;
                padding: 10px;
                border: 1.5px solid #ccc;
@@ -164,19 +164,18 @@
                background-color: #fafafa;
                width: 80%;
                max-width: 400px;
-             "/>
-    </div>
+             " />
+      </div>
 
-    <div style="margin-bottom: 25px;">
-      <input type="file" id="photo" accept="image/*" capture="camera"
-             style="font-size: 1rem; border: none; background: none;" />
-    </div>
+      <div style="margin-bottom: 25px;">
+        <input type="file" id="photo" accept="image/*" capture="camera"
+          style="font-size: 1rem; border: none; background: none;" />
+      </div>
 
-    <img id="preview" class="preview"
-         style="display:none; max-width: 300px; border-radius: 12px; margin: 15px auto;" />
+      <img id="preview" class="preview"
+        style="display:none; max-width: 300px; border-radius: 12px; margin: 15px auto;" />
 
-    <button id="uploadBtn" disabled
-            style="
+      <button id="uploadBtn" disabled style="
               background-color: #007bff;
               color: white;
               border: none;
@@ -186,13 +185,12 @@
               cursor: pointer;
               transition: 0.2s;
             ">
-      Xác thực bằng AI
-    </button>
+        Xác thực bằng AI
+      </button>
 
-    <div id="result" style="margin-top: 20px; font-size: 1.2rem; font-weight: 600;"></div>
+      <div id="result" style="margin-top: 20px; font-size: 1.2rem; font-weight: 600;"></div>
 
-    <button id="nextDestinationBtn" onclick="window.location.href='quiz_hoconrua.html'"
-            style="
+      <button id="nextDestinationBtn" onclick="window.location.href='ketthuclt1.html'" style="
               display: none;
               margin-top: 25px;
               background-color: #ff6600;
@@ -204,17 +202,15 @@
               cursor: pointer;
               transition: 0.3s;
             ">
-      Tiếp tục đến với các câu hỏi →
-    </button>
+        Kết thúc lộ trình →
+      </button>
 
-  </section>
+    </section>
 
-  <button id="nextDestinationBtn" onclick="window.location.href='ketthuclt1.html'">
-    Kết thúc lộ trình →
-  </button>
 
-  <!-- 🏛️ Thông tin bảo tàng (ẩn ban đầu) -->
-  <section id="museum-info" style="
+
+    <!-- 🏛️ Thông tin bảo tàng (ẩn ban đầu) -->
+    <section id="museum-info" style="
   display: none;
   margin: 60px auto;
   max-width: 900px;
@@ -227,7 +223,7 @@
   transition: all 0.5s ease;
 ">
 
-  <h2 style="
+      <h2 style="
     font-size: 2.2rem;
     font-weight: 800;
     color: #0056b3;
@@ -236,12 +232,10 @@
     letter-spacing: 1px;
     font-family: 'Be Vietnam Pro', sans-serif;
   ">
-    🏛️ Giới thiệu về Bảo tàng Chiến tích Chiến tranh
-  </h2>
+        Giới thiệu về Hồ Con Rùa
+      </h2>
 
-  <img src="./assets/images/BTCTCT.png"
-       alt="Bảo tàng Chiến tích Chiến tranh"
-       style="
+      <img src="./assets/images/HoConRua.jpg" alt="Hồ Con Rùa" style="
          width: 100%;
          max-width: 600px;
          border-radius: 14px;
@@ -250,25 +244,25 @@
          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
        " />
 
-  <p style="
+      <p style="
     font-size: 1.7rem;
     color: #333;
     line-height: 2;
     text-align: justify;
     padding: 0 10px;
   ">
-    Bảo tàng Chiến tích Chiến tranh nằm tại <b>28 Võ Văn Tần, Quận 3, TP. Hồ Chí Minh</b>,
-    là một trong những điểm đến lịch sử nổi tiếng nhất của Việt Nam.
-    <br><br>
-    Nơi đây lưu giữ hơn <b>20.000 hiện vật và hình ảnh tư liệu quý giá</b>, phản ánh chân thực về
-    cuộc chiến tranh, nỗi đau mất mát và khát vọng hòa bình của dân tộc.
-    <br><br>
-    Ngoài khu trưng bày chính, du khách còn có thể chiêm ngưỡng các khí tài chiến đấu thật như
-    máy bay, xe tăng, pháo – tái hiện sinh động những dấu ấn lịch sử oai hùng.
-  </p>
+        Hồ Con Rùa tọa lạc tại <b>Công trường Quốc Tế, Phường Võ Thị Sáu, Quận 3, TP. Hồ Chí Minh</b>,
+        là một trong những vòng xoay giao thông và địa danh mang tính biểu tượng nhất của thành phố.
+        <br><br>
+        Nơi đây là một công trình kiến trúc độc đáo được xây dựng từ 1965-1967, <b>với thiết kế tháp cao
+          và hồ nước bao quanh</b>, phản ánh một giai đoạn phát triển và những giai thoại đô thị của Sài Gòn.
+        <br><br>
+        Ngoài khu vực hồ nước và đài phun, du khách còn có thể chiêm ngưỡng tòa tháp trung tâm với con đường dốc xoắn ốc
+        và không khí nhộn nhịp xung quanh – một biểu tượng cho sức sống và giao thoa văn hóa của thành phố.
+      </p>
 
-  </section>
-</main>
+    </section>
+  </main>
 
   <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
     <div class="container">
@@ -302,6 +296,49 @@
       }
     });
 
+    // uploadBtn.addEventListener("click", async () => {
+    //   const file = photoInput.files[0];
+    //   const locationName = document.getElementById("locationName").value.trim();
+
+    //   if (!file) {
+    //     alert("Vui lòng chọn ảnh trước khi xác thực!");
+    //     return;
+    //   }
+
+    //   resultBox.textContent = "⏳ Đang gửi hình ảnh để AI xử lý...";
+    //   uploadBtn.disabled = true;
+
+    //   const formData = new FormData();
+    //   formData.append("image", file);
+    //   formData.append("location", locationName);
+
+    //   try {
+    //     const res = await fetch("/verify-image", {
+    //       method: "POST",
+    //       body: formData,
+    //     });
+    //     const data = await res.json();
+
+    //     resultBox.textContent = data.message;
+    //     uploadBtn.disabled = false;
+
+    //     if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
+    //       resultBox.style.color = "green";
+    //       nextDestinationBtn.style.display = "block";
+    //       document.getElementById("museum-info").style.display = "block";
+    //     } else {
+    //       resultBox.style.color = "red";
+    //       nextDestinationBtn.style.display = "none";
+    //       document.getElementById("museum-info").style.display = "none";
+    //     }
+    //   } catch (err) {
+    //     console.error(err);
+    //     resultBox.textContent = "❌ Lỗi kết nối với server.";
+    //     uploadBtn.disabled = false;
+    //   }
+    // });
+
+
     uploadBtn.addEventListener("click", async () => {
       const file = photoInput.files[0];
       const locationName = document.getElementById("locationName").value.trim();
@@ -319,6 +356,7 @@
       formData.append("location", locationName);
 
       try {
+        // --- BƯỚC 1: Gửi ảnh lên Server AI (Code cũ của bạn) ---
         const res = await fetch("/verify-image", {
           method: "POST",
           body: formData,
@@ -328,15 +366,73 @@
         resultBox.textContent = data.message;
         uploadBtn.disabled = false;
 
+        // --- BƯỚC 2: Kiểm tra kết quả từ AI ---
         if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
+          
+          // A. Xử lý giao diện khi đúng
           resultBox.style.color = "green";
           nextDestinationBtn.style.display = "block";
           document.getElementById("museum-info").style.display = "block";
+
+          // B. BẮT ĐẦU QUY TRÌNH NÉN & LƯU ẢNH (Chỉ chạy khi đúng địa điểm)
+          const reader = new FileReader();
+          reader.readAsDataURL(file); // Đọc file ảnh gốc
+
+          reader.onload = function (event) {
+            const img = new Image();
+            img.src = event.target.result;
+            
+            img.onload = function() {
+              // Tạo Canvas để nén ảnh (Resize về max 600px)
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              
+              const maxWidth = 600; 
+              const scaleFactor = maxWidth / img.width;
+              
+              // Nếu ảnh nhỏ hơn 600px thì giữ nguyên, nếu to hơn thì resize
+              if (img.width > maxWidth) {
+                  canvas.width = maxWidth;
+                  canvas.height = img.height * scaleFactor;
+              } else {
+                  canvas.width = img.width;
+                  canvas.height = img.height;
+              }
+              
+              // Vẽ ảnh lên canvas
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              
+              // Xuất ảnh nén dạng JPEG chất lượng 70%
+              const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7); 
+
+              // Lưu vào LocalStorage
+              let myTripAlbum = JSON.parse(localStorage.getItem("SaiGonGo_Album")) || [];
+              
+              myTripAlbum.push({
+                location: locationName,
+                image: compressedBase64, 
+                time: new Date().toLocaleString("vi-VN")
+              });
+              
+              try {
+                localStorage.setItem("SaiGonGo_Album", JSON.stringify(myTripAlbum));
+                console.log("✅ Đã xác thực đúng và lưu ảnh vào nhật ký!");
+              } catch (e) {
+                console.error("Lỗi lưu ảnh:", e);
+                // Không alert lỗi bộ nhớ đầy để tránh làm phiền người dùng lúc đang vui
+              }
+            };
+          };
+          // --- KẾT THÚC QUY TRÌNH LƯU ẢNH ---
+
         } else {
+          // Trường hợp AI bảo SAI
           resultBox.style.color = "red";
           nextDestinationBtn.style.display = "none";
           document.getElementById("museum-info").style.display = "none";
+          // Ở đây KHÔNG CÓ code lưu ảnh, nên ảnh sai sẽ không bị lưu.
         }
+
       } catch (err) {
         console.error(err);
         resultBox.textContent = "❌ Lỗi kết nối với server.";
@@ -348,4 +444,5 @@
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
+
 </html>

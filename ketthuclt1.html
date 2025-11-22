@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hoàn thành lộ trình - SaiGonGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --primary-orange: #ff6600;
+            --bg-color: #f8fbff;
+        }
+
+        body {
+            font-family: "Be Vietnam Pro", sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            /* Tăng chiều rộng tổng thể để chứa các thẻ to hơn */
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .celebration-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.15);
+            margin-bottom: 50px;
+            position: relative;
+            border: 2px solid #eef;
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .trophy-icon {
+            font-size: 5rem;
+            color: #ffc107;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            font-size: 2.5rem;
+            margin: 10px 0;
+            font-weight: 800;
+        }
+
+        .sub-text {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .suggestion-section h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* --- PHẦN CHỈNH SỬA KÍCH THƯỚC --- */
+        .card-grid {
+            display: grid;
+            /* Tăng minmax lên 350px để thẻ to hơn */
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            /* Tăng khoảng cách giữa các ô */
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #eee;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 260px;
+            /* Tăng chiều cao ảnh lên 260px */
+            object-fit: cover;
+            background-color: #ddd;
+        }
+
+        /* CSS cho ô trống placeholder */
+        .card-placeholder-img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            color: #ccc;
+            font-size: 3rem;
+        }
+
+        .card-body {
+            padding: 25px;
+            /* Tăng padding bên trong */
+            text-align: left;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .tag-food {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .tag-drink {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .tag-play {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .tag-empty {
+            background-color: #eee;
+            color: #777;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            /* Tăng cỡ chữ tiêu đề */
+            font-weight: 700;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 10px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            z-index: 2;
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-caption {
+            padding: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #333;
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        .gallery-time {
+            font-size: 0.7rem;
+            color: #888;
+            font-weight: 400;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .card-address {
+            font-size: 1rem;
+            color: #777;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: start;
+            gap: 5px;
+        }
+
+        .btn-home {
+            display: inline-block;
+            margin-top: 50px;
+            padding: 15px 40px;
+            background-color: var(--primary-orange);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .btn-home:hover {
+            background-color: #e65c00;
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);
+        }
+
+        .modal {
+            display: none;
+            /* Mặc định ẩn */
+            position: fixed;
+            z-index: 9999;
+            /* Luôn nằm trên cùng */
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            /* Màu nền đen mờ */
+            backdrop-filter: blur(5px);
+            /* Làm mờ hậu cảnh */
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 800px;
+            /* Giới hạn chiều rộng */
+            max-height: 80vh;
+            /* Giới hạn chiều cao */
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            animation: zoomIn 0.3s;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #ff6600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Thay đổi con trỏ chuột khi hover vào ảnh nhỏ để người dùng biết bấm được */
+        .gallery-img {
+            cursor: zoom-in;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container" style="display: flex; align-items: center;">
+            <a href="index.html" class="logo">SaiGonGo</a>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <section class="celebration-section">
+            <div class="trophy-icon">🏆</div>
+            <h1>XUẤT SẮC!</h1>
+            <p class="sub-text">
+                Chúc mừng bạn đã hoàn thành lộ trình khám phá <br>
+                <b>Bạn đang ở khu vực Hồ Con Rùa</b>.
+            </p>
+
+        </section>
+
+        <section class="suggestion-section">
+            <h2>🔥 Ăn gì, chơi gì quanh đây?</h2>
+            <p style="margin-bottom: 30px; color: #666;">Nạp năng lượng ngay với những địa điểm "hot" chỉ cách vài bước
+                chân.</p>
+
+            <div class="card-grid">
+
+                <div class="card">
+                    <img src="./assets/images/banhtrang.jpeg" class="card-img" alt="Bánh tráng trộn">
+                    <div class="card-body">
+                        <span class="tag tag-food">Ẩm thực đường phố</span>
+                        <h3 class="card-title">Bánh Tráng Trộn</h3>
+                        <div class="card-address">
+                            <ion-icon name="location-outline" style="margin-top:3px"></ion-icon>
+                            <span>Vòng xoay Hồ Con Rùa</span>
+                        </div>
+                        <p style="font-size: 0.95rem; color: #555;">Món ăn vặt "quốc dân" nhất định phải thử khi ngồi
+                            hóng gió tại hồ.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./assets/images/phela.jpg" class="card-img" alt="Cà phê Phê La">
+                    <div class="card-body">
+                        <span class="tag tag-play">Cafe</span>
+                        <h3 class="card-title">Phê La Coffee</h3>
+                        <div class="card-address">
+                            <ion-icon name="location-outline" style="margin-top:3px"></ion-icon>
+                            <span>42 Trần Cao Vân, Phường 6, Quận 3</span>
+                        </div>
+                        <p style="font-size: 0.95rem; color: #555;">Địa điểm check-in sang chảnh với kiến trúc cổ điển
+                            ấn tượng.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./assets/images/highlands.jpg" class="card-img" alt="Highlands Coffee">
+                    <div class="card-body">
+                        <span class="tag tag-play">Cafe</span>
+                        <h3 class="card-title">Highlands Coffee</h3>
+                        <div class="card-address">
+                            <ion-icon name="location-outline" style="margin-top:3px"></ion-icon>
+                            <span>2bis Công trường Quốc Tế, Phường 6, Quận 3</span>
+                        </div>
+                        <p style="font-size: 0.95rem; color: #555;">Không gian rộng rãi, thích hợp để thư giãn và làm
+                            việc.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./assets/images/longwang.jpg" class="card-img" alt="Long Wang Restaurant">
+                    <div class="card-body">
+                        <span class="tag tag-food">Nhà hàng</span>
+                        <h3 class="card-title">Long Wang Hồ Con Rùa</h3>
+                        <div class="card-address">
+                            <ion-icon name="location-outline" style="margin-top:3px"></ion-icon>
+                            <span>11 Phạm Ngọc Thạch, Phường 6, Quận 3</span>
+                        </div>
+                        <p style="font-size: 0.95rem; color: #555;">Một nơi lý tưởng để thưởng thức ẩm thực Trung Hoa.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./assets/images/rooftop.jpg" class="card-img" alt="Rehab SGN Restaurant">
+                    <div class="card-body">
+                        <span class="tag tag-food">Nhà hàng</span>
+                        <h3 class="card-title">Rehab SGN | Rooftop</h3>
+                        <div class="card-address">
+                            <ion-icon name="location-outline" style="margin-top:3px"></ion-icon>
+                            <span>Số 2Bis Công trường Quốc Tế, Phường 6, Quận 3</span>
+                        </div>
+                        <p style="font-size: 0.95rem; color: #555;">Vừa thưởng thức ẩm thực vừa ngắm cảnh thành phố từ
+                            trên cao.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./assets/images/genchay.jpg" class="card-img" alt="Gen Chay Restaurant">
+                    <div class="card-body">
+                        <span class="tag tag-food">Nhà hàng</span>
+                        <h3 class="card-title">Gen Chay</h3>
+                        <div class="card-address">
+                            <ion-icon name="location-outline" style="margin-top:3px"></ion-icon>
+                            <span>6B Công trường Quốc Tế, Phường 6, Quận 3</span>
+                        </div>
+                        <p style="font-size: 0.95rem; color: #555;">Cửa hàng đồ ăn chay thế hệ mới với con món độc lạ.
+                        </p>
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+
+        <section class="album-section" style="margin-bottom: 50px;">
+            <h2>📸 Nhật ký hành trình của bạn</h2>
+            <p style="color: #666; margin-bottom: 20px;">Những khoảnh khắc bạn đã ghi lại trên đường đi.</p>
+
+            <div id="trip-gallery" class="gallery-grid">
+            </div>
+
+            <p id="no-photo-msg" style="display:none; color: #999;">Chưa có hình ảnh nào được lưu.</p>
+        </section>
+
+        <a href="index.html" class="btn-home">
+            <ion-icon name="home-outline" style="vertical-align: middle; margin-bottom: 3px;"></ion-icon>
+            Về trang chủ
+        </a>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        window.addEventListener('load', () => {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function () {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, {
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                }));
+                confetti(Object.assign({}, defaults, {
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                }));
+            }, 250);
+        });
+    </script>
+
+    <script>
+        // --- PHẦN 1: LOAD ẢNH TỪ STORAGE ---
+        window.addEventListener('load', () => {
+            const gallery = document.getElementById('trip-gallery');
+            const noPhotoMsg = document.getElementById('no-photo-msg');
+
+            // Lấy dữ liệu từ LocalStorage
+            const savedAlbum = JSON.parse(localStorage.getItem("SaiGonGo_Album"));
+
+            if (savedAlbum && savedAlbum.length > 0) {
+                savedAlbum.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'gallery-item';
+
+                    // CHÚ Ý DÒNG DƯỚI: Thêm sự kiện onclick để mở ảnh
+                    // Chúng ta truyền đường dẫn ảnh (item.image) và tên địa điểm (item.location) vào hàm
+                    div.innerHTML = `
+                    <img src="${item.image}" class="gallery-img" 
+                         alt="${item.location}" 
+                         onclick="openModal(this.src, '${item.location} - ${item.time}')">
+                    
+                    <div class="gallery-caption">
+                        ${item.location}
+                        <span class="gallery-time">${item.time}</span>
+                    </div>
+                `;
+                    gallery.appendChild(div);
+                });
+            } else {
+                noPhotoMsg.style.display = 'block';
+            }
+        });
+
+        // --- PHẦN 2: CÁC HÀM XỬ LÝ XEM ẢNH TO ---
+
+        // Hàm mở Modal
+        function openModal(imgSrc, captionText) {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("img01");
+            const captionTextDiv = document.getElementById("caption");
+
+            modal.style.display = "flex"; // Hiện modal
+            modal.style.flexDirection = "column";
+            modal.style.justifyContent = "center";
+
+            modalImg.src = imgSrc; // Gán ảnh vừa bấm vào modal
+            captionTextDiv.innerHTML = captionText; // Gán chữ chú thích
+        }
+
+        // Hàm đóng Modal
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+        }
+
+        // Bấm ra ngoài vùng ảnh thì cũng tự đóng cho tiện
+        window.onclick = function (event) {
+            const modal = document.getElementById("imageModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    <button id="resetBtn" style="
+    background: #dc3545; 
+    color: white; 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    margin-top: 30px;
+    font-weight: bold;">
+        🗑️ Xóa nhật ký & Đi lại từ đầu
+    </button>
+
+    <script>
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            if (confirm("Bạn có chắc muốn xóa toàn bộ ảnh và đi lại từ đầu không?")) {
+                // 1. Xóa key trong localStorage
+                localStorage.removeItem("SaiGonGo_Album");
+
+                // 2. Thông báo và chuyển về trang chủ
+                alert("Đã xóa dữ liệu thành công!");
+                window.location.href = "index.html"; // Chuyển về trang chủ
+            }
+        });
+    </script>
+
+    <div id="imageModal" class="modal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
+</body>
+
+</html>
