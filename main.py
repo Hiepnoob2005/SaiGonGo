@@ -25,8 +25,8 @@ from math import radians, sin, cos, sqrt, atan2
 LOCATIONS = {
     "bao_tang_chien_tich": {
         "name": "Bảo tàng Chiến tích Chiến tranh",
-        "lat": 10.7797839,
-        "lon": 106.6893418
+        "lat": 10.779906977140161,
+        "lon": 106.69199438068075
     },
     "dinh_doc_lap": {
         "name": "Dinh Độc Lập",
@@ -42,6 +42,11 @@ LOCATIONS = {
         "name": "Chợ Bến Thành",
         "lat": 10.772444,
         "lon": 106.698055
+    },
+    "ho_con_rua": {
+        "name": "Hồ Con Rùa",
+        "lat": 10.782615630794004,
+        "lon": 106.69595372983176
     }
 }
 
