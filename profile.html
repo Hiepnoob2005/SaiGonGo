@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ sơ người dùng - SaiGonGo</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Be Vietnam Pro', sans-serif; }
+        .profile-container {
+            max-width: 1100px;
+            margin: 120px auto 50px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        /* Sidebar bên trái */
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .avatar-circle {
+            width: 120px; height: 120px;
+            background: #e0f2f1;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: var(--viridian-green);
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .user-name { font-size: 1.8rem; font-weight: 700; color: var(--jet); margin-bottom: 5px; }
+        .user-email { color: var(--battleship-gray); font-size: 0.9rem; margin-bottom: 20px; }
+        
+        /* Nội dung bên phải */
+        .profile-content { display: flex; flex-direction: column; gap: 20px; }
+        
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+        }
+        .stat-card {
+            background: white; padding: 25px; border-radius: 15px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .stat-info h3 { font-size: 2.5rem; color: var(--viridian-green); font-weight: 800; margin-bottom: 5px; }
+        .stat-info p { color: #666; font-size: 1rem; }
+        .stat-icon { font-size: 3rem; color: var(--mikado-yellow); }
+
+        .history-section {
+            background: white; padding: 30px; border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .section-header { font-size: 1.4rem; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        
+        .route-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px; background: #f9f9f9; border-radius: 10px; margin-bottom: 10px;
+        }
+        .route-status {
+            padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+        }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-locked { background: #e2e3e5; color: #383d41; }
+
+    </style>
+</head>
+<body>
+
+    <header class="header" data-header>
+        <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
+            <a href="index.html" class="logo">SaiGonGo</a>
+            <a href="index.html" class="btn btn-outline">Quay về trang chủ</a>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="avatar-circle">
+                <ion-icon name="person"></ion-icon>
+            </div>
+            <h2 class="user-name" id="p-username">Đang tải...</h2>
+            <p class="user-email" id="p-email">...</p>
+            <button class="btn btn-primary w-100" style="margin-top: 15px;">Chỉnh sửa hồ sơ</button>
+            <button id="logoutBtn" class="btn btn-outline w-100" style="margin-top: 10px; border-color: #dc3545; color: #dc3545;">Đăng xuất</button>
+        </div>
+
+        <div class="profile-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3 id="p-points">0</h3>
+                        <p>Điểm thưởng (XP)</p>
+                    </div>
+                    <div class="stat-icon">💎</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3 id="p-routes">0</h3>
+                        <p>Lộ trình hoàn thành</p>
+                    </div>
+                    <div class="stat-icon">🗺️</div>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <h3 class="section-header">Lịch sử hành trình</h3>
+                <div id="route-list">
+                    <p style="text-align: center; color: #999;">Đang tải dữ liệu...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gọi API lấy thông tin User
+        fetch('/api/user')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.logged_in) {
+                    window.location.href = 'login.html'; // Chưa đăng nhập thì đá về login
+                    return;
+                }
+
+                // Điền dữ liệu vào giao diện
+                document.getElementById('p-username').textContent = data.username;
+                document.getElementById('p-email').textContent = data.email;
+                document.getElementById('p-points').textContent = data.points;
+
+                // Xử lý danh sách lộ trình
+                const routes = data.routes || {};
+                const routeList = document.getElementById('route-list');
+                const completedCount = Object.values(routes).filter(r => r.status === 'completed').length;
+                
+                document.getElementById('p-routes').textContent = completedCount;
+
+                if (Object.keys(routes).length > 0) {
+                    routeList.innerHTML = ''; // Xóa loading
+                    // Demo hiển thị Route 1
+                    const r1 = routes['route1'] || { status: 'Chưa tham gia' };
+                    let statusClass = r1.status === 'completed' ? 'status-completed' : 'status-locked';
+                    let statusText = r1.status === 'completed' ? 'Đã hoàn thành' : 'Chưa hoàn thành';
+
+                    const html = `
+                        <div class="route-item">
+                            <div>
+                                <h4 style="font-weight: 700; margin-bottom: 5px;">Lộ trình 1: Kí ức Sài Gòn</h4>
+                                <span style="font-size: 0.85rem; color: #777;">Bảo tàng - Dinh Độc Lập - Hồ Con Rùa</span>
+                            </div>
+                            <span class="route-status ${statusClass}">${statusText}</span>
+                        </div>
+                    `;
+                    routeList.innerHTML = html;
+                } else {
+                    routeList.innerHTML = '<p style="text-align:center">Chưa có hành trình nào.</p>';
+                }
+            });
+
+        // Xử lý nút Đăng xuất
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            fetch('/api/logout', { method: 'POST' }).then(() => window.location.href = 'index.html');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+[
+  {
+    "username": "dphuoc",
+    "email": "lnphuoc1608@gmail.com",
+    "points": 50,
+    "routes": {
+      "route1": {
+        "status": "completed",
+        "reward_claimed": true
+      }
+    }
+  }
+]

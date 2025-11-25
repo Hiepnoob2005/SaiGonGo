@@ -608,6 +608,49 @@
         <img class="modal-content" id="img01">
         <div id="caption"></div>
     </div>
-</body>
 
+<div style="text-align: center; margin: 40px;">
+        <p id="status-msg" style="color: #666; font-style: italic;">Đang cập nhật kết quả hành trình...</p>
+        
+        <a href="lotrinh1.html" class="btn btn-primary" style="font-size: 1.5rem; padding: 15px 40px; text-decoration: none; color: white;">
+            🔙 Quay lại mở Rương kho báu
+        </a>
+    </div>
+
+    <script>
+        window.addEventListener('load', async () => {
+            const msgElement = document.getElementById('status-msg');
+
+            try {
+                // Tự động gọi API báo hoàn thành ngay khi vào trang
+                const res = await fetch('/api/complete-route', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ routeId: 'route1' })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    msgElement.textContent = "✅ Đã ghi nhận hoàn thành! Hãy quay lại để nhận quà.";
+                    msgElement.style.color = "green";
+                    msgElement.style.fontWeight = "bold";
+                } else {
+                    // Nếu chưa đăng nhập hoặc lỗi
+                    if(res.status === 401) {
+                        msgElement.textContent = "⚠️ Bạn chưa đăng nhập. Kết quả không được lưu.";
+                        msgElement.style.color = "red";
+                    } else {
+                        console.log("Status update:", data.message);
+                        msgElement.textContent = "✅ Bạn đã hoàn thành lộ trình này rồi.";
+                        msgElement.style.color = "blue";
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                msgElement.textContent = "⚠️ Có lỗi kết nối server.";
+            }
+        });
+    </script>
+</body>
 </html>

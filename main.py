@@ -67,6 +67,39 @@ else:
         print(f"❌ Lỗi khởi tạo Gemini Client: {e}")
         client = None
 
+# --- CẤU HÌNH DATABASE GAME (Thêm mới) ---
+DB_FILE = "database.txt"
+
+# --- HÀM HỖ TRỢ XỬ LÝ DATABASE GAME ---
+def load_db():
+    if not os.path.exists(DB_FILE): return []
+    try:
+        with open(DB_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except: return []
+
+def save_db(data):
+    with open(DB_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+def sync_user_to_game_db(email, username):
+    """Đảm bảo user luôn có trong database.txt để lưu điểm"""
+    users = load_db()
+    user_record = next((u for u in users if u['email'] == email), None)
+    
+    if not user_record:
+        user_record = {
+            "username": username,
+            "email": email,
+            "points": 0,
+            "routes": {
+                "route1": { "status": "locked", "reward_claimed": False }
+            }
+        }
+        users.append(user_record)
+        save_db(users)
+    return user_record
+
 # --- KHỞI TẠO FLASK & CẤU HÌNH ---
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'mot-chuoi-bi-mat-mac-dinh-khong-an-toan')
@@ -234,6 +267,77 @@ def get_status():
         return jsonify({"logged_in": True, "username": current_user.username})
     else:
         return jsonify({"logged_in": False})
+
+# --- API GAME LOGIC (Thêm mới) ---
+
+@app.route('/api/user', methods=['GET'])
+def get_user_info_game():
+    """API lấy thông tin User bao gồm cả Điểm và Status Lộ trình"""
+    if not current_user.is_authenticated:
+        return jsonify({"logged_in": False})
+    
+    # Đồng bộ user hiện tại vào database game nếu chưa có
+    game_data = sync_user_to_game_db(current_user.email, current_user.username)
+    
+    return jsonify({
+        "logged_in": True,
+        "username": current_user.username,
+        "email": current_user.email,
+        "points": game_data.get('points', 0),
+        "routes": game_data.get('routes', {})
+    })
+
+@app.route('/api/complete-route', methods=['POST'])
+def complete_route():
+    """API xác nhận hoàn thành lộ trình"""
+    if not current_user.is_authenticated:
+        return jsonify({"message": "Chưa đăng nhập"}), 401
+    
+    data = request.json
+    route_id = data.get('routeId')
+    users = load_db()
+    
+    for user in users:
+        if user['email'] == current_user.email:
+            # Khởi tạo object route nếu chưa có
+            if 'routes' not in user: user['routes'] = {}
+            if route_id not in user['routes']: user['routes'][route_id] = {}
+            
+            # Cập nhật status
+            user['routes'][route_id]['status'] = 'completed'
+            save_db(users)
+            return jsonify({"success": True, "message": "Đã hoàn thành lộ trình!"})
+            
+    # Nếu không tìm thấy trong DB game (trường hợp hiếm), thử sync lại
+    sync_user_to_game_db(current_user.email, current_user.username)
+    return jsonify({"message": "Đã đồng bộ dữ liệu, vui lòng thử lại"}), 400
+
+@app.route('/api/claim-reward', methods=['POST'])
+def claim_reward():
+    """API nhận thưởng mở rương"""
+    if not current_user.is_authenticated:
+        return jsonify({"message": "Chưa đăng nhập"}), 401
+    
+    data = request.json
+    route_id = data.get('routeId')
+    points_to_add = data.get('points', 0)
+    
+    users = load_db()
+    for user in users:
+        if user['email'] == current_user.email:
+            user_route = user.get('routes', {}).get(route_id)
+            
+            # Kiểm tra điều kiện: Xong route + Chưa nhận quà
+            if user_route and user_route.get('status') == 'completed' and not user_route.get('reward_claimed'):
+                user['points'] = user.get('points', 0) + points_to_add
+                user['routes'][route_id]['reward_claimed'] = True
+                
+                save_db(users)
+                return jsonify({"success": True, "newPoints": user['points']})
+            else:
+                return jsonify({"success": False, "message": "Không đủ điều kiện hoặc đã nhận rồi"}), 400
+
+    return jsonify({"message": "Lỗi xử lý"}), 500
 
 @app.route("/api/request-otp", methods=["POST"])
 def request_otp():
@@ -474,5 +578,8 @@ if __name__ == '__main__':
     if not os.path.exists(OTP_FILE):
         with open(OTP_FILE, "w", encoding="utf-8") as f:
             f.write("{}")
-            
+    # --- CODE THÊM MỚI: Tạo file database.txt ---
+    if not os.path.exists(DB_FILE):
+        with open(DB_FILE, "w", encoding="utf-8") as f:
+            f.write("[]") # Khởi tạo mảng JSON rỗng        
     app.run(port=5000, debug=True)

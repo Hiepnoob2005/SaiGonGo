@@ -384,57 +384,112 @@
     </main>
 
     <div id="toast-notification">Đây là thông báo của bạn!</div>
-    <script>
-        // Lấy các phần tử DOM
-        const chestImage = document.getElementById('treasure-chest');
-        const toast = document.getElementById('toast-notification');
-        const xpScoreElement = document.getElementById('xp-score');
+<script>
+    const chestImage = document.getElementById('treasure-chest');
+    const toast = document.getElementById('toast-notification');
+    const xpScoreElement = document.getElementById('xp-score');
+    
+    const closedSrc = chestImage.getAttribute('data-closed-src');
+    const openSrc = chestImage.getAttribute('data-open-src');
+    
+    let isRouteCompleted = false;
+    let isRewardClaimed = false;
 
-        // --- BẠN CÓ THỂ TÙY CHỈNH DÒNG THÔNG BÁO TẠI ĐÂY ---
-        const customMessage = "Bạn đã mở rương! +50 XP!";
-        // ----------------------------------------------------
-
-        // Lấy URL hình ảnh từ thuộc tính data
-        const closedSrc = chestImage.getAttribute('data-closed-src');
-        const openSrc = chestImage.getAttribute('data-open-src');
-
-        let isChestOpen = false; // Trạng thái rương
-
-        // Thêm sự kiện click vào rương
-        chestImage.addEventListener('click', () => {
-            // Chỉ thực hiện nếu rương chưa mở
-            if (!isChestOpen) {
-                // 1. Thay đổi hình ảnh
-                chestImage.src = openSrc;
-                isChestOpen = true; // Đánh dấu là rương đã mở
-
-                // 2. Hiển thị thông báo đẩy
-                showToast(customMessage);
-
-                // 3. CẬP NHẬT ĐIỂM SỐ
-                xpScoreElement.textContent = "Điểm cao nhất 💎 50 XP"; 
+    // 1. Khi load trang, kiểm tra trạng thái từ Server
+    window.addEventListener('load', async () => {
+        try {
+            const res = await fetch('/api/user');
+            const data = await res.json();
+            
+            if (data.logged_in) {
+                const route1 = data.routes && data.routes['route1'];
                 
-                // (Tùy chọn) Xóa con trỏ 'pointer' để không thể nhấp lại
-                chestImage.style.cursor = 'default';
-                chestImage.style.transform = 'scale(1)'; // Reset hiệu ứng hover
+                if (route1 && route1.status === 'completed') {
+                    isRouteCompleted = true;
+                    isRewardClaimed = route1.reward_claimed;
+
+                    if (isRewardClaimed) {
+                        // Nếu đã nhận thưởng rồi -> Hiện rương mở luôn
+                        chestImage.src = openSrc;
+                        chestImage.style.cursor = 'default';
+                        xpScoreElement.textContent = `Điểm hiện tại 💎 ${data.points} XP`;
+                    } else {
+                        // Nếu đã xong nhưng chưa mở -> Rương đóng, hiệu ứng rung lắc mời gọi
+                        chestImage.style.cursor = 'pointer';
+                        chestImage.style.animation = 'shake 0.5s infinite'; 
+                    }
+                } else {
+                    // Chưa xong lộ trình
+                    chestImage.style.filter = "grayscale(100%)"; // Làm xám rương
+                    chestImage.style.cursor = "not-allowed";
+                    chestImage.title = "Bạn cần hoàn thành lộ trình để mở khóa!";
+                }
             }
-        });
+        } catch (e) { console.error(e); }
+    });
 
-        // Hàm hiển thị thông báo
-        function showToast(message) {
-            // Đặt nội dung thông báo
-            toast.textContent = message;
-
-            // Thêm class 'show' để hiển thị
-            toast.classList.add('show');
-
-            // Tự động ẩn sau 3 giây
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000); // 3000ms = 3 giây
+    // 2. Xử lý click rương
+    chestImage.addEventListener('click', async () => {
+        if (!isRouteCompleted) {
+            showToast("🔒 Hãy hoàn thành hết các địa điểm để mở khóa rương!");
+            return;
         }
 
-    </script>
+        if (isRewardClaimed) {
+            showToast("Bạn đã nhận quà của lộ trình này rồi!");
+            return;
+        }
 
+        // Gọi API nhận thưởng
+        try {
+            const res = await fetch('/api/claim-reward', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ routeId: 'route1', points: 50 })
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                // Hiệu ứng mở rương
+                chestImage.src = openSrc;
+                chestImage.style.animation = 'none'; // Tắt rung
+                
+                // Cập nhật giao diện
+                xpScoreElement.textContent = `Điểm hiện tại 💎 ${data.newPoints} XP`;
+                showToast(`🎉 Xuất sắc! Bạn nhận được 50 XP!`);
+                
+                isRewardClaimed = true;
+            } else {
+                showToast(data.message);
+            }
+        } catch (e) {
+            console.error(e);
+            showToast("Lỗi kết nối server");
+        }
+    });
+
+    function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+</script>
+
+<style>
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+</style>
 </body>
 </html>
