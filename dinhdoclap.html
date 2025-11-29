@@ -174,7 +174,7 @@
 
 <body id="top">
   <div id="score-display" class="score-badge">
-  💎 <span id="user-points">Loading...</span>
+    💎 <span id="user-points">Loading...</span>
   </div>
   <div id="point-anim" class="point-animation"></div>
   <header class="header" data-header>
@@ -275,7 +275,7 @@
             Tiếp tục đến với các câu hỏi →
           </button>
 
-      <section id="museum-info" style="
+          <section id="museum-info" style="
   display: none;
   margin: 60px auto;
   max-width: 900px;
@@ -288,7 +288,7 @@
   transition: all 0.5s ease;
 ">
 
-  <h2 style="
+            <h2 style="
     font-size: 2.2rem;
     font-weight: 800;
     color: #0056b3;
@@ -297,12 +297,10 @@
     letter-spacing: 1px;
     font-family: 'Be Vietnam Pro', sans-serif;
   ">
-    🏛️ Giới thiệu về Dinh Độc Lập
-  </h2>
+              🏛️ Giới thiệu về Dinh Độc Lập
+            </h2>
 
-  <img src="./assets/images/DinhDocLap.png"
-       alt="Dinh Độc Lập"
-       style="
+            <img src="./assets/images/DinhDocLap.png" alt="Dinh Độc Lập" style="
          width: 100%;
          max-width: 600px;
          border-radius: 14px;
@@ -311,23 +309,27 @@
          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
        " />
 
-  <p style="
+            <p style="
     font-size: 1.7rem;
     color: #333;
     line-height: 2;
     text-align: justify;
     padding: 0 10px;
   ">
-<b>Dinh Độc Lập</b> (nay là Hội trường Thống Nhất) nằm tại <b>số 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP. Hồ Chí Minh</b>.
-        Đây là một trong những công trình lịch sử quan trọng nhất của Việt Nam – biểu tượng của hòa bình, thống nhất và độc lập dân tộc.
-        <br><br>
-        Dinh được khởi công xây dựng vào năm <b>1962</b> và hoàn thành vào năm <b>1966</b> trên nền của Dinh Norodom cũ.
-        Ngày <b>30/4/1975</b>, lá cờ chiến thắng tung bay trên nóc Dinh, đánh dấu sự kiện giải phóng miền Nam và thống nhất đất nước.
-        <br><br>
-        Hiện nay, Dinh Độc Lập là một trong những điểm du lịch nổi tiếng nhất Sài Gòn,
-        thu hút hàng triệu lượt khách tham quan mỗi năm.
-      </p>
-    </section>
+              <b>Dinh Độc Lập</b> (nay là Hội trường Thống Nhất) nằm tại <b>số 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP. Hồ Chí
+                Minh</b>.
+              Đây là một trong những công trình lịch sử quan trọng nhất của Việt Nam – biểu tượng của hòa bình, thống
+              nhất và độc lập dân tộc.
+              <br><br>
+              Dinh được khởi công xây dựng vào năm <b>1962</b> và hoàn thành vào năm <b>1966</b> trên nền của Dinh
+              Norodom cũ.
+              Ngày <b>30/4/1975</b>, lá cờ chiến thắng tung bay trên nóc Dinh, đánh dấu sự kiện giải phóng miền Nam và
+              thống nhất đất nước.
+              <br><br>
+              Hiện nay, Dinh Độc Lập là một trong những điểm du lịch nổi tiếng nhất Sài Gòn,
+              thu hút hàng triệu lượt khách tham quan mỗi năm.
+            </p>
+          </section>
   </main>
 
   <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
@@ -484,28 +486,28 @@
         if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
           // --- CODE CỘNG ĐIỂM (+5) ---
           try {
-              const scoreRes = await fetch('/api/update-score', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ points: 5, routeId: 'route1' })
-              });
-              const scoreData = await scoreRes.json();
-              
-              if (scoreData.success) {
-                  // Cập nhật UI
-                  document.getElementById('user-points').textContent = scoreData.new_points;
-                  
-                  // Hiệu ứng +5 bay lên
-                  const anim = document.getElementById('point-anim');
-                  anim.textContent = "+5 Điểm (Xác thực)";
-                  anim.className = "point-animation anim-plus";
-              }
+            const scoreRes = await fetch('/api/update-score', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ points: 5, routeId: 'route1' })
+            });
+            const scoreData = await scoreRes.json();
+
+            if (scoreData.success) {
+              // Cập nhật UI
+              document.getElementById('user-points').textContent = scoreData.new_points;
+
+              // Hiệu ứng +5 bay lên
+              const anim = document.getElementById('point-anim');
+              anim.textContent = "+5 Điểm (Xác thực)";
+              anim.className = "point-animation anim-plus";
+            }
           } catch (err) { console.error(err); }
-// --- [CODE MỚI] ẨN CÁC NÚT ĐỂ CHỐNG SPAM ---
+          // --- [CODE MỚI] ẨN CÁC NÚT ĐỂ CHỐNG SPAM ---
           uploadBtn.style.display = "none";       // Ẩn nút xác thực
           photoInput.style.display = "none";      // Ẩn ô chọn file
           preview.style.display = "none";         // Ẩn ảnh xem trước
-          
+
           // Thay dòng thông báo kết quả bằng thông báo hoàn thành
           resultBox.innerHTML = "✅ <b style='color:green'>Xác thực thành công! Bạn đã nhận điểm.</b>";
           // ---------------------------------------------
@@ -522,14 +524,14 @@
           };
 
         } else {
-// --- TRƯỜNG HỢP SAI ---
+          // --- TRƯỜNG HỢP SAI ---
           resultBox.textContent = data.message; // Hiện thông báo sai
           resultBox.style.color = "red";
-          
+
           uploadBtn.disabled = false; // Mở lại nút để cho phép thử lại
-          
+
           nextDestinationBtn.style.display = "none";
-          document.getElementById("museum-info").style.display = "none";        
+          document.getElementById("museum-info").style.display = "none";
         }
 
       } catch (err) {
@@ -540,11 +542,11 @@
     });
     // Load điểm khi vào trang
     async function loadUserScore() {
-        try {
-            const res = await fetch('/api/user');
-            const data = await res.json();
-            if (data.logged_in) document.getElementById('user-points').textContent = data.points;
-        } catch (e) {}
+      try {
+        const res = await fetch('/api/user');
+        const data = await res.json();
+        if (data.logged_in) document.getElementById('user-points').textContent = data.points;
+      } catch (e) { }
     }
     window.addEventListener('load', loadUserScore);
   </script>
@@ -552,4 +554,5 @@
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
+
 </html>
