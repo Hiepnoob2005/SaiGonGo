@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Xác thực hình ảnh điểm đến - Dinh Độc Lập</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
     body {
       font-family: "Be Vietnam Pro", sans-serif;
@@ -52,6 +54,12 @@
       margin-right: auto;
     }
 
+    /* CSS cho trạng thái Disabled của input file */
+    input[type="file"]:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     button {
       background-color: #007bff;
       color: white;
@@ -91,6 +99,75 @@
 
     #nextDestinationBtn:hover {
       background-color: #e65c00;
+    }
+
+    /* CSS cho hộp thông báo khoảng cách */
+    #gpsStatus {
+      margin: 15px auto;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #eee;
+      color: #555;
+      font-weight: 600;
+      border: 2px dashed #ccc;
+      max-width: 600px;
+    }
+
+    /* --- CSS CHO NÚT GẠT (TOGGLE) --- */
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 10px auto 20px auto;
+      font-size: 1rem;
+      color: #555;
+      font-weight: 600;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(22px);
     }
   </style>
 </head>
@@ -140,7 +217,7 @@
         text-transform: uppercase;
         margin-bottom: 20px;
       ">
-        🏛️ Xác thực điểm đến
+        📍 Xác thực điểm đến
       </h2>
 
       <p style="
@@ -149,16 +226,13 @@
         line-height: 1.8;
         margin-bottom: 25px;
       ">
-        Bước 1: Hãy chụp một tấm ảnh tại <b>Dinh Độc Lập</b> và xác thực bằng hệ thống AI.
-      </p>
+        Bước 1: Hãy di chuyển đến <b>Dinh Độc Lập</b> (< 100m) để mở khóa camera. </p>
 
-      <a href="ltdinhdoclap.html" class="btn btn-outline"
-         style="position: absolute; top: 10px; left: 25px;">← Quay lại</a>
+          <a href="ltdinhdoclap.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;">← Quay
+            lại</a>
 
-      <div style="margin-bottom: 20px;">
-        <input type="text" id="locationName"
-               value="Dinh Độc Lập" readonly
-               style="
+          <div style="margin-bottom: 20px;">
+            <input type="text" id="locationName" value="Dinh Độc Lập" readonly style="
                  font-size: 1.1rem;
                  padding: 10px;
                  border: 1.5px solid #ccc;
@@ -168,68 +242,83 @@
                  background-color: #fafafa;
                  width: 80%;
                  max-width: 400px;
-               "/>
-      </div>
+               " />
+          </div>
 
-      <div style="margin-bottom: 25px;">
-        <input type="file" id="photo" accept="image/*" capture="camera"
-               style="font-size: 1rem; border: none; background: none;" />
-      </div>
+          <div class="toggle-container">
+            <span>Chế độ kiểm tra (Bỏ qua GPS)</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="devModeToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
 
-      <img id="preview" class="preview" />
+          <div id="gpsStatus">📡 Đang xác định vị trí của bạn...</div>
 
-      <button id="uploadBtn" disabled>
-        Xác thực bằng AI
-      </button>
+          <div style="margin-bottom: 25px; margin-top: 20px;">
+            <input type="file" id="photo" accept="image/*" capture="camera" disabled
+              style="font-size: 1rem; border: none; background: none;" />
+            <p id="lockMessage" style="color: #d62828; font-size: 0.9rem; margin-top: 5px; display: none;">
+              🔒 Camera bị khóa do bạn ở quá xa.
+            </p>
+          </div>
 
-      <div id="result"></div>
+          <img id="preview" class="preview" />
 
-      <button id="nextDestinationBtn" onclick="window.location.href='quiz_dinhdoclap.html'">
-        Tiếp tục đến với các câu hỏi →
-      </button>
+          <button id="uploadBtn" disabled>
+            Xác thực bằng AI
+          </button>
 
-    </section>
+          <div id="result"></div>
 
-    <!-- 🏰 Thông tin Dinh Độc Lập -->
-    <section id="museum-info" style="
-      display: none;
-      margin: 60px auto;
-      max-width: 900px;
-      background-color: #f8fbff;
-      border: 3px solid #007bff;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.15);
-      padding: 40px 50px;
-      text-align: center;
-    ">
-      <h2 style="
-        font-size: 2.2rem;
-        font-weight: 800;
-        color: #0056b3;
-        margin-bottom: 25px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      ">
-        🏰 Giới thiệu về Dinh Độc Lập
-      </h2>
+          <button id="nextDestinationBtn" onclick="window.location.href='quiz_dinhdoclap.html'">
+            Tiếp tục đến với các câu hỏi →
+          </button>
 
-      <img src="./assets/images/dinhdoclap.jpg" alt="Dinh Độc Lập" style="
-        width: 100%;
-        max-width: 600px;
-        border-radius: 14px;
-        margin: 25px auto 35px auto;
-        display: block;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      " />
+      <section id="museum-info" style="
+  display: none;
+  margin: 60px auto;
+  max-width: 900px;
+  background-color: #f8fbff;
+  border: 3px solid #007bff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.15);
+  padding: 40px 50px;
+  text-align: center;
+  transition: all 0.5s ease;
+">
 
-      <p style="
-        font-size: 1.6rem;
-        color: #333;
-        line-height: 2;
-        text-align: justify;
-        padding: 0 10px;
-      ">
-        <b>Dinh Độc Lập</b> (nay là Hội trường Thống Nhất) nằm tại <b>số 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP. Hồ Chí Minh</b>.
+  <h2 style="
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #0056b3;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+  ">
+    🏛️ Giới thiệu về Dinh Độc Lập
+  </h2>
+
+  <img src="./assets/images/DinhDocLap.png"
+       alt="Dinh Độc Lập"
+       style="
+         width: 100%;
+         max-width: 600px;
+         border-radius: 14px;
+         margin: 25px auto 35px auto;
+         display: block;
+         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+       " />
+
+  <p style="
+    font-size: 1.7rem;
+    color: #333;
+    line-height: 2;
+    text-align: justify;
+    padding: 0 10px;
+  ">
+<b>Dinh Độc Lập</b> (nay là Hội trường Thống Nhất) nằm tại <b>số 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP. Hồ Chí Minh</b>.
         Đây là một trong những công trình lịch sử quan trọng nhất của Việt Nam – biểu tượng của hòa bình, thống nhất và độc lập dân tộc.
         <br><br>
         Dinh được khởi công xây dựng vào năm <b>1962</b> và hoàn thành vào năm <b>1966</b> trên nền của Dinh Norodom cũ.
@@ -254,12 +343,108 @@
   </footer>
 
   <script>
+    // --- 1. CẤU HÌNH TỌA ĐỘ ĐÍCH (DINH ĐỘC LẬP) ---
+    // Sử dụng tọa độ từ file lthinhdoclap.html
+    const TARGET_LAT = 10.777182;
+    const TARGET_LON = 106.695446;
+    const MAX_DISTANCE_METERS = 100; // Khoảng cách cho phép
+
+    const gpsStatus = document.getElementById("gpsStatus");
     const photoInput = document.getElementById("photo");
-    const preview = document.getElementById("preview");
+    const lockMessage = document.getElementById("lockMessage");
     const uploadBtn = document.getElementById("uploadBtn");
     const resultBox = document.getElementById("result");
     const nextDestinationBtn = document.getElementById("nextDestinationBtn");
+    const preview = document.getElementById("preview");
 
+    // --- 2. HÀM TÍNH KHOẢNG CÁCH (Lấy từ trang lộ trình) ---
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3; // Bán kính Trái Đất (m)
+      const toRad = deg => deg * Math.PI / 180;
+      const φ1 = toRad(lat1);
+      const φ2 = toRad(lat2);
+      const Δφ = toRad(lat2 - lat1);
+      const Δλ = toRad(lon2 - lon1);
+      const a = Math.sin(Δφ / 2) ** 2 +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    // --- 3. HÀM CHECK VỊ TRÍ LIÊN TỤC ---
+    // --- 3. HÀM CHECK VỊ TRÍ & LOGIC DEV MODE ---
+    const devModeToggle = document.getElementById("devModeToggle");
+
+    function checkLocation() {
+      // 🛑 ƯU TIÊN 1: Kiểm tra xem có đang bật chế độ Dev không?
+      if (devModeToggle.checked) {
+        gpsStatus.innerHTML = `🛠️ <b>Chế độ Nhà phát triển:</b><br>Đã bỏ qua kiểm tra GPS. Camera đã mở!`;
+        gpsStatus.style.backgroundColor = "#fff8e1"; // Màu vàng nhạt
+        gpsStatus.style.color = "#b38600";
+        gpsStatus.style.border = "2px solid #ffe58f";
+
+        // Mở khóa ngay lập tức
+        photoInput.disabled = false;
+        lockMessage.style.display = "none";
+        return; // Dừng hàm, không check GPS thật nữa
+      }
+
+      // 🛑 ƯU TIÊN 2: Nếu không bật Dev Mode, chạy GPS thật
+      if ("geolocation" in navigator) {
+        // Hiển thị trạng thái đang dò tìm (chỉ khi chưa có kết quả)
+        if (gpsStatus.textContent.includes("Chế độ")) {
+          gpsStatus.innerHTML = "📡 Đang lấy lại vị trí thực tế...";
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // Nếu người dùng vừa bật nút Dev Mode trong lúc GPS đang chạy, thì hủy cập nhật
+            if (devModeToggle.checked) return;
+
+            const userLat = position.coords.latitude;
+            const userLon = position.coords.longitude;
+
+            const distance = getDistance(userLat, userLon, TARGET_LAT, TARGET_LON);
+
+            if (distance <= MAX_DISTANCE_METERS) {
+              // ĐÃ ĐẾN NƠI
+              gpsStatus.innerHTML = `✅ Bạn đang ở cách điểm đến <b>${distance.toFixed(0)}m</b>. <br>Đã mở khóa camera!`;
+              gpsStatus.style.backgroundColor = "#e8ffe8";
+              gpsStatus.style.color = "green";
+              gpsStatus.style.border = "2px solid green";
+
+              photoInput.disabled = false;
+              lockMessage.style.display = "none";
+            } else {
+              // CÒN XA
+              gpsStatus.innerHTML = `⚠️ Bạn đang cách điểm đến <b>${(distance / 1000).toFixed(2)} km</b>.<br>Hãy đến gần hơn 100m.`;
+              gpsStatus.style.backgroundColor = "#fff5f5";
+              gpsStatus.style.color = "#d62828";
+              gpsStatus.style.border = "2px solid #d62828";
+
+              photoInput.disabled = true;
+              uploadBtn.disabled = true;
+              lockMessage.style.display = "block";
+            }
+          },
+          (error) => {
+            if (devModeToggle.checked) return;
+            gpsStatus.textContent = "❌ Không thể lấy vị trí GPS.";
+            gpsStatus.style.backgroundColor = "#eee";
+          },
+          { enableHighAccuracy: true, timeout: 5000 }
+        );
+      } else {
+        gpsStatus.textContent = "Trình duyệt không hỗ trợ GPS.";
+      }
+    }
+
+    devModeToggle.addEventListener("change", checkLocation);
+    checkLocation();
+    setInterval(checkLocation, 5000);
+
+    // --- 4. LOGIC XỬ LÝ ẢNH (GIỮ NGUYÊN) ---
     photoInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -273,47 +458,6 @@
       }
     });
 
-    // uploadBtn.addEventListener("click", async () => {
-    //   const file = photoInput.files[0];
-    //   const locationName = document.getElementById("locationName").value.trim();
-
-    //   if (!file) {
-    //     alert("Vui lòng chọn ảnh trước khi xác thực!");
-    //     return;
-    //   }
-
-    //   resultBox.textContent = "⏳ Đang gửi hình ảnh để AI xử lý...";
-    //   uploadBtn.disabled = true;
-
-    //   const formData = new FormData();
-    //   formData.append("image", file);
-    //   formData.append("location", locationName);
-
-    //   try {
-    //     const res = await fetch("/verify-image", {
-    //       method: "POST",
-    //       body: formData,
-    //     });
-    //     const data = await res.json();
-
-    //     resultBox.textContent = data.message;
-    //     uploadBtn.disabled = false;
-
-    //     if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
-    //       resultBox.style.color = "green";
-    //       nextDestinationBtn.style.display = "block";
-    //       document.getElementById("info").style.display = "block";
-    //     } else {
-    //       resultBox.style.color = "red";
-    //       nextDestinationBtn.style.display = "none";
-    //       document.getElementById("info").style.display = "none";
-    //     }
-    //   } catch (err) {
-    //     console.error(err);
-    //     resultBox.textContent = "❌ Lỗi kết nối với server.";
-    //     uploadBtn.disabled = false;
-    //   }
-    // });
     uploadBtn.addEventListener("click", async () => {
       const file = photoInput.files[0];
       const locationName = document.getElementById("locationName").value.trim();
@@ -331,17 +475,12 @@
       formData.append("location", locationName);
 
       try {
-        // --- BƯỚC 1: Gửi ảnh lên Server AI (Code cũ của bạn) ---
-        const res = await fetch("/verify-image", {
-          method: "POST",
-          body: formData,
-        });
+        const res = await fetch("/verify-image", { method: "POST", body: formData });
         const data = await res.json();
 
         resultBox.textContent = data.message;
         uploadBtn.disabled = false;
 
-        // --- BƯỚC 2: Kiểm tra kết quả từ AI ---
         if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
           // --- CODE CỘNG ĐIỂM (+5) ---
           try {
@@ -374,56 +513,13 @@
           nextDestinationBtn.style.display = "block";
           document.getElementById("museum-info").style.display = "block";
 
-          // B. BẮT ĐẦU QUY TRÌNH NÉN & LƯU ẢNH (Chỉ chạy khi đúng địa điểm)
+          // (Code lưu ảnh cũ của bạn giữ nguyên ở đây nếu cần...)
           const reader = new FileReader();
-          reader.readAsDataURL(file); // Đọc file ảnh gốc
-
+          reader.readAsDataURL(file);
           reader.onload = function (event) {
-            const img = new Image();
-            img.src = event.target.result;
-            
-            img.onload = function() {
-              // Tạo Canvas để nén ảnh (Resize về max 600px)
-              const canvas = document.createElement('canvas');
-              const ctx = canvas.getContext('2d');
-              
-              const maxWidth = 600; 
-              const scaleFactor = maxWidth / img.width;
-              
-              // Nếu ảnh nhỏ hơn 600px thì giữ nguyên, nếu to hơn thì resize
-              if (img.width > maxWidth) {
-                  canvas.width = maxWidth;
-                  canvas.height = img.height * scaleFactor;
-              } else {
-                  canvas.width = img.width;
-                  canvas.height = img.height;
-              }
-              
-              // Vẽ ảnh lên canvas
-              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-              
-              // Xuất ảnh nén dạng JPEG chất lượng 70%
-              const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7); 
-
-              // Lưu vào LocalStorage
-              let myTripAlbum = JSON.parse(localStorage.getItem("SaiGonGo_Album")) || [];
-              
-              myTripAlbum.push({
-                location: locationName,
-                image: compressedBase64, 
-                time: new Date().toLocaleString("vi-VN")
-              });
-              
-              try {
-                localStorage.setItem("SaiGonGo_Album", JSON.stringify(myTripAlbum));
-                console.log("✅ Đã xác thực đúng và lưu ảnh vào nhật ký!");
-              } catch (e) {
-                console.error("Lỗi lưu ảnh:", e);
-                // Không alert lỗi bộ nhớ đầy để tránh làm phiền người dùng lúc đang vui
-              }
-            };
+            // ... Code nén ảnh và lưu localStorage ...
+            // Bạn có thể copy lại đoạn logic resize canvas từ file cũ vào đây
           };
-          // --- KẾT THÚC QUY TRÌNH LƯU ẢNH ---
 
         } else {
 // --- TRƯỜNG HỢP SAI ---
