@@ -9,5 +9,16 @@
         "reward_claimed": true
       }
     }
+  },
+  {
+    "username": "test1",
+    "email": "abc@gmail.com",
+    "points": 103,
+    "routes": {
+      "route1": {
+        "status": "completed",
+        "reward_claimed": true
+      }
+    }
   }
 ]

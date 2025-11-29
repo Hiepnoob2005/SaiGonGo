@@ -115,6 +115,10 @@
 </head>
 
 <body id="top">
+  <div id="score-display" class="score-badge">
+  💎 <span id="user-points">Loading...</span>
+  </div>
+  <div id="point-anim" class="point-animation"></div>
   <header class="header" data-header>
     <div class="container">
       <a href="index.html">
@@ -236,14 +240,14 @@
       </div>
     </div>
   </footer>
-
-  <script>
+<script>
     const photoInput = document.getElementById("photo");
     const preview = document.getElementById("preview");
     const uploadBtn = document.getElementById("uploadBtn");
     const resultBox = document.getElementById("result");
     const nextDestinationBtn = document.getElementById("nextDestinationBtn");
 
+    // 1. Hiển thị ảnh xem trước khi chọn
     photoInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -257,48 +261,21 @@
       }
     });
 
-    // uploadBtn.addEventListener("click", async () => {
-    //   const file = photoInput.files[0];
-    //   const locationName = document.getElementById("locationName").value.trim();
+    // 2. Load điểm số khi vào trang
+    async function loadUserScore() {
+        try {
+            const res = await fetch('/api/user');
+            const data = await res.json();
+            if (data.logged_in) {
+                document.getElementById('user-points').textContent = data.points;
+            } else {
+                document.getElementById('score-display').style.display = 'none';
+            }
+        } catch (e) { console.error("Lỗi load điểm:", e); }
+    }
+    window.addEventListener('load', loadUserScore);
 
-    //   if (!file) {
-    //     alert("Vui lòng chọn ảnh trước khi xác thực!");
-    //     return;
-    //   }
-
-    //   resultBox.textContent = "⏳ Đang gửi hình ảnh để AI xử lý...";
-    //   uploadBtn.disabled = true;
-
-    //   const formData = new FormData();
-    //   formData.append("image", file);
-    //   formData.append("location", locationName);
-
-    //   try {
-    //     const res = await fetch("/verify-image", {
-    //       method: "POST",
-    //       body: formData,
-    //     });
-    //     const data = await res.json();
-
-    //     resultBox.textContent = data.message;
-    //     uploadBtn.disabled = false;
-
-    //     if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
-    //       resultBox.style.color = "green";
-    //       nextDestinationBtn.style.display = "block";
-    //       document.getElementById("info").style.display = "block";
-    //     } else {
-    //       resultBox.style.color = "red";
-    //       nextDestinationBtn.style.display = "none";
-    //       document.getElementById("info").style.display = "none";
-    //     }
-    //   } catch (err) {
-    //     console.error(err);
-    //     resultBox.textContent = "❌ Lỗi kết nối với server.";
-    //     uploadBtn.disabled = false;
-    //   }
-    // });
-
+    // 3. Xử lý nút bấm Xác thực
     uploadBtn.addEventListener("click", async () => {
       const file = photoInput.files[0];
       const locationName = document.getElementById("locationName").value.trim();
@@ -309,47 +286,70 @@
       }
 
       resultBox.textContent = "⏳ Đang gửi hình ảnh để AI xử lý...";
-      uploadBtn.disabled = true;
+      uploadBtn.disabled = true; // Khóa nút ngay để tránh bấm nhiều lần
 
       const formData = new FormData();
       formData.append("image", file);
       formData.append("location", locationName);
 
       try {
-        // 1. Gửi ảnh lên Server
+        // --- GỌI API VERIFY ---
         const res = await fetch("/verify-image", {
           method: "POST",
           body: formData,
         });
+        
+        // Kiểm tra xem Server có trả về lỗi HTML không (dù log báo 200 nhưng đề phòng)
+        if (!res.ok) throw new Error("Server phản hồi lỗi: " + res.status);
+        
         const data = await res.json();
 
-        resultBox.textContent = data.message;
-        uploadBtn.disabled = false;
-
-        // 2. Kiểm tra kết quả
+        // --- KIỂM TRA KẾT QUẢ AI ---
         if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
           
-          // --- SỬA LỖI Ở ĐÂY ---
-          resultBox.style.color = "green";
-          nextDestinationBtn.style.display = "block";
-          
-          // Đổi 'museum-info' thành 'info' để khớp với HTML của trang này
-          document.getElementById("info").style.display = "block"; 
+          // A. GỌI API CỘNG ĐIỂM
+          try {
+              const scoreRes = await fetch('/api/update-score', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ points: 5, routeId: 'route1' })
+              });
+              const scoreData = await scoreRes.json();
+              
+              if (scoreData.success) {
+                  // Cập nhật giao diện điểm
+                  document.getElementById('user-points').textContent = scoreData.new_points;
+                  
+                  // Hiệu ứng bay điểm
+                  const anim = document.getElementById('point-anim');
+                  anim.textContent = "+5 Điểm";
+                  anim.className = "point-animation anim-plus";
+              }
+          } catch (err) { 
+              console.error("Lỗi cộng điểm (không ảnh hưởng game):", err); 
+          }
 
-          // --- BẮT ĐẦU LƯU ẢNH ---
+          // B. ẨN CÁC NÚT (Logic chống Spam)
+          uploadBtn.style.display = "none";
+          photoInput.style.display = "none";
+          preview.style.display = "none";
+          
+          // C. THÔNG BÁO VÀ HIỆN NÚT TIẾP THEO
+          resultBox.innerHTML = "✅ <b style='color:green'>Chính xác! Bạn đã được cộng điểm.</b>";
+          nextDestinationBtn.style.display = "block";
+          document.getElementById("info").style.display = "block";
+
+          // D. LƯU ẢNH VÀO ALBUM (Local Storage)
           const reader = new FileReader();
           reader.readAsDataURL(file);
-
           reader.onload = function (event) {
             const img = new Image();
             img.src = event.target.result;
-            
             img.onload = function() {
               const canvas = document.createElement('canvas');
               const ctx = canvas.getContext('2d');
               const maxWidth = 600; 
               const scaleFactor = maxWidth / img.width;
-              
               if (img.width > maxWidth) {
                   canvas.width = maxWidth;
                   canvas.height = img.height * scaleFactor;
@@ -357,41 +357,31 @@
                   canvas.width = img.width;
                   canvas.height = img.height;
               }
-              
               ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
               const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7); 
 
               let myTripAlbum = JSON.parse(localStorage.getItem("SaiGonGo_Album")) || [];
-              
               myTripAlbum.push({
                 location: locationName,
                 image: compressedBase64, 
                 time: new Date().toLocaleString("vi-VN")
               });
-              
-              try {
-                localStorage.setItem("SaiGonGo_Album", JSON.stringify(myTripAlbum));
-                console.log("✅ Đã lưu ảnh!");
-              } catch (e) {
-                console.error(e);
-              }
+              try { localStorage.setItem("SaiGonGo_Album", JSON.stringify(myTripAlbum)); } catch (e) {}
             };
           };
-          // --- KẾT THÚC LƯU ẢNH ---
 
         } else {
-          // Sai địa điểm
+          // --- TRƯỜNG HỢP SAI ---
+          resultBox.textContent = data.message;
           resultBox.style.color = "red";
-          nextDestinationBtn.style.display = "none";
-          
-          // Cũng phải sửa ở đây thành 'info'
-          document.getElementById("info").style.display = "none"; 
+          uploadBtn.disabled = false; // Mở lại nút để thử lại
         }
 
       } catch (err) {
-        console.error(err);
-        resultBox.textContent = "❌ Lỗi kết nối với server.";
-        uploadBtn.disabled = false;
+        console.error("Lỗi Javascript:", err);
+        resultBox.textContent = "⚠️ Có lỗi hiển thị: " + err.message;
+        // Vẫn mở nút để thử lại nếu lỗi mạng thật
+        uploadBtn.disabled = false; 
       }
     });
   </script>

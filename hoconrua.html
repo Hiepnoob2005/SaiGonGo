@@ -97,6 +97,10 @@
 </head>
 
 <body id="top">
+  <div id="score-display" class="score-badge">
+  💎 <span id="user-points">Loading...</span>
+  </div>
+  <div id="point-anim" class="point-animation"></div>
   <header class="header" data-header>
     <div class="container">
       <a href="index.html">
@@ -368,9 +372,33 @@
 
         // --- BƯỚC 2: Kiểm tra kết quả từ AI ---
         if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
+          // --- CODE CỘNG ĐIỂM (+5) ---
+          try {
+              const scoreRes = await fetch('/api/update-score', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ points: 5, routeId: 'route1' })
+              });
+              const scoreData = await scoreRes.json();
+              
+              if (scoreData.success) {
+                  // Cập nhật UI
+                  document.getElementById('user-points').textContent = scoreData.new_points;
+                  
+                  // Hiệu ứng +5 bay lên
+                  const anim = document.getElementById('point-anim');
+                  anim.textContent = "+5 Điểm (Xác thực)";
+                  anim.className = "point-animation anim-plus";
+              }
+          } catch (err) { console.error(err); }
+          // --- [CODE MỚI] ẨN CÁC NÚT ĐỂ CHỐNG SPAM ---
+          uploadBtn.style.display = "none";       // Ẩn nút xác thực
+          photoInput.style.display = "none";      // Ẩn ô chọn file
+          preview.style.display = "none";         // Ẩn ảnh xem trước
           
-          // A. Xử lý giao diện khi đúng
-          resultBox.style.color = "green";
+          // Thay dòng thông báo kết quả bằng thông báo hoàn thành
+          resultBox.innerHTML = "✅ <b style='color:green'>Xác thực thành công! Bạn đã nhận điểm.</b>";
+          // ---------------------------------------------
           nextDestinationBtn.style.display = "block";
           document.getElementById("museum-info").style.display = "block";
 
@@ -426,11 +454,14 @@
           // --- KẾT THÚC QUY TRÌNH LƯU ẢNH ---
 
         } else {
-          // Trường hợp AI bảo SAI
+        // --- TRƯỜNG HỢP SAI ---
+          resultBox.textContent = data.message; // Hiện thông báo sai
           resultBox.style.color = "red";
+          
+          uploadBtn.disabled = false; // Mở lại nút để cho phép thử lại
+          
           nextDestinationBtn.style.display = "none";
           document.getElementById("museum-info").style.display = "none";
-          // Ở đây KHÔNG CÓ code lưu ảnh, nên ảnh sai sẽ không bị lưu.
         }
 
       } catch (err) {
@@ -439,6 +470,15 @@
         uploadBtn.disabled = false;
       }
     });
+    // Load điểm khi vào trang
+    async function loadUserScore() {
+        try {
+            const res = await fetch('/api/user');
+            const data = await res.json();
+            if (data.logged_in) document.getElementById('user-points').textContent = data.points;
+        } catch (e) {}
+    }
+    window.addEventListener('load', loadUserScore);
   </script>
 
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

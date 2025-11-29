@@ -1213,3 +1213,62 @@ body {
     visibility: visible;
     opacity: 1;
   }
+
+  /* --- SCORE BADGE (Góc phải màn hình) --- */
+.score-badge {
+  position: fixed;
+  top: 90px; /* Thấp hơn header một chút */
+  right: 20px;
+  background: rgba(0, 0, 0, 0.85); /* Nền đen mờ */
+  color: #FFD700; /* Màu vàng kim */
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-family: var(--ff-heebo);
+  font-weight: 700;
+  font-size: 1.4rem;
+  z-index: 9999;
+  border: 2px solid #FFD700;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease;
+}
+
+.score-badge:hover {
+  transform: scale(1.05);
+}
+
+/* --- Hiệu ứng điểm bay --- */
+.point-animation {
+  position: fixed;
+  top: 130px;
+  right: 40px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+.anim-plus { 
+  color: #00ff00; 
+  text-shadow: 0 0 5px #000;
+  animation: floatUp 2s ease-out forwards; 
+}
+.anim-minus { 
+  color: #ff3333; 
+  text-shadow: 0 0 5px #000;
+  animation: floatDown 2s ease-out forwards; 
+}
+
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
+}
+
+@keyframes floatDown {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(40px); }
+}

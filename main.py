@@ -565,6 +565,64 @@ def serve_static(filename):
     """Phục vụ các file tĩnh và HTML khác"""
     return send_from_directory(BASE_DIR, filename)
 
+# ----------------------------------------------------
+# --- API MỚI: CẬP NHẬT ĐIỂM (Cộng/Trừ) ---
+# ----------------------------------------------------
+@app.route('/api/update-score', methods=['POST'])
+def update_score():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Chưa đăng nhập"}), 401
+    
+    data = request.json
+    points_to_change = data.get('points', 0)
+    route_id = data.get('routeId', 'route1') # Mặc định là route1
+    
+    users = load_db()
+    user_record = None
+    
+    # Tìm user trong list
+    for u in users:
+        if u['email'] == current_user.email:
+            user_record = u
+            break
+            
+    if not user_record:
+        # Nếu chưa có trong DB game thì tạo mới
+        user_record = sync_user_to_game_db(current_user.email, current_user.username)
+        # Reload lại database sau khi sync
+        users = load_db()
+        for u in users:
+            if u['email'] == current_user.email:
+                user_record = u
+                break
+
+    # --- LOGIC CHỐNG GIAN LẬN ---
+    # Kiểm tra xem route này đã hoàn thành chưa
+    user_routes = user_record.get('routes', {})
+    this_route = user_routes.get(route_id, {})
+    
+    if this_route.get('status') == 'completed':
+        # Nếu đã hoàn thành -> Không trừ/cộng điểm nữa
+        return jsonify({
+            "success": False, 
+            "message": "Lộ trình đã hoàn thành, không tính điểm.",
+            "current_points": user_record.get('points', 0)
+        })
+
+    # Cập nhật điểm
+    current_points = user_record.get('points', 0)
+    new_points = current_points + points_to_change
+    user_record['points'] = new_points
+    
+    # Lưu lại vào file
+    save_db(users)
+    
+    return jsonify({
+        "success": True, 
+        "new_points": new_points,
+        "added": points_to_change
+    })
+
 # ----------------------------------------------
 # --- VI. CHẠY MÁY CHỦ ---
 # ----------------------------------------------
