@@ -138,6 +138,10 @@
   </style>
 </head>
 <body id="top">
+  <div id="score-display" class="score-badge">
+  💎 <span id="user-points">Loading...</span>
+  </div>
+  <div id="point-anim" class="point-animation"></div>
     <header class="header" data-header>
         <div class="container">
             <a href="index.html">
@@ -189,6 +193,12 @@
         <a id="mapLink" class="btn-action btn-map" target="_blank" style="display: none; text-decoration: none;">
             <button onclick="openGoogleMap()">🗺️ Mở Map Trợ giúp</button>
         </a>
+        
+        <div style="margin-top: 25px;">
+            <a href="lthoconrua.html" class="btn-action" style="display: inline-block; text-decoration: none; background-color: #f92929;">
+                ⏩ Bỏ qua địa điểm này
+            </a>
+        </div>
 
         <section class="challenge-section" id="photoChallenge" style="display: none;">
             <a href="buudientp.html" class="btn-action" style="text-decoration: none; background-color: green;">
@@ -315,16 +325,58 @@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <script>
-  function openGoogleMap() {
+  // --- 1. HÀM LOAD ĐIỂM KHI VÀO TRANG ---
+    async function loadUserScore() {
+        try {
+            const res = await fetch('/api/user');
+            const data = await res.json();
+            if (data.logged_in) {
+                document.getElementById('user-points').textContent = data.points;
+            } else {
+                document.getElementById('score-display').style.display = 'none';
+            }
+        } catch (e) { console.error(e); }
+    }
+    window.addEventListener('load', loadUserScore);
+  async function openGoogleMap() {
     // ⚙️ Điểm bắt đầu và đích (bạn có thể đổi tuỳ nơi)
     const start = "Nhà thờ Đức Bà, 1 Công xã Paris, Quận 1, TP.HCM";
     const destination = "Bưu điện TP, 2 Công xã Paris, Quận 1, TP.HCM";
 
     // 🗺️ Tạo link Google Maps với mode = walking
     const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+// Gọi API trừ điểm (-2 điểm)
+        try {
+            const res = await fetch('/api/update-score', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    points: -2, 
+                    routeId: 'route1' // ID của lộ trình hiện tại
+                })
+            });
+            const data = await res.json();
 
-    // 🚀 Mở Google Maps trong tab mới
-    window.open(url, "_blank");
+            if (data.success) {
+                // Cập nhật điểm trên màn hình
+                document.getElementById('user-points').textContent = data.new_points;
+                
+                // Hiệu ứng -2 bay xuống
+                const anim = document.getElementById('point-anim');
+                anim.textContent = "-2 Điểm (Xem Map)";
+                anim.className = "point-animation anim-minus";
+                
+                // Reset animation để có thể chạy lại lần sau
+                setTimeout(() => { anim.className = "point-animation"; }, 2000);
+            } else {
+                console.log(data.message); // "Lộ trình đã hoàn thành..."
+            }
+        } catch (e) {
+            console.error("Lỗi cập nhật điểm:", e);
+        } finally {
+            // LUÔN LUÔN mở map dù trừ điểm thành công hay thất bại (để không chặn người dùng)
+            window.open(url, "_blank");
+        }
   }
 </script>
 <script>
