@@ -1,0 +1,53 @@
+
+document
+   .getElementById("registerForm")
+   // Thêm 'async' để có thể dùng 'await' cho fetch
+   .addEventListener("submit", async function (e) {
+      e.preventDefault(); // Ngăn form gửi đi
+
+      // SỬA LỖI: Bạn cần .value để lấy văn bản
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword =
+         document.getElementById("confirmPassword").value;
+
+      if (password !== confirmPassword) {
+         // Bạn nên dùng hàm showMessage tùy chỉnh thay vì alert()
+         alert("Passwords do not match!");
+         return;
+      }
+
+      // --- BẮT ĐẦU PHẦN THAY THẾ ---
+      try {
+         // Gửi dữ liệu đến backend (Python) tại route '/api/register'
+         const response = await fetch("http://localhost:5000/api/register", {
+            method: "POST", // Phương thức là POST
+            headers: { "Content-Type": "application/json" }, // Báo cho server biết đây là JSON
+            // Chuyển đổi đối tượng JavaScript thành chuỗi JSON
+            body: JSON.stringify({
+               username: username,
+               email: email,
+               password: password,
+            }),
+         });
+
+         // Lấy phản hồi từ server (dưới dạng JSON)
+         const result = await response.json();
+
+         if (response.ok) {
+            // response.ok = mã trạng thái 2xx (thành công)
+            alert(result.message || "Account created successfully!");
+            // Chuyển hướng đến trang đăng nhập
+            window.location.href = "login.html";
+         } else {
+            // Hiển thị lỗi từ server (ví dụ: "Email đã tồn tại")
+            alert(result.message || "Registration failed!");
+         }
+      } catch (error) {
+         // Lỗi này xảy ra nếu server Python (app.py) chưa chạy
+         console.error("Error:", error);
+         alert("Could not connect to the server.");
+      }
+      // --- KẾT THÚC PHẦN THAY THẾ ---
+   });
