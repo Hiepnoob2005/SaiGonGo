@@ -3,267 +3,386 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trắc nghiệm - Bảo tàng Chiến tích Chiến tranh</title>
-
+  <title>Truy tìm hiện vật - Bảo tàng Chiến tích Chiến tranh</title>
   <style>
     :root {
       --primary: #ff7043;
-      --accent: #ffe0b2;
-      --correct: #81c784;
-      --wrong: #e57373;
-      --text-dark: #333;
+      --secondary: #4a90e2;
+      --success: #66bb6a;
+      --bg: #fffaf0;
+      --card-bg: #ffffff;
+      --text: #333;
     }
 
     body {
       font-family: "Be Vietnam Pro", sans-serif;
       background: linear-gradient(135deg, #fffaf0, #ffe0b2);
       margin: 0;
-      padding: 0;
+      padding: 20px;
+      color: var(--text);
     }
 
-    .main-container {
-      max-width: 850px;
-      margin: 60px auto;
-      background-color: #fff;
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card-bg);
       border-radius: 20px;
-      padding: 40px 50px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 0.6s ease;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h2 {
+    header {
       text-align: center;
-      color: var(--primary);
-      font-size: 28px;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
     }
 
-    p {
-      color: var(--text-dark);
-      line-height: 1.6;
+    h1 { color: var(--primary); margin-bottom: 5px; }
+    p.subtitle { color: #666; font-size: 0.95rem; }
+
+    /* Progress Bar */
+    .progress-container {
+      background: #eee;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+      position: relative;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    .progress-text {
+      position: absolute;
+      width: 100%;
       text-align: center;
+      top: 0;
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+      line-height: 20px;
     }
 
-    /* --- Câu hỏi --- */
-    .question {
-      background-color: var(--accent);
-      border-left: 6px solid var(--primary);
-      border-radius: 14px;
-      padding: 20px 25px;
-      margin: 25px 0;
-      transition: 0.3s;
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
     }
 
-    .question p {
-      font-weight: 700;
-      font-size: 1.25rem;
-      margin-bottom: 12px;
-      color: #000000;             /* màu cam đất nổi bật nhưng vẫn hài hòa */
-      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
-    }
-
-    /* --- Đáp án (bỏ radio, dùng button-like style) --- */
-    .option {
-      display: block;
+    .card {
       background: #fff;
-      border: 2px solid #ddd;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin: 8px 0;
-      cursor: pointer;
-      transition: all 0.25s;
-      font-weight: 500;
-    }
-
-    .option:hover {
-      background-color: #fff3e0;
-      transform: translateY(-2px);
-      border-color: var(--primary);
-    }
-
-    .option.selected {
-      background-color: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-      transform: scale(1.02);
-    }
-
-    .option.correct {
-      background-color: var(--correct);
-      color: #fff;
-      border-color: var(--correct);
-    }
-
-    .option.wrong {
-      background-color: var(--wrong);
-      color: #fff;
-      border-color: var(--wrong);
-    }
-
-    /* --- Nút và kết quả --- */
-    button {
-      background-color: var(--primary);
-      color: white;
-      padding: 12px 40px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 600;
-      display: block;
-      margin: 30px auto 10px;
-      transition: 0.3s;
-    }
-
-    button:hover:enabled {
-      background-color: #ff5722;
-      transform: translateY(-2px);
-    }
-
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    #result {
+      border: 2px solid #eee;
+      border-radius: 15px;
+      padding: 15px;
       text-align: center;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: #444;
-      margin-top: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
     }
 
-    #nextDestinationBtn {
+    .card:hover { transform: translateY(-3px); border-color: var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    
+    .card.completed { border-color: var(--success); background: #f0fdf4; }
+    .card.completed::after {
+      content: "✓";
+      position: absolute;
+      top: 5px; right: 5px;
+      background: var(--success);
+      color: white;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+    .card-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+    .card-hint { font-size: 0.75rem; color: #777; }
+
+    /* Modal / Camera Overlay */
+    .modal {
       display: none;
-      background-color: #007bff;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
     }
-
-    #nextDestinationBtn:hover {
-      background-color: #0056b3;
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
     }
-
-    .back-btn {
-      display: inline-block;
-      margin-bottom: 20px;
-      color: var(--primary);
-      text-decoration: none;
+    .modal-img-preview {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 15px 0;
+      background: #eee;
+      display: none;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
       font-weight: 600;
-      transition: 0.3s;
+      cursor: pointer;
+      margin: 5px;
+      width: 100%;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #ccc; color: #333; }
+    .btn-danger { background: #ef5350; color: white; font-size: 0.8rem; margin-top: 10px; background: transparent; border: 1px solid #ef5350; color: #ef5350;}
+
+    /* Kết quả */
+    #nextStep {
+      display: none;
+      margin-top: 30px;
+      text-align: center;
     }
 
-    .back-btn:hover {
-      text-decoration: underline;
+    .loader {
+      border: 4px solid #f3f3f3; border-top: 4px solid var(--primary);
+      border-radius: 50%; width: 30px; height: 30px;
+      animation: spin 1s linear infinite; margin: 10px auto; display: none;
     }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
   </style>
 </head>
-
 <body>
-  <main class="main-container">
-    <a href="baotang.html" class="back-btn">← Quay lại</a>
-    <h2>🧠 Trắc nghiệm: Bảo tàng Chiến tích Chiến tranh</h2>
-    <p>Chọn đáp án đúng cho từng câu hỏi dưới đây và xem kết quả của bạn!</p>
 
-    <form id="quizForm">
-      <div class="question">
-        <p>1️⃣ Bảo tàng Chiến tích Chiến tranh nằm ở đường nào của TP. Hồ Chí Minh?</p>
-        <div class="option" data-value="A">A. Lê Duẩn</div>
-        <div class="option" data-value="B">B. Võ Văn Tần</div>
-        <div class="option" data-value="C">C. Nguyễn Thị Minh Khai</div>
-        <div class="option" data-value="D">D. Nam Kỳ Khởi Nghĩa</div>
-      </div>
+<div class="container">
+  <a href="baotang.html" style="text-decoration: none; color: var(--primary); font-weight: bold;">← Quay lại</a>
+  
+  <header>
+    <h1>🔍 Spot the Detail</h1>
+    <p class="subtitle">Tìm và chụp ít nhất <b>3 hiện vật</b> bên dưới để hoàn thành nhiệm vụ!</p>
+    
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-text" id="progressText">0/3 Hoàn thành</div>
+    </div>
+  </header>
 
-      <div class="question">
-        <p>2️⃣ Bảo tàng Chiến tích Chiến tranh được mở cửa cho công chúng vào năm nào?</p>
-        <div class="option" data-value="A">A. 1975</div>
-        <div class="option" data-value="B">B. 1980</div>
-        <div class="option" data-value="C">C. 1990</div>
-        <div class="option" data-value="D">D. 1995</div>
-      </div>
+  <div class="grid" id="gridContainer">
+    </div>
 
-      <div class="question">
-        <p>3️⃣ Chủ đề chính của Bảo tàng Chiến tích Chiến tranh là gì?</p>
-        <div class="option" data-value="A">A. Lịch sử triều Nguyễn</div>
-        <div class="option" data-value="B">B. Văn hóa miền Nam</div>
-        <div class="option" data-value="C">C. Chiến tranh và hậu quả</div>
-        <div class="option" data-value="D">D. Nghệ thuật Việt Nam</div>
-      </div>
+  <div id="nextStep">
+    <h3>🎉 Chúc mừng! Bạn đã hoàn thành thử thách.</h3>
+    <p>Bạn đã nhận được điểm thưởng cho sự quan sát tinh tế.</p>
+    <button class="btn btn-primary" onclick="window.location.href='ltdinhdoclap.html'">Tiếp tục hành trình →</button>
+  </div>
+</div>
 
-      <div class="question">
-        <p>4️⃣ Bảo tàng Chiến tích Chiến tranh trưng bày loại hiện vật nào nổi bật nhất?</p>
-        <div class="option" data-value="A">A. Vũ khí và hình ảnh chiến tranh</div>
-        <div class="option" data-value="B">B. Trang phục dân tộc</div>
-        <div class="option" data-value="C">C. Cổ vật Champa</div>
-        <div class="option" data-value="D">D. Bản đồ cổ Việt Nam</div>
-      </div>
+<div class="modal" id="cameraModal">
+  <div class="modal-content">
+    <h3 id="modalTitle">Tên hiện vật</h3>
+    <p id="modalHint" style="font-size: 0.9rem; color: #666;">Gợi ý vị trí...</p>
+    
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
+    
+    <img id="preview" class="modal-img-preview">
+    
+    <div id="actionButtons">
+      <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()">📸 Chụp ảnh ngay</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+      <button class="btn btn-danger" onclick="reportMissing()">⚠️ Tôi không tìm thấy (Báo cáo)</button>
+    </div>
 
-      <div class="question">
-        <p>5️⃣ Bảo tàng Chiến tích Chiến tranh từng mang tên gì trước năm 1995?</p>
-        <div class="option" data-value="A">A. Bảo tàng Hồ Chí Minh</div>
-        <div class="option" data-value="B">B. Nhà trưng bày tội ác Mỹ - Ngụy</div>
-        <div class="option" data-value="C">C. Bảo tàng Dân tộc học</div>
-        <div class="option" data-value="D">D. Bảo tàng Cách mạng</div>
-      </div>
-    </form>
+    <div id="verifySection" style="display:none;">
+      <div class="loader" id="loader"></div>
+      <p id="statusMsg">Đang phân tích...</p>
+      <button class="btn btn-primary" id="confirmBtn" style="display:none;" onclick="closeModal()">Tuyệt vời!</button>
+      <button class="btn btn-secondary" id="retryBtn" style="display:none;" onclick="resetModal()">Thử lại</button>
+    </div>
+  </div>
+</div>
 
-    <button id="submitBtn" disabled>Xem kết quả</button>
-    <div id="result"></div>
-    <button id="nextDestinationBtn" onclick="window.location.href='ltdinhdoclap.html'">Tiếp tục: Dinh Độc Lập →</button>
-  </main>
+<script>
+  // Dữ liệu 10 hiện vật
+  const details = [
+    { id: 'uh1', name: 'Trực thăng UH-1', icon: '🚁', hint: 'Nằm ở sân trước, bên trái cổng vào.' },
+    { id: 'm48', name: 'Xe tăng M48', icon: '🚜', hint: 'Xe tăng lớn nhất ở sân trưng bày.' },
+    { id: 'f5', name: 'Máy bay F-5', icon: '✈️', hint: 'Máy bay phản lực mũi nhọn, cánh xuôi.' },
+    { id: 'guillotine', name: 'Máy chém', icon: '🔪', hint: 'Khu trưng bày tội ác chiến tranh.' },
+    { id: 'tiger_cage', name: 'Chuồng cọp', icon: '⛓️', hint: 'Khu mô phỏng nhà tù Côn Đảo.' },
+    { id: 'm107', name: 'Pháo M107', icon: '💣', hint: 'Khẩu pháo có nòng cực dài.' },
+    { id: 'cbu55', name: 'Bom CBU-55', icon: '🧨', hint: 'Quả bom to, dựng đứng.' },
+    { id: 'chinook', name: 'CH-47 Chinook', icon: '🚁', hint: 'Trực thăng 2 cánh quạt khổng lồ.' },
+    { id: 'bulldozer', name: 'Xe ủi đất', icon: '🚜', hint: 'Xe màu vàng/xanh dùng phá rừng.' },
+    { id: 'peace_art', name: 'Tranh Bồ Câu', icon: '🕊️', hint: 'Khu vực tranh thiếu nhi hoặc tường hòa bình.' }
+  ];
 
-  <script>
-    const correctAnswers = { q1: "B", q2: "A", q3: "C", q4: "A", q5: "B" };
-    const questions = document.querySelectorAll(".question");
-    const submitBtn = document.getElementById("submitBtn");
-    const resultBox = document.getElementById("result");
-    const nextDestinationBtn = document.getElementById("nextDestinationBtn");
+  let completedCount = 0;
+  const targetCount = 3;
+  let currentDetailId = null;
+  const completedDetails = new Set();
 
-    const userAnswers = {};
+  const grid = document.getElementById('gridContainer');
+  const progressBar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText');
+  const modal = document.getElementById('cameraModal');
 
-    questions.forEach((q, i) => {
-      const opts = q.querySelectorAll(".option");
-      const qKey = "q" + (i + 1);
-
-      opts.forEach(opt => {
-        opt.addEventListener("click", () => {
-          // Bỏ chọn các option khác
-          opts.forEach(o => o.classList.remove("selected"));
-          opt.classList.add("selected");
-          userAnswers[qKey] = opt.dataset.value;
-
-          // Kích hoạt nút "Xem kết quả" khi đã chọn hết
-          const allAnswered = Object.keys(correctAnswers).every(k => userAnswers[k]);
-          submitBtn.disabled = !allAnswered;
-        });
-      });
+  // Khởi tạo Grid
+  function initGrid() {
+    grid.innerHTML = '';
+    details.forEach(item => {
+      const card = document.createElement('div');
+      card.className = `card ${completedDetails.has(item.id) ? 'completed' : ''}`;
+      card.onclick = () => openModal(item);
+      card.innerHTML = `
+        <span class="icon">${item.icon}</span>
+        <div class="card-title">${item.name}</div>
+        <div class="card-hint">${item.hint}</div>
+      `;
+      grid.appendChild(card);
     });
+    updateProgress();
+  }
 
-    submitBtn.addEventListener("click", () => {
-      let score = 0;
-      Object.keys(correctAnswers).forEach((qKey, idx) => {
-        const question = questions[idx];
-        const selected = question.querySelector(".selected");
-        if (!selected) return;
+  function updateProgress() {
+    const pct = (completedCount / targetCount) * 100;
+    progressBar.style.width = `${Math.min(pct, 100)}%`;
+    progressText.innerText = `${completedCount}/${targetCount} Hoàn thành`;
+    
+    if (completedCount >= targetCount) {
+      document.getElementById('nextStep').style.display = 'block';
+    }
+  }
 
-        if (selected.dataset.value === correctAnswers[qKey]) {
-          selected.classList.add("correct");
-          score++;
+  // Modal Logic
+  function openModal(item) {
+    if (completedDetails.has(item.id)) return; // Đã làm rồi thì không mở lại
+    currentDetailId = item.id;
+    document.getElementById('modalTitle').innerText = item.name;
+    document.getElementById('modalHint').innerText = item.hint;
+    
+    resetModal();
+    modal.style.display = 'flex';
+  }
+
+  function closeModal() {
+    modal.style.display = 'none';
+  }
+
+  function resetModal() {
+    document.getElementById('preview').style.display = 'none';
+    document.getElementById('preview').src = '';
+    document.getElementById('actionButtons').style.display = 'block';
+    document.getElementById('verifySection').style.display = 'none';
+    document.getElementById('cameraInput').value = '';
+  }
+
+  function previewImage(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('preview').src = e.target.result;
+        document.getElementById('preview').style.display = 'block';
+        uploadAndVerify(input.files[0], false);
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  // Xử lý báo cáo thiếu (Report Missing)
+  function reportMissing() {
+    const confirmMissing = confirm("Bạn chắc chắn hiện vật này không còn ở vị trí đó? Hãy chụp ảnh vị trí TRỐNG để AI kiểm tra.");
+    if (confirmMissing) {
+      document.getElementById('cameraInput').setAttribute('data-mode', 'missing');
+      document.getElementById('cameraInput').click();
+    }
+  }
+  
+  // Sửa lại hàm previewImage để hỗ trợ mode missing
+  document.getElementById('cameraInput').addEventListener('change', function() {
+      const isMissingMode = this.getAttribute('data-mode') === 'missing';
+      this.removeAttribute('data-mode'); // Reset mode
+      
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById('preview').src = e.target.result;
+            document.getElementById('preview').style.display = 'block';
+            uploadAndVerify(this.files[0], isMissingMode);
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+  });
+
+  async function uploadAndVerify(file, isReportMissing) {
+    document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('verifySection').style.display = 'block';
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('statusMsg').innerText = isReportMissing ? "AI đang kiểm tra hiện trường..." : "AI đang phân tích ảnh...";
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('detail_id', currentDetailId);
+    formData.append('report_missing', isReportMissing);
+
+    try {
+      const res = await fetch('http://127.0.0.1:5000/api/verify-detail', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      
+      document.getElementById('loader').style.display = 'none';
+      
+      if (data.success) {
+        if (data.data && data.data.valid) {
+             // Trường hợp tìm đúng
+            document.getElementById('statusMsg').innerHTML = `✅ Chính xác!<br><br><b>Thông tin thú vị:</b><br>${data.data.fact}`;
+            markCompleted();
+        } else if (data.status === 'skipped') {
+             // Trường hợp báo cáo thiếu thành công
+             document.getElementById('statusMsg').innerHTML = `⚠️ Đã xác nhận thiếu.<br>${data.message}`;
+             markCompleted();
         } else {
-          selected.classList.add("wrong");
-          // highlight đúng đáp án
-          const correctOpt = question.querySelector(`[data-value="${correctAnswers[qKey]}"]`);
-          correctOpt.classList.add("correct");
+            // AI từ chối (Sai ảnh hoặc AI vẫn thấy vật thể khi báo thiếu)
+            const reason = data.data ? data.data.reason : data.message;
+            document.getElementById('statusMsg').innerHTML = `❌ Chưa đúng.<br>${reason}`;
+            document.getElementById('retryBtn').style.display = 'inline-block';
         }
-      });
+      } else {
+        document.getElementById('statusMsg').innerText = `❌ ${data.message}`;
+        document.getElementById('retryBtn').style.display = 'inline-block';
+      }
+    } catch (err) {
+      console.error(err);
+      document.getElementById('statusMsg').innerText = "❌ Lỗi kết nối server.";
+      document.getElementById('retryBtn').style.display = 'inline-block';
+    }
+  }
 
-      resultBox.innerHTML = `✅ Bạn trả lời đúng <b>${score}/5</b> câu.<br><small>Đáp án đúng: 1B, 2A, 3C, 4A, 5B</small>`;
-      nextDestinationBtn.style.display = "block";
-      submitBtn.disabled = true;
-    });
-  </script>
+  function markCompleted() {
+    if (completedDetails.has(currentDetailId)) {
+        return;
+    }
+    completedDetails.add(currentDetailId);
+    completedCount++;
+    document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('confirmBtn').style.display = 'inline-block';
+    
+    // Cập nhật UI Grid
+    initGrid(); 
+  }
+
+  // Chạy lần đầu
+  initGrid();
+</script>
+
 </body>
 </html>

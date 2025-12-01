@@ -550,6 +550,109 @@ def verify_image():
     except Exception as e:
         print(f"Lỗi Gemini Vision: {e}")
         return jsonify({"message": f"❌ Lỗi xử lý GenAI: {str(e)}"}), 500   
+    
+# --- CẤU HÌNH DANH SÁCH CHI TIẾT ---
+DETAILS_INFO = {
+    # --- Bảo tàng Chiến tích ---
+    "uh1": "Trực thăng UH-1 Huey quân sự",
+    "m48": "Xe tăng M48 Patton",
+    "f5": "Máy bay tiêm kích F-5",
+    "guillotine": "Máy chém thời Pháp thuộc",
+    "tiger_cage": "Mô hình chuồng cọp kẽm gai",
+    "m107": "Pháo tự hành M107 nòng dài",
+    "cbu55": "Quả bom CBU-55 lớn",
+    "chinook": "Trực thăng vận tải CH-47 Chinook",
+    "bulldozer": "Xe ủi đất quân sự",
+    "peace_art": "Tranh vẽ hòa bình hoặc chim bồ câu",
+
+    # --- Dinh Độc Lập ---
+    "tank_390": "Xe tăng số hiệu 390 hoặc 843",
+    "fountain_dinh": "Đài phun nước lớn trước Dinh Độc Lập",
+    "cabinet_room": "Phòng họp nội các ghế xanh hoặc bàn bầu dục",
+    "mercedes_car": "Xe ô tô Mercedes cổ màu vàng hoặc đen",
+    "helicopter_roof": "Trực thăng đậu trên nóc nhà",
+    "stone_curtain": "Rèm hoa đá (cấu trúc bê tông hình rèm tre)",
+    "banquet_hall": "Phòng khánh tiết thảm đỏ vàng sang trọng",
+
+    # --- Bưu điện Thành phố ---
+    "clock_facade": "Đồng hồ lớn trên mặt tiền tòa nhà",
+    "map_left": "Bản đồ cổ vẽ tay khu vực Sài Gòn trên tường",
+    "map_right": "Bản đồ đường dây điện báo cổ trên tường",
+    "phone_booth": "Buồng điện thoại công cộng bằng gỗ cổ kính",
+    "uncle_ho_pic": "Hình ảnh Bác Hồ lớn ở cuối sảnh",
+    "arch_ceiling": "Vòm trần nhà khung sắt màu xanh",
+    "souvenir_shop": "Quầy bán hàng lưu niệm ở trung tâm",
+
+    # --- Nhà thờ Đức Bà ---
+    "mary_statue": "Tượng Đức Mẹ Hòa Bình bằng đá trắng",
+    "rose_window": "Cửa sổ hoa hồng kính màu (hình tròn)",
+    "bell_towers": "Hai tháp chuông nhọn cao vút",
+    "red_brick": "Tường gạch trần màu đỏ cam đặc trưng",
+    "main_gate": "Cổng vòm chính của nhà thờ",
+    "scaffolding": "Giàn giáo xây dựng (do đang trùng tu)" # Thêm cái này để AI nhận diện nếu đang sửa chữa
+}
+
+@app.route("/api/verify-detail", methods=["POST"])
+def verify_detail():
+    if not client:
+        return jsonify({"success": False, "message": "Lỗi: AI chưa khởi tạo."}), 500
+        
+    try:
+        if 'image' not in request.files or 'detail_id' not in request.form:
+            return jsonify({"success": False, "message": "Thiếu dữ liệu"}), 400
+            
+        file = request.files["image"]
+        detail_id = request.form["detail_id"]
+        report_missing = request.form.get("report_missing", "false") == "true"
+        
+        target_object = DETAILS_INFO.get(detail_id, "vật thể quân sự")
+        image_bytes = file.read()
+        img = Image.open(BytesIO(image_bytes))
+
+        # Trường hợp 1: Người dùng báo cáo không tìm thấy -> AI kiểm tra xem chỗ đó CÓ TRỐNG KHÔNG
+        if report_missing:
+            prompt = (
+                f"Người dùng đang tìm '{target_object}' nhưng báo cáo là nó đã bị di dời hoặc sửa chữa. "
+                f"Hãy nhìn ảnh chụp hiện trường này. Nếu bạn thấy '{target_object}' vẫn còn đó rõ ràng, hãy trả lời 'STILL_THERE'. "
+                f"Nếu không thấy vật thể đó (chỉ thấy tường, sàn, giàn giáo, hoặc vật khác), hãy trả lời 'MISSING_CONFIRMED'. "
+                f"Chỉ trả lời đúng keyword."
+            )
+        # Trường hợp 2: Người dùng nộp ảnh vật thể -> AI kiểm tra đúng sai và cung cấp thông tin
+        else:
+            prompt = (
+                f"Bạn là trọng tài trò chơi truy tìm kho báu tại bảo tàng. "
+                f"Người chơi cần tìm: '{target_object}'. "
+                f"Hãy xem ảnh. Nếu trong ảnh CHÍNH XÁC là '{target_object}', hãy trả lời theo định dạng JSON: "
+                f"{{ \"valid\": true, \"fact\": \"[Một sự thật lịch sử thú vị ngắn gọn 1 câu về vật này bằng tiếng Việt]\" }}. "
+                f"Nếu hoàn toàn sai, trả lời: {{ \"valid\": false, \"reason\": \"[Lý do ngắn gọn]\" }}."
+            )
+
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=[img, prompt]
+        )
+        
+        result_text = response.text.strip()
+        
+        # Xử lý kết quả trả về
+        if report_missing:
+            if "MISSING_CONFIRMED" in result_text:
+                return jsonify({"success": True, "status": "skipped", "message": "Đã xác nhận vật thể bị thiếu. Bạn được tính hoàn thành chi tiết này!"})
+            else:
+                return jsonify({"success": False, "status": "rejected", "message": "AI vẫn nhìn thấy vật thể trong ảnh của bạn. Hãy tìm kỹ lại!"})
+        else:
+            # Xử lý JSON từ AI (cần dọn dẹp chuỗi nếu AI trả về markdown)
+            clean_json = result_text.replace('```json', '').replace('```', '').strip()
+            try:
+                data = json.loads(clean_json)
+                return jsonify({"success": True, "data": data})
+            except:
+                # Fallback nếu AI không trả JSON chuẩn
+                return jsonify({"success": False, "message": "Lỗi phân tích AI, vui lòng thử lại chụp rõ hơn."})
+
+    except Exception as e:
+        print(f"Lỗi verify detail: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
 
 # ----------------------------------------------    
 # --- V. FILE SERVING (Phục vụ Frontend) ---
