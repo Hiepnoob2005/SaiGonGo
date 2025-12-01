@@ -20,5 +20,16 @@
         "reward_claimed": true
       }
     }
+  },
+  {
+    "username": "24127168",
+    "email": "lthieu2435@clc.fitus.edu.vn",
+    "points": 0,
+    "routes": {
+      "route1": {
+        "status": "locked",
+        "reward_claimed": false
+      }
+    }
   }
 ]
