@@ -3,143 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Đổi Voucher - Bảo Tàng Khám Phá</title>
+    <title>Shop Đổi Voucher - SaiGonGo</title>
+    
+    <!-- Global CSS (NEW - Helvetica font) -->
+    <link rel="stylesheet" href="./assets/css/global.css" />
+    
     <style>
         body {
-            font-family:"Be Vietnam Pro", sans-serif;
             margin: 0;
             padding: 0;
-            color: #333;
-            background-image: url('https://via.placeholder.com/1920x1080?text=Shop+Background'); /* Thay đổi URL này bằng hình nền của bạn */
+            color: var(--jet);
+            background-image: url('https://via.placeholder.com/1920x1080?text=Shop+Background');
             background-size: cover;
             background-attachment: fixed;
             background-position: center center;
         }
+        
         .overlay {
             background-color: rgba(0, 0, 0, 0.6);
             min-height: 100vh;
             padding-bottom: 50px;
         }
-        header {
-            background-color: rgba(76, 175, 80, 0.8);
-            color: white;
+        
+        .shop-header {
+            background-color: rgba(76, 175, 80, 0.9);
+            color: var(--white);
             padding: 1.5em 0;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow-md);
         }
-        header h1 {
+        
+        .shop-header h1 {
             margin: 0;
-            font-size: 2.5em;
+            font-size: var(--font-size-2xl);
+            font-weight: 800;
         }
-        header p {
-            font-size: 1.1em;
+        
+        .shop-header p {
+            font-size: var(--font-size-md);
             margin-top: 5px;
         }
+        
         .banner {
             text-align: center;
             padding: 80px 20px;
-            color: white;
-            background-image: url('https://via.placeholder.com/1200x300?text=Voucher+Shop+Banner'); /* Thay đổi URL này bằng banner của bạn */
+            color: var(--white);
+            background-image: url('https://via.placeholder.com/1200x300?text=Voucher+Shop+Banner');
             background-size: cover;
             background-position: center;
             margin-bottom: 40px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-lg);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 250px;
         }
+        
         .banner h2 {
-            font-size: 3em;
+            font-size: var(--font-size-3xl);
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            font-weight: 800;
         }
+        
         .banner p {
-            font-size: 1.5em;
+            font-size: var(--font-size-xl);
             text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
         }
-        .container {
+        
+        .shop-container {
             width: 80%;
             margin: auto;
             overflow: hidden;
             padding: 20px 0;
             background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
         }
+        
+        .shop-container h3 {
+            text-align: center;
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--jet);
+        }
+        
         .voucher-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             padding: 30px;
         }
+        
         .voucher-card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: var(--white);
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
             overflow: hidden;
             text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
         }
+        
         .voucher-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-lg);
         }
+        
         .voucher-card img {
             max-width: 100%;
-            height: 200px; /* Chiều cao cố định cho ảnh */
-            object-fit: contain; /* Giữ tỷ lệ khung hình, không cắt ảnh */
-            background-color: #f8f8f8; /* Nền nhẹ cho ảnh logo */
-            padding: 10px; /* Đệm xung quanh logo */
+            height: 200px;
+            object-fit: contain;
+            background-color: #f8f8f8;
+            padding: 10px;
             border-bottom: 1px solid #eee;
         }
+        
         .voucher-card h4 {
-            font-size: 1.5em;
-            color: #333;
+            font-size: var(--font-size-xl);
+            color: var(--jet);
             margin: 15px 0 10px;
+            font-weight: 700;
         }
+        
         .voucher-card p {
             padding: 0 15px 15px;
-            color: #666;
-            font-size: 0.95em;
+            color: var(--battleship-gray);
+            font-size: var(--font-size-sm);
         }
+        
         .voucher-card .points {
-            font-size: 1.3em;
-            color: #e67e22;
+            font-size: var(--font-size-lg);
+            color: var(--primary-orange);
             font-weight: bold;
             margin-bottom: 15px;
         }
+        
         .voucher-card .redeem-btn {
             display: block;
-            background-color: #f39c12;
-            color: white;
+            background-color: var(--mikado-yellow);
+            color: var(--white);
             padding: 12px 0;
             text-decoration: none;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease;
+            border-bottom-left-radius: var(--radius-md);
+            border-bottom-right-radius: var(--radius-md);
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            transition: background-color var(--transition-normal);
         }
+        
         .redeem-btn:hover {
             background-color: #e08e0b;
+            color: var(--white);
+            text-decoration: none;
         }
-        footer {
+        
+        .shop-footer {
             text-align: center;
             padding: 20px;
             margin-top: 40px;
-            color: white;
+            color: var(--white);
             background-color: rgba(51, 51, 51, 0.7);
             position: relative;
             bottom: 0;
             width: 100%;
         }
+        
+        .shop-footer a {
+            color: var(--white);
+            text-decoration: none;
+        }
+        
+        .shop-footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="overlay">
-        <header>
+        <header class="shop-header">
             <h1>Shop Đổi Voucher</h1>
             <p>Sử dụng điểm khám phá của bạn để nhận những ưu đãi đặc biệt!</p>
         </header>
@@ -149,7 +193,7 @@
             <p>Đổi điểm, nhận voucher từ các thương hiệu yêu thích!</p>
         </div>
 
-        <div class="container">
+        <div class="shop-container">
             <h3>Các Voucher Hiện Có</h3>
             <div class="voucher-grid">
                 <div class="voucher-card">
@@ -200,12 +244,12 @@
                     <a href="#" class="redeem-btn">Đổi Ngay</a>
                 </div>
             </div>
-            <p style="text-align: center; margin-top: 40px; font-style: italic;">Bạn cần đăng nhập để đổi điểm.</p>
+            <p style="text-align: center; margin-top: 40px; font-style: italic; color: var(--battleship-gray);">Bạn cần đăng nhập để đổi điểm.</p>
         </div>
 
-        <footer>
-            <p>&copy; 2023 Bảo Tàng Khám Phá. Tất cả bản quyền được bảo lưu.</p>
-            <a href="baotang.html" style="color: white; text-decoration: none;">Quay lại Trang Bảo Tàng</a>
+        <footer class="shop-footer">
+            <p>&copy; 2023 SaiGonGo. Tất cả bản quyền được bảo lưu.</p>
+            <a href="lotrinh1.html">Quay lại Lộ trình</a>
         </footer>
     </div>
 </body>

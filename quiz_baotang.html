@@ -4,30 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trắc nghiệm - Bảo tàng Chiến tích Chiến tranh</title>
+  
+  <!-- Global CSS (NEW - Helvetica font) -->
+  <link rel="stylesheet" href="./assets/css/global.css" />
 
   <style>
     :root {
-      --primary: #ff7043;
-      --accent: #ffe0b2;
-      --correct: #81c784;
-      --wrong: #e57373;
-      --text-dark: #333;
+      --quiz-primary: #ff7043;
+      --quiz-accent: #ffe0b2;
+      --quiz-correct: #81c784;
+      --quiz-wrong: #e57373;
     }
 
     body {
-      font-family: "Be Vietnam Pro", sans-serif;
       background: linear-gradient(135deg, #fffaf0, #ffe0b2);
       margin: 0;
       padding: 0;
     }
 
-    .main-container {
+    .quiz-container {
       max-width: 850px;
       margin: 60px auto;
-      background-color: #fff;
-      border-radius: 20px;
+      background-color: var(--white);
+      border-radius: var(--radius-xl);
       padding: 40px 50px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-xl);
       animation: fadeIn 0.6s ease;
     }
 
@@ -36,96 +37,96 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    h2 {
+    .quiz-title {
       text-align: center;
-      color: var(--primary);
-      font-size: 28px;
+      color: var(--quiz-primary);
+      font-size: var(--font-size-2xl);
+      font-weight: 800;
       margin-bottom: 10px;
     }
 
-    p {
-      color: var(--text-dark);
+    .quiz-subtitle {
+      color: var(--jet);
       line-height: 1.6;
       text-align: center;
+      margin-bottom: 30px;
     }
 
-    /* --- Câu hỏi --- */
     .question {
-      background-color: var(--accent);
-      border-left: 6px solid var(--primary);
-      border-radius: 14px;
+      background-color: var(--quiz-accent);
+      border-left: 6px solid var(--quiz-primary);
+      border-radius: var(--radius-lg);
       padding: 20px 25px;
       margin: 25px 0;
-      transition: 0.3s;
+      transition: var(--transition-normal);
     }
 
     .question p {
       font-weight: 700;
-      font-size: 1.25rem;
+      font-size: var(--font-size-lg);
       margin-bottom: 12px;
-      color: #000000;             /* màu cam đất nổi bật nhưng vẫn hài hòa */
+      color: var(--jet);
       text-shadow: 0 1px 1px rgba(0,0,0,0.1);
     }
 
-    /* --- Đáp án (bỏ radio, dùng button-like style) --- */
     .option {
       display: block;
-      background: #fff;
-      border: 2px solid #ddd;
-      border-radius: 10px;
+      background: var(--white);
+      border: 2px solid var(--border-gray);
+      border-radius: var(--radius-md);
       padding: 12px 16px;
       margin: 8px 0;
       cursor: pointer;
       transition: all 0.25s;
       font-weight: 500;
+      font-size: var(--font-size-base);
     }
 
     .option:hover {
       background-color: #fff3e0;
       transform: translateY(-2px);
-      border-color: var(--primary);
+      border-color: var(--quiz-primary);
     }
 
     .option.selected {
-      background-color: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
+      background-color: var(--quiz-primary);
+      color: var(--white);
+      border-color: var(--quiz-primary);
       transform: scale(1.02);
     }
 
     .option.correct {
-      background-color: var(--correct);
-      color: #fff;
-      border-color: var(--correct);
+      background-color: var(--quiz-correct);
+      color: var(--white);
+      border-color: var(--quiz-correct);
     }
 
     .option.wrong {
-      background-color: var(--wrong);
-      color: #fff;
-      border-color: var(--wrong);
+      background-color: var(--quiz-wrong);
+      color: var(--white);
+      border-color: var(--quiz-wrong);
     }
 
-    /* --- Nút và kết quả --- */
-    button {
-      background-color: var(--primary);
-      color: white;
+    .submit-btn {
+      background-color: var(--quiz-primary);
+      color: var(--white);
       padding: 12px 40px;
       border: none;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       cursor: pointer;
-      font-size: 1.1rem;
+      font-size: var(--font-size-md);
       font-weight: 600;
       display: block;
       margin: 30px auto 10px;
-      transition: 0.3s;
+      transition: var(--transition-normal);
     }
 
-    button:hover:enabled {
+    .submit-btn:hover:enabled {
       background-color: #ff5722;
       transform: translateY(-2px);
     }
 
-    button:disabled {
+    .submit-btn:disabled {
       background-color: #ccc;
       cursor: not-allowed;
     }
@@ -133,27 +134,35 @@
     #result {
       text-align: center;
       font-weight: 600;
-      font-size: 1.1rem;
-      color: #444;
+      font-size: var(--font-size-md);
+      color: var(--jet);
       margin-top: 20px;
     }
 
     #nextDestinationBtn {
       display: none;
-      background-color: #007bff;
+      background-color: var(--primary-blue);
+      color: var(--white);
+      padding: 12px 40px;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--font-size-md);
+      font-weight: 600;
+      margin: 20px auto;
     }
 
     #nextDestinationBtn:hover {
-      background-color: #0056b3;
+      background-color: var(--primary-blue-dark);
     }
 
     .back-btn {
       display: inline-block;
       margin-bottom: 20px;
-      color: var(--primary);
+      color: var(--quiz-primary);
       text-decoration: none;
       font-weight: 600;
-      transition: 0.3s;
+      transition: var(--transition-normal);
     }
 
     .back-btn:hover {
@@ -163,10 +172,10 @@
 </head>
 
 <body>
-  <main class="main-container">
+  <main class="quiz-container">
     <a href="baotang.html" class="back-btn">← Quay lại</a>
-    <h2>🧠 Trắc nghiệm: Bảo tàng Chiến tích Chiến tranh</h2>
-    <p>Chọn đáp án đúng cho từng câu hỏi dưới đây và xem kết quả của bạn!</p>
+    <h2 class="quiz-title">🧠 Trắc nghiệm: Bảo tàng Chiến tích Chiến tranh</h2>
+    <p class="quiz-subtitle">Chọn đáp án đúng cho từng câu hỏi dưới đây và xem kết quả của bạn!</p>
 
     <form id="quizForm">
       <div class="question">
@@ -210,7 +219,7 @@
       </div>
     </form>
 
-    <button id="submitBtn" disabled>Xem kết quả</button>
+    <button id="submitBtn" class="submit-btn" disabled>Xem kết quả</button>
     <div id="result"></div>
     <button id="nextDestinationBtn" onclick="window.location.href='ltdinhdoclap.html'">Tiếp tục: Dinh Độc Lập →</button>
   </main>
@@ -230,12 +239,10 @@
 
       opts.forEach(opt => {
         opt.addEventListener("click", () => {
-          // Bỏ chọn các option khác
           opts.forEach(o => o.classList.remove("selected"));
           opt.classList.add("selected");
           userAnswers[qKey] = opt.dataset.value;
 
-          // Kích hoạt nút "Xem kết quả" khi đã chọn hết
           const allAnswered = Object.keys(correctAnswers).every(k => userAnswers[k]);
           submitBtn.disabled = !allAnswered;
         });
@@ -254,7 +261,6 @@
           score++;
         } else {
           selected.classList.add("wrong");
-          // highlight đúng đáp án
           const correctOpt = question.querySelector(`[data-value="${correctAnswers[qKey]}"]`);
           correctOpt.classList.add("correct");
         }

@@ -4,53 +4,52 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bảo tàng Chiến tích Chiến tranh</title>
+    
+    <!-- Global CSS (NEW - Helvetica font) -->
+    <link rel="stylesheet" href="./assets/css/global.css" />
     <link rel="stylesheet" href="./assets/css/style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-
-        body {
-            font-family: "Be Vietnam Pro", sans-serif;
-        }
-        /* Thêm CSS cho nút shop */
         .shop-button-container {
             text-align: center;
-            margin-top: 30px; /* Khoảng cách từ rương */
+            margin-top: 30px;
         }
 
         .btn-shop {
             display: inline-block;
-            background-color: #007bff; /* Màu xanh dương */
-            color: white;
+            background-color: var(--primary-blue);
+            color: var(--white);
             padding: 15px 30px;
-            border-radius: 10px;
+            border-radius: var(--radius-md);
             text-decoration: none;
-            font-size: 1.1rem;
+            font-size: var(--font-size-md);
             font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3); /* Bóng đổ nhẹ */
+            transition: background-color var(--transition-normal), transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
         }
 
         .btn-shop:hover {
-            background-color: #0056b3; /* Màu xanh đậm hơn khi hover */
-            transform: translateY(-2px); /* Nút nhích lên nhẹ */
+            background-color: var(--primary-blue-dark);
+            transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+            text-decoration: none;
+            color: var(--white);
         }
 
-        /* CSS cho toast notification (nếu chưa có trong style.css) */
         #toast-notification {
-            visibility: hidden; /* Ẩn theo mặc định */
+            visibility: hidden;
             min-width: 250px;
-            background-color: #333;
-            color: #fff;
+            background-color: var(--jet);
+            color: var(--white);
             text-align: center;
-            border-radius: 5px;
+            border-radius: var(--radius-sm);
             padding: 16px;
             position: fixed;
             z-index: 1;
             left: 50%;
             transform: translateX(-50%);
             bottom: 30px;
-            font-size: 17px;
+            font-size: var(--font-size-base);
             opacity: 0;
             transition: opacity 0.5s, bottom 0.5s;
         }
@@ -61,435 +60,429 @@
             bottom: 50px;
         }
 
+        .route-badge {
+            display: inline-block;
+            padding: 12px 30px;
+            border: 3px solid #f1f1f1;
+            border-radius: var(--radius-lg);
+            background-color: rgb(167, 205, 246);
+            box-shadow: 0 4px 10px rgba(152, 193, 236, 0.2);
+            font-size: var(--font-size-2xl);
+            font-weight: 800;
+            color: #040c69;
+            text-transform: uppercase;
+        }
 
+        .section-badge {
+            display: inline-block;
+            padding: 10px 25px;
+            border: 2px solid var(--primary-orange);
+            border-radius: var(--radius-md);
+            background-color: rgba(255, 102, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(255, 102, 0, 0.2);
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+            color: var(--primary-orange-dark);
+            margin-bottom: 25px;
+        }
+
+        .museum-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin: 50px auto;
+            max-width: 1100px;
+            flex-wrap: wrap;
+        }
+
+        .museum-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .museum-image img {
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .museum-info {
+            flex: 1;
+            min-width: 320px;
+        }
+
+        .museum-info p {
+            font-size: var(--font-size-lg);
+            color: #444;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        .destination-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            justify-items: center;
+            align-items: start;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .destination-item {
+            text-align: center;
+        }
+
+        .destination-item .img-wrapper {
+            width: 100%;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .destination-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-normal);
+        }
+
+        .destination-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .destination-item p {
+            margin-top: 12px;
+            font-size: var(--font-size-base);
+            color: #444;
+            font-weight: 700;
+        }
+
+        .map-and-ranking {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .start-point {
+            flex: 1 1 500px;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .start-point h2 {
+            font-size: var(--font-size-lg);
+            color: var(--jet);
+            margin-bottom: 20px;
+        }
+
+        .start-point iframe {
+            border-radius: var(--radius-lg);
+        }
+
+        .start-point h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 800;
+            margin-top: 15px;
+        }
+
+        .ranking {
+            flex: 1 1 300px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .ranking h2 {
+            font-size: var(--font-size-xl);
+            color: var(--jet);
+        }
+
+        #xp-score {
+            color: var(--primary-orange);
+            font-weight: 600;
+            font-size: var(--font-size-md);
+            margin-top: 10px;
+        }
+
+        .support-box {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            font-size: var(--font-size-sm);
+            line-height: 1.6;
+            z-index: 100;
+        }
+
+        .support-box h3 {
+            margin: 0 0 5px 0;
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .support-box a {
+            color: var(--white);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .start-btn-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99;
+            text-align: center;
+        }
+
+        .start-btn-container .btn {
+            background-color: var(--primary-orange);
+            color: var(--white);
+            padding: 20px 70px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            transition: all 0.25s ease;
+            display: inline-block;
+        }
+
+        .start-btn-container .btn:hover {
+            transform: translateY(-4px);
+            background-color: var(--primary-orange-dark);
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
     </style>
 </head>
 <body>
     <header class="header">
-  <div class="container">
-    <div style="
-        display: inline-block;
-        padding: 12px 30px;
-        border: 3px solid #f1f1f1;
-        border-radius: 12px;
-        background-color: rgb(167, 205, 246);
-        box-shadow: 0 4px 10px rgba(152, 193, 236, 0.2);
-        font-size: 2.4rem;
-        font-weight: 800;
-        color: #040c69;
-        text-transform: uppercase;
-        font-family: 'Be Vietnam Pro', sans-serif;
-      ">
-      Lộ trình 1
-    </div>
-    <a href="index.html" class="btn btn-outline">← Quay lại trang chính</a>
-  </div>
-</header>
+        <div class="container">
+            <div class="route-badge">Lộ trình 1</div>
+            <a href="index.html" class="btn btn-outline">← Quay lại trang chính</a>
+        </div>
+    </header>
 
     <main class="container">
-        <section class="museum-section" style="display: flex; align-items: center; justify-content: center; gap: 40px; margin: 50px auto; max-width: 1100px; flex-wrap: wrap;">
-            <div class="museum-image" style="flex: 1; text-align: center;">
-                <img
-                    src="./assets/images/BTCTCT.png"
-                    alt="Bảo tàng Chiến tích Chiến tranh"
-                    style="
-                        width: 100%;
-                        max-width: 480px;
-                        border-radius: 12px;
-                        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-                    "
-                />
+        <section class="museum-section">
+            <div class="museum-image">
+                <img src="./assets/images/BTCTCT.png" alt="Bảo tàng Chiến tích Chiến tranh" />
             </div>
 
-            <!-- <div class="museum-info" style="flex: 1; min-width: 320px;">
-                <h2 style="font-size: 2.2rem; color: #1b1b1b; margin-bottom: 20px;">Giới thiệu sơ lược</h2>
+            <div class="museum-info">
+                <h2 class="section-badge">Giới thiệu sơ lược về lộ trình 1</h2>
 
-                <p style="font-size: 1.4rem; color: #444; line-height: 1.8; text-align: justify;">
-                    Nằm tại số <b>28 Võ Văn Tần, Quận 3, TP. Hồ Chí Minh</b>, Bảo tàng Chiến tích Chiến tranh là một trong những địa điểm du lịch
-                    được yêu thích nhất, thu hút hàng triệu lượt khách trong và ngoài nước mỗi năm. 
-                    <br><br>
-                    Nơi đây trưng bày hơn 20.000 hiện vật, hình ảnh và tư liệu quý giá về chiến tranh Việt Nam,
-                    phản ánh chân thực những mất mát, hy sinh và khát vọng hòa bình của dân tộc.
-                    <br><br>
-                    Bên ngoài khuôn viên, du khách có thể chiêm ngưỡng các khí tài quân sự thật như máy bay, xe tăng, pháo
-                    — tất cả tạo nên một không gian lịch sử sống động và sâu sắc.
-                </p>
-            </div> -->
-
-            <div class="museum-info" style="flex: 1; min-width: 320px;">
-                <h2 style="
-                  display: inline-block;
-                  padding: 10px 25px;
-                  border: 2px solid #ff6600;
-                  border-radius: 10px;
-                  background-color: rgba(255, 102, 0, 0.1);
-                  box-shadow: 0 4px 10px rgba(255, 102, 0, 0.2);
-                  font-size: 2rem;
-                  font-weight: 800;
-                  color: #e65c00;
-                  margin-bottom: 25px;
-                  font-family: 'Be Vietnam Pro', sans-serif;
-                  ">
-                  Giới thiệu sơ lược về lộ trình 1
-                </h2>
-
-                <p style="font-size: 1.6rem; color: #444; line-height: 1.8; text-align: justify;">
+                <p>
                     Lộ trình sẽ xuất phát từ <b>Bảo tàng Chiến tích Chiến tranh</b> tại số <b>28 Võ Văn Tần, Quận 3, TP. Hồ Chí Minh</b>.
                     Lần lượt đi qua các địa điểm nổi bật trong thành phố như <b>Dinh Độc Lập</b>, <b>Công viên 30/4</b>, <b>Nhà thờ Đức Bà</b>, <b>Bưu điện Thành phố</b>, <b>Đường sách Nguyễn Văn Bình</b>, <b>Hồ con rùa</b>. Từ đó, 
                     giúp du khách khám phá lịch sử, văn hóa và kiến trúc độc đáo của Sài Gòn.
-                    
-                    
                 </p>
             </div>
         </section>
 
         <section class="next-destinations" style="text-align: center; margin-top: 60px;">
-            <h2 style="
-                  display: inline-block;
-                  padding: 10px 25px;
-                  border: 2px solid #ff6600;
-                  border-radius: 10px;
-                  background-color: rgba(255, 102, 0, 0.1);
-                  box-shadow: 0 4px 10px rgba(255, 102, 0, 0.2);
-                  font-size: 2rem;
-                  font-weight: 800;
-                  color: #e65c00;
-                  margin-bottom: 25px;
-                  font-family: 'Be Vietnam Pro', sans-serif;
-                  ">
-                  Những địa điểm tiếp theo trong lộ trình
-                </h2>
+            <h2 class="section-badge">Những địa điểm tiếp theo trong lộ trình</h2>
 
-  <div class="destination-grid" style="
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    justify-items: center;
-    align-items: start;
-    max-width: 900px;
-    margin: 0 auto;
-  ">
+            <div class="destination-grid">
+                <div class="destination-item">
+                    <div class="img-wrapper">
+                        <img src="./assets/images/DinhDocLap.jpg" alt="Dinh Độc Lập">
+                    </div>
+                    <p>Dinh Độc Lập</p>
+                </div>
 
-    <!-- Dinh Độc Lập -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/DinhDocLap.jpg" alt="Dinh Độc Lập" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Dinh Độc Lập</p>
-    </div>
+                <div class="destination-item">
+                    <div class="img-wrapper">
+                        <img src="./assets/images/cv30th4.jpg" alt="Công viên 30/4">
+                    </div>
+                    <p>Công viên 30/4</p>
+                </div>
 
-    <!-- Công viên 30/4 -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/cv30th4.jpg" alt="Công viên 30/4" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Công viên 30/4</p>
-    </div>
+                <div class="destination-item">
+                    <div class="img-wrapper">
+                        <img src="./assets/images/NhaThoDucBa.jpg" alt="Nhà thờ Đức Bà">
+                    </div>
+                    <p>Nhà thờ Đức Bà</p>
+                </div>
 
-    <!-- Nhà thờ Đức Bà -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/NhaThoDucBa.jpg" alt="Nhà thờ Đức Bà" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Nhà thờ Đức Bà</p>
-    </div>
+                <div class="destination-item">
+                    <div class="img-wrapper">
+                        <img src="./assets/images/BuuDienTP.png" alt="Bưu điện Thành phố">
+                    </div>
+                    <p>Bưu điện Thành phố</p>
+                </div>
 
-    <!-- Bưu điện Thành phố -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/BuuDienTP.png" alt="Bưu điện Thành phố" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Bưu điện Thành phố</p>
-    </div>
+                <div class="destination-item">
+                    <div class="img-wrapper">
+                        <img src="./assets/images/DuongSachNVB.jpg" alt="Đường sách Nguyễn Văn Bình">
+                    </div>
+                    <p>Đường sách Nguyễn Văn Bình</p>
+                </div>
 
-    <!-- Đường sách Nguyễn Văn Bình -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/DuongSachNVB.jpg" alt="Đường sách Nguyễn Văn Bình" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Đường sách Nguyễn Văn Bình</p>
-    </div>
+                <div class="destination-item">
+                    <div class="img-wrapper">
+                        <img src="./assets/images/HoConRua.jpg" alt="Hồ Con Rùa">
+                    </div>
+                    <p>Hồ Con Rùa</p>
+                </div>
+            </div>
+        </section>
 
-    <!-- Hồ Con Rùa -->
-    <div class="destination-item" style="text-align: center;">
-      <div style="
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      ">
-        <img src="./assets/images/HoConRua.jpg" alt="Hồ Con Rùa" style="
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        ">
-      </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Hồ Con Rùa</p>
-    </div>
+        <section class="map-and-ranking">
+            <div class="start-point">
+                <h2>Điểm xuất phát</h2>
+                <div style="width: 100%; border-radius: 12px; overflow: hidden;">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7838.822421986659!2d106.689342!3d10.779784!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f30a23708cf%3A0x7cd94adf2b1474aa!2zQuG6o28gdMOgbmcgQ2jhu6luZyB0w61jaCBDaGnhur9uIHRyYW5o!5e0!3m2!1svi!2sus!4v1761832010042!5m2!1svi!2sus"
+                            width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <h3>Bảo tàng Chiến tích Chiến tranh</h3>
+                <p style="color: #555;">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</p>
+            </div>
 
-  </div>
-</section>
+            <div class="ranking">
+                <h2>Xếp hạng</h2>
+                <p id="xp-score">Điểm cao nhất 💎 0 XP</p>
 
-        <section class="map-and-ranking"
-         style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 40px; margin-top: 60px;">
-    
-  <!-- Cột bên trái: Bản đồ -->
-  <div class="start-point" style="flex: 1 1 500px; max-width: 600px; text-align: center;">
-    <h2 style="font-size: 1.6rem; color: #222; margin-bottom: 20px;">Điểm xuất phát</h2>
-    <div style="width: 100%; border-radius: 12px; overflow: hidden;">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7838.822421986659!2d106.689342!3d10.779784!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f30a23708cf%3A0x7cd94adf2b1474aa!2zQuG6o28gdMOgbmcgQ2jhu6luZyB0w61jaCBDaGnhur9uIHRyYW5o!5e0!3m2!1svi!2sus!4v1761832010042!5m2!1svi!2sus"
-              width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
-    <div style="margin-top: 15px;">
-      <h3 style="font-size: 1.2rem; font-weight: 800;">Bảo tàng Chiến tích Chiến tranh</h3>
-      <p style="color: #555;">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</p>
-    </div>
-  </div>
+                <div style="margin-top: 20px;">
+                    <img 
+                        id="treasure-chest"
+                        src="./assets/images/Ruong_dong.png"
+                        alt="Rương kho báu đóng"
+                        data-closed-src="./assets/images/Ruong_dong.png"
+                        data-open-src="./assets/images/Ruong.jpeg"
+                        style="max-width: 250px; cursor: pointer;"
+                    />
+                </div>
 
-  <!-- Cột bên phải: Xếp hạng -->
-  <div class="ranking" style="flex: 1 1 300px; max-width: 400px; text-align: center;">
-    <h2 style="font-size: 1.5rem; color: #222;">Xếp hạng</h2>
-    <p id="xp-score" style="color: #ff6b00; font-weight: 600; font-size: 1.1rem; margin-top: 10px;">
-      Điểm cao nhất 💎 0 XP
-    </p>
-
-    <div style="margin-top: 20px;">
-      <img 
-        id="treasure-chest"
-        src="./assets/images/Ruong_dong.png"
-        alt="Rương kho báu đóng"
-        data-closed-src="./assets/images/Ruong_dong.png"
-        data-open-src="./assets/images/Ruong.jpeg"
-        style="max-width: 250px;"
-      />
-    </div>
-
-    <div class="shop-button-container" style="margin-top: 25px;">
-      <a href="shop.html" class="btn-shop"
-         style="display: inline-block; background-color: #007bff; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 600;">
-        🛍️ Đổi Voucher
-      </a>
-    </div>
-  </div>
-</section>
+                <div class="shop-button-container">
+                    <a href="shop.html" class="btn-shop">🛍️ Đổi Voucher</a>
+                </div>
+            </div>
+        </section>
 
         <hr style="margin: 40px 0; border: 0.5px solid #ddd;">
 
-        <section class="support" 
-                 style="
-                   position: fixed;
-                   bottom: 20px;
-                   left: 20px;
-                   background-color: #007bff;
-                   color: white;
-                   padding: 15px 20px;
-                   border-radius: 12px;
-                   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-                   font-size: 0.95rem;
-                   line-height: 1.6;
-                   z-index: 100;
-                 ">
-            <h3 style="margin: 0 0 5px 0; font-size: 1.05rem; font-weight: 700;">📞 Hỗ trợ</h3>
-            <p style="margin: 0;">
-              Email: <a href="mailto:hello@ontripquest.com" style="color: #fff; font-weight: 600; text-decoration: underline;">hello@ontripquest.com</a><br>
-              Hotline: <a href="tel:0906488443" style="color: #fff; font-weight: 600; text-decoration: underline;">0906 488 443</a>
+        <section class="support-box">
+            <h3>📞 Hỗ trợ</h3>
+            <p>
+                Email: <a href="mailto:hello@ontripquest.com">hello@ontripquest.com</a><br>
+                Hotline: <a href="tel:0906488443">0906 488 443</a>
             </p>
         </section>
 
-         <div style="
-          position: fixed;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 99;
-          text-align: center;
-        ">
-            <a href="batdau1.html" class="btn btn-primary"
-               style="
-                 background-color: #ff6600;
-                 color: white;
-                 padding: 20px 70px;
-                 border-radius: 14px;
-                 text-decoration: none;
-                 font-size: 1.4rem;
-                 font-weight: 700;
-                 box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-                 transition: all 0.25s ease;
-                 display: inline-block;
-               "
-               onmouseover="this.style.transform='translateY(-4px)'"
-               onmouseout="this.style.transform='translateY(0)'"
-            >
-                🚀 Bắt đầu
-            </a>
+        <div class="start-btn-container">
+            <a href="batdau1.html" class="btn">🚀 Bắt đầu</a>
         </div>
     </main>
 
     <div id="toast-notification">Đây là thông báo của bạn!</div>
-<script>
-    const chestImage = document.getElementById('treasure-chest');
-    const toast = document.getElementById('toast-notification');
-    const xpScoreElement = document.getElementById('xp-score');
     
-    const closedSrc = chestImage.getAttribute('data-closed-src');
-    const openSrc = chestImage.getAttribute('data-open-src');
-    
-    let isRouteCompleted = false;
-    let isRewardClaimed = false;
+    <script>
+        const chestImage = document.getElementById('treasure-chest');
+        const toast = document.getElementById('toast-notification');
+        const xpScoreElement = document.getElementById('xp-score');
+        
+        const closedSrc = chestImage.getAttribute('data-closed-src');
+        const openSrc = chestImage.getAttribute('data-open-src');
+        
+        let isRouteCompleted = false;
+        let isRewardClaimed = false;
 
-    // 1. Khi load trang, kiểm tra trạng thái từ Server
-    window.addEventListener('load', async () => {
-        try {
-            const res = await fetch('/api/user');
-            const data = await res.json();
-            
-            if (data.logged_in) {
-                const route1 = data.routes && data.routes['route1'];
+        window.addEventListener('load', async () => {
+            try {
+                const res = await fetch('/api/user');
+                const data = await res.json();
                 
-                if (route1 && route1.status === 'completed') {
-                    isRouteCompleted = true;
-                    isRewardClaimed = route1.reward_claimed;
+                if (data.logged_in) {
+                    const route1 = data.routes && data.routes['route1'];
+                    
+                    if (route1 && route1.status === 'completed') {
+                        isRouteCompleted = true;
+                        isRewardClaimed = route1.reward_claimed;
 
-                    if (isRewardClaimed) {
-                        // Nếu đã nhận thưởng rồi -> Hiện rương mở luôn
-                        chestImage.src = openSrc;
-                        chestImage.style.cursor = 'default';
-                        xpScoreElement.textContent = `Điểm hiện tại 💎 ${data.points} XP`;
+                        if (isRewardClaimed) {
+                            chestImage.src = openSrc;
+                            chestImage.style.cursor = 'default';
+                            xpScoreElement.textContent = `Điểm hiện tại 💎 ${data.points} XP`;
+                        } else {
+                            chestImage.style.cursor = 'pointer';
+                            chestImage.style.animation = 'shake 0.5s infinite'; 
+                        }
                     } else {
-                        // Nếu đã xong nhưng chưa mở -> Rương đóng, hiệu ứng rung lắc mời gọi
-                        chestImage.style.cursor = 'pointer';
-                        chestImage.style.animation = 'shake 0.5s infinite'; 
+                        chestImage.style.filter = "grayscale(100%)";
+                        chestImage.style.cursor = "not-allowed";
+                        chestImage.title = "Bạn cần hoàn thành lộ trình để mở khóa!";
                     }
-                } else {
-                    // Chưa xong lộ trình
-                    chestImage.style.filter = "grayscale(100%)"; // Làm xám rương
-                    chestImage.style.cursor = "not-allowed";
-                    chestImage.title = "Bạn cần hoàn thành lộ trình để mở khóa!";
                 }
+            } catch (e) { console.error(e); }
+        });
+
+        chestImage.addEventListener('click', async () => {
+            if (!isRouteCompleted) {
+                showToast("🔒 Hãy hoàn thành hết các địa điểm để mở khóa rương!");
+                return;
             }
-        } catch (e) { console.error(e); }
-    });
 
-    // 2. Xử lý click rương
-    chestImage.addEventListener('click', async () => {
-        if (!isRouteCompleted) {
-            showToast("🔒 Hãy hoàn thành hết các địa điểm để mở khóa rương!");
-            return;
-        }
-
-        if (isRewardClaimed) {
-            showToast("Bạn đã nhận quà của lộ trình này rồi!");
-            return;
-        }
-
-        // Gọi API nhận thưởng
-        try {
-            const res = await fetch('/api/claim-reward', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ routeId: 'route1', points: 50 })
-            });
-            
-            const data = await res.json();
-            
-            if (data.success) {
-                // Hiệu ứng mở rương
-                chestImage.src = openSrc;
-                chestImage.style.animation = 'none'; // Tắt rung
-                
-                // Cập nhật giao diện
-                xpScoreElement.textContent = `Điểm hiện tại 💎 ${data.newPoints} XP`;
-                showToast(`🎉 Xuất sắc! Bạn nhận được 50 XP!`);
-                
-                isRewardClaimed = true;
-            } else {
-                showToast(data.message);
+            if (isRewardClaimed) {
+                showToast("Bạn đã nhận quà của lộ trình này rồi!");
+                return;
             }
-        } catch (e) {
-            console.error(e);
-            showToast("Lỗi kết nối server");
+
+            try {
+                const res = await fetch('/api/claim-reward', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ routeId: 'route1', points: 50 })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    chestImage.src = openSrc;
+                    chestImage.style.animation = 'none';
+                    
+                    xpScoreElement.textContent = `Điểm hiện tại 💎 ${data.newPoints} XP`;
+                    showToast(`🎉 Xuất sắc! Bạn nhận được 50 XP!`);
+                    
+                    isRewardClaimed = true;
+                } else {
+                    showToast(data.message);
+                }
+            } catch (e) {
+                console.error(e);
+                showToast("Lỗi kết nối server");
+            }
+        });
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
-    });
-
-    function showToast(message) {
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => { toast.classList.remove('show'); }, 3000);
-    }
-</script>
-
-<style>
-@keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
-</style>
+    </script>
 </body>
 </html>
