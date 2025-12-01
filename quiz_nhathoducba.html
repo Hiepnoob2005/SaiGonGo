@@ -3,262 +3,192 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trắc nghiệm - Nhà thờ Đức Bà</title>
-  <link rel="stylesheet" href="./assets/css/style.css" />
-
+  <title>Truy tìm hiện vật - Nhà thờ Đức Bà</title>
   <style>
-    :root {
-      --primary: #ff7043;
-      --accent: #fff3e0;
-      --correct: #81c784;
-      --wrong: #e57373;
-      --text-dark: #333;
-    }
-
-    body {
-      font-family: "Be Vietnam Pro", sans-serif;
-      background: linear-gradient(135deg, #fffaf0, #ffe0b2);
-      margin: 0;
-      padding: 0;
-    }
-
-    .main-container {
-      max-width: 850px;
-      margin: 60px auto;
-      background-color: #fff;
-      border-radius: 20px;
-      padding: 40px 50px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 0.6s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h2 {
-      text-align: center;
-      color: var(--primary);
-      font-size: 30px;
-      margin-bottom: 15px;
-    }
-
-    p {
-      color: var(--text-dark);
-      line-height: 1.6;
-      text-align: center;
-    }
-
-    .question {
-      background-color: var(--accent);
-      border-left: 6px solid var(--primary);
-      border-radius: 14px;
-      padding: 20px 25px;
-      margin: 25px 0;
-      transition: 0.3s;
-    }
-
-    .question p {
-      font-weight: 700;
-      font-size: 1.25rem;
-      margin-bottom: 12px;
-      color: #000000;             /* màu cam đất nổi bật nhưng vẫn hài hòa */
-      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
-    }
-
-    .option {
-      display: block;
-      background: #fff;
-      border: 2px solid #ddd;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin: 8px 0;
-      cursor: pointer;
-      transition: all 0.25s;
-      font-weight: 500;
-    }
-
-    .option:hover {
-      background-color: #fff3e0;
-      transform: translateY(-2px);
-      border-color: var(--primary);
-    }
-
-    .option.selected {
-      background-color: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-      transform: scale(1.02);
-    }
-
-    .option.correct {
-      background-color: var(--correct);
-      color: #fff;
-      border-color: var(--correct);
-    }
-
-    .option.wrong {
-      background-color: var(--wrong);
-      color: #fff;
-      border-color: var(--wrong);
-    }
-
-    button {
-      background-color: var(--primary);
-      color: white;
-      padding: 12px 40px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 600;
-      display: block;
-      margin: 30px auto 10px;
-      transition: 0.3s;
-    }
-
-    button:hover:enabled {
-      background-color: #ff5722;
-      transform: translateY(-2px);
-    }
-
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    #result {
-      text-align: center;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: #444;
-      margin-top: 20px;
-    }
-
-    #nextDestinationBtn {
-      display: none;
-      background-color: #007bff;
-    }
-
-    #nextDestinationBtn:hover {
-      background-color: #0056b3;
-    }
-
-    .back-btn {
-      display: inline-block;
-      margin-bottom: 20px;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    .back-btn:hover {
-      text-decoration: underline;
-    }
+    :root { --primary: #ff7043; --secondary: #4a90e2; --success: #66bb6a; --bg: #fffaf0; --card-bg: #ffffff; --text: #333; }
+    body { font-family: "Be Vietnam Pro", sans-serif; background: linear-gradient(135deg, #fffaf0, #ffe0b2); margin: 0; padding: 20px; color: var(--text); }
+    .container { max-width: 800px; margin: 0 auto; background: var(--card-bg); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    header { text-align: center; margin-bottom: 30px; }
+    h1 { color: var(--primary); margin-bottom: 5px; }
+    p.subtitle { color: #666; font-size: 0.95rem; }
+    .progress-container { background: #eee; height: 20px; border-radius: 10px; overflow: hidden; margin: 20px 0; position: relative; }
+    .progress-bar { height: 100%; background: var(--success); width: 0%; transition: width 0.5s ease; }
+    .progress-text { position: absolute; width: 100%; text-align: center; top: 0; font-size: 12px; font-weight: bold; color: #333; line-height: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+    .card { background: #fff; border: 2px solid #eee; border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+    .card:hover { transform: translateY(-3px); border-color: var(--secondary); }
+    .card.completed { border-color: var(--success); background: #f0fdf4; }
+    .card.completed::after { content: "✓"; position: absolute; top: 5px; right: 5px; background: var(--success); color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+    .icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+    .card-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+    .card-hint { font-size: 0.75rem; color: #777; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
+    .modal-img-preview { width: 100%; max-height: 250px; object-fit: cover; border-radius: 10px; margin: 15px 0; background: #eee; display: none; }
+    .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; margin: 5px; width: 100%; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #ccc; color: #333; }
+    .btn-danger { background: transparent; border: 1px solid #ef5350; color: #ef5350; font-size: 0.8rem; margin-top: 10px; }
+    #nextStep { display: none; margin-top: 30px; text-align: center; }
+    .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
+<body>
 
-<body id="top">
-  <main class="main-container">
-    <a href="nhathoducba.html" class="back-btn">← Quay lại</a>
-    <h2>🧠 Trắc nghiệm: Nhà thờ Đức Bà</h2>
-    <p>Hãy trả lời 5 câu hỏi dưới đây. Khi hoàn thành, bạn sẽ thấy kết quả và có thể tiếp tục hành trình.</p>
+<div class="container">
+  <a href="nhathoducba.html" style="text-decoration: none; color: var(--primary); font-weight: bold;">← Quay lại</a>
+  
+  <header>
+    <h1>⛪ Spot the Detail: Nhà thờ Đức Bà</h1>
+    <p class="subtitle">Tìm <b>3 chi tiết</b> kiến trúc độc đáo. Nếu đang sửa chữa, hãy dùng nút "Báo cáo"!</p>
+    
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-text" id="progressText">0/3 Hoàn thành</div>
+    </div>
+  </header>
 
-    <form id="quizForm">
-      <div class="question">
-        <p>1️⃣ Nhà thờ Đức Bà được xây dựng bởi nước nào?</p>
-        <div class="option" data-value="A">A. Pháp</div>
-        <div class="option" data-value="B">B. Đức</div>
-        <div class="option" data-value="C">C. Anh</div>
-        <div class="option" data-value="D">D. Mỹ</div>
-      </div>
+  <div class="grid" id="gridContainer"></div>
 
-      <div class="question">
-        <p>2️⃣ Nhà thờ Đức Bà bắt đầu xây dựng vào năm nào?</p>
-        <div class="option" data-value="A">A. 1877</div>
-        <div class="option" data-value="B">B. 1880</div>
-        <div class="option" data-value="C">C. 1882</div>
-        <div class="option" data-value="D">D. 1890</div>
-      </div>
+  <div id="nextStep">
+    <h3>🎉 Chúc mừng!</h3>
+    <p>Bạn đã khám phá xong biểu tượng kiến trúc của Sài Gòn.</p>
+    <button class="btn btn-primary" onclick="window.location.href='ltbuudientp.html'">Tiếp tục: Bưu điện TP →</button>
+  </div>
+</div>
 
-      <div class="question">
-        <p>3️⃣ Tượng Đức Mẹ Hòa Bình được đặt trước khuôn viên nhà thờ từ năm nào?</p>
-        <div class="option" data-value="A">A. 1967</div>
-        <div class="option" data-value="B">B. 1960</div>
-        <div class="option" data-value="C">C. 1959</div>
-        <div class="option" data-value="D">D. 1969</div>
-      </div>
+<div class="modal" id="cameraModal">
+  <div class="modal-content">
+    <h3 id="modalTitle">Tên hiện vật</h3>
+    <p id="modalHint" style="font-size: 0.9rem; color: #666;">Gợi ý...</p>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
+    <img id="preview" class="modal-img-preview">
+    <div id="actionButtons">
+      <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()">📸 Chụp ảnh ngay</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+      <button class="btn btn-danger" onclick="reportMissing()">⚠️ Tôi không tìm thấy (Do trùng tu)</button>
+    </div>
+    <div id="verifySection" style="display:none;">
+      <div class="loader" id="loader"></div>
+      <p id="statusMsg">Đang phân tích...</p>
+      <button class="btn btn-primary" id="confirmBtn" style="display:none;" onclick="closeModal()">Tuyệt vời!</button>
+      <button class="btn btn-secondary" id="retryBtn" style="display:none;" onclick="resetModal()">Thử lại</button>
+    </div>
+  </div>
+</div>
 
-      <div class="question">
-        <p>4️⃣ Nhà thờ Đức Bà phong tặng danh hiệu "Vương cung thánh đường" vào năm nào?</p>
-        <div class="option" data-value="A">A. 1960</div>
-        <div class="option" data-value="B">B. 1962</div>
-        <div class="option" data-value="C">C. 1967</div>
-        <div class="option" data-value="D">D. 1969</div>
-      </div>
+<script>
+  // DANH SÁCH CHI TIẾT NHÀ THỜ ĐỨC BÀ
+  const details = [
+    { id: 'mary_statue', name: 'Tượng Đức Mẹ', icon: '🗽', hint: 'Đứng trên quả địa cầu ở công viên trước nhà thờ.' },
+    { id: 'bell_towers', name: 'Hai tháp chuông', icon: '⛪', hint: 'Đỉnh cao nhất của nhà thờ (nhìn từ xa).' },
+    { id: 'rose_window', name: 'Cửa sổ hoa hồng', icon: '🏵️', hint: 'Cửa sổ tròn lớn ở mặt tiền (giữa 2 tháp).' },
+    { id: 'red_brick', name: 'Tường gạch đỏ', icon: '🧱', hint: 'Loại gạch trần đặc trưng từ Marseille.' },
+    { id: 'main_gate', name: 'Cổng chính', icon: '🚪', hint: 'Cổng vòm lớn hướng ra công viên.' },
+    { id: 'scaffolding', name: 'Giàn giáo (Tu sửa)', icon: '🏗️', hint: 'Chụp phần công trình đang được che chắn.' }
+  ];
 
-      <div class="question">
-        <p>5️⃣ Nhà thờ Đức Bà bắt đầu quá trình đại trùng tu lớn vào năm nào?</p>
-        <div class="option" data-value="A">A. 2010</div>
-        <div class="option" data-value="B">B. 2015</div>
-        <div class="option" data-value="C">C. 2017</div>
-        <div class="option" data-value="D">D. 2020</div>
-      </div>
-    </form>
+  let completedCount = 0; const targetCount = 3; let currentDetailId = null; const completedDetails = new Set();
+  const grid = document.getElementById('gridContainer'); const progressBar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText'); const modal = document.getElementById('cameraModal');
 
-    <button id="submitBtn" disabled>Xem kết quả</button>
-    <div id="result"></div>
-    <button id="nextDestinationBtn" onclick="window.location.href='ltbuudientp.html'">Tiếp tục: Bưu điện Thành Phố →</button>
-  </main>
-
-  <script>
-    const correctAnswers = { q1: "A", q2: "A", q3: "C", q4: "B", q5: "C" };
-    const questions = document.querySelectorAll(".question");
-    const submitBtn = document.getElementById("submitBtn");
-    const resultBox = document.getElementById("result");
-    const nextDestinationBtn = document.getElementById("nextDestinationBtn");
-
-    const userAnswers = {};
-
-    questions.forEach((q, i) => {
-      const opts = q.querySelectorAll(".option");
-      const qKey = "q" + (i + 1);
-
-      opts.forEach(opt => {
-        opt.addEventListener("click", () => {
-          opts.forEach(o => o.classList.remove("selected"));
-          opt.classList.add("selected");
-          userAnswers[qKey] = opt.dataset.value;
-
-          const allAnswered = Object.keys(correctAnswers).every(k => userAnswers[k]);
-          submitBtn.disabled = !allAnswered;
-        });
-      });
+  function initGrid() {
+    grid.innerHTML = '';
+    details.forEach(item => {
+      const card = document.createElement('div');
+      card.className = `card ${completedDetails.has(item.id) ? 'completed' : ''}`;
+      card.onclick = () => openModal(item);
+      card.innerHTML = `<span class="icon">${item.icon}</span><div class="card-title">${item.name}</div><div class="card-hint">${item.hint}</div>`;
+      grid.appendChild(card);
     });
+    updateProgress();
+  }
 
-    submitBtn.addEventListener("click", () => {
-      let score = 0;
-      Object.keys(correctAnswers).forEach((qKey, idx) => {
-        const question = questions[idx];
-        const selected = question.querySelector(".selected");
-        if (!selected) return;
+  function updateProgress() {
+    const pct = (completedCount / targetCount) * 100;
+    progressBar.style.width = `${Math.min(pct, 100)}%`;
+    progressText.innerText = `${completedCount}/${targetCount} Hoàn thành`;
+    if (completedCount >= targetCount) document.getElementById('nextStep').style.display = 'block';
+  }
 
-        if (selected.dataset.value === correctAnswers[qKey]) {
-          selected.classList.add("correct");
-          score++;
-        } else {
-          selected.classList.add("wrong");
-          const correctOpt = question.querySelector(`[data-value="${correctAnswers[qKey]}"]`);
-          correctOpt.classList.add("correct");
-        }
-      });
+  function openModal(item) {
+    if (completedDetails.has(item.id)) return;
+    currentDetailId = item.id;
+    document.getElementById('modalTitle').innerText = item.name;
+    document.getElementById('modalHint').innerText = item.hint;
+    resetModal();
+    modal.style.display = 'flex';
+  }
 
-      resultBox.innerHTML = `✅ Bạn trả lời đúng <b>${score}/5</b> câu.<br><small>Đáp án đúng: 1A, 2A, 3C, 4B, 5C</small>`;
-      nextDestinationBtn.style.display = "block";
-      submitBtn.disabled = true;
-    });
-  </script>
+  function closeModal() { modal.style.display = 'none'; }
+  function resetModal() {
+    document.getElementById('preview').style.display = 'none'; document.getElementById('preview').src = '';
+    document.getElementById('actionButtons').style.display = 'block'; document.getElementById('verifySection').style.display = 'none';
+    document.getElementById('cameraInput').value = '';
+  }
+
+  function reportMissing() {
+    if(confirm("Xác nhận chụp ảnh hiện trường đang thi công/trống?")) {
+      document.getElementById('cameraInput').setAttribute('data-mode', 'missing');
+      document.getElementById('cameraInput').click();
+    }
+  }
+
+  document.getElementById('cameraInput').addEventListener('change', function() {
+      const isMissingMode = this.getAttribute('data-mode') === 'missing';
+      this.removeAttribute('data-mode');
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById('preview').src = e.target.result;
+            document.getElementById('preview').style.display = 'block';
+            uploadAndVerify(this.files[0], isMissingMode);
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+  });
+
+  async function uploadAndVerify(file, isReportMissing) {
+    document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('verifySection').style.display = 'block';
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('statusMsg').innerText = "AI đang xử lý...";
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('detail_id', currentDetailId);
+    formData.append('report_missing', isReportMissing);
+
+    try {
+      const res = await fetch('http://127.0.0.1:5000/api/verify-detail', { method: 'POST', body: formData });
+      const data = await res.json();
+      document.getElementById('loader').style.display = 'none';
+      
+      if (data.success && (data.data?.valid || data.status === 'skipped')) {
+        document.getElementById('statusMsg').innerHTML = data.status === 'skipped' ? 
+            `⚠️ Đã xác nhận.` : `✅ Chính xác!<br><br><small>${data.data.fact}</small>`;
+        markCompleted();
+      } else {
+        const reason = data.data ? data.data.reason : data.message;
+        document.getElementById('statusMsg').innerHTML = `❌ Chưa đúng.<br>${reason}`;
+        document.getElementById('retryBtn').style.display = 'inline-block';
+      }
+    } catch (err) {
+      document.getElementById('statusMsg').innerText = "❌ Lỗi kết nối server.";
+      document.getElementById('retryBtn').style.display = 'inline-block';
+    }
+  }
+
+  function markCompleted() {
+    if (completedDetails.has(currentDetailId)) return;
+    completedDetails.add(currentDetailId);
+    completedCount++;
+    document.getElementById('confirmBtn').style.display = 'inline-block';
+    initGrid();
+  }
+
+  initGrid();
+</script>
 </body>
 </html>
