@@ -8,7 +8,7 @@
   <style>
     /* CSS Tùy chỉnh */
     body {
-      font-family: "Be Vietnam Pro", sans-serif;
+      font-family: "Times New Roman", Times, serif;
       background-color: #f8f8f8;
       text-align: center;
       padding-top: 50px; 
@@ -32,7 +32,7 @@
   border-radius: 16px;
   text-align: left;
   white-space: pre-wrap; 
-  font-size: 1rem; 
+  font-size: 1.5rem; 
   line-height: 1.6;  
   font-weight: 600;
   color: #222; 
@@ -55,7 +55,7 @@
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 1.2rem;               
+  font-size: 1.5rem;               
   font-weight: 800;
   letter-spacing: 0.5px;
   transition: all 0.25s ease;
@@ -169,7 +169,7 @@
 ">
   📍 Đang xác định vị trí...
 </div>
-        <a href="nhathoducba.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về</a>
+        <a href="quiz_nhathoducba.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về</a>
 
         <input type="text" id="locationName" value="Bưu điện Thành Phố" readonly style="margin-bottom: 20px;" />
 
@@ -183,6 +183,10 @@
         </div>
         
         <button id="getDirectionsBtn" class="btn-action">✅ Yêu cầu Lộ trình GPS</button>
+
+        <button id="altRouteBtn" class="btn-action" style="background-color: #ff9800; display: none; margin-top: 10px;">
+            ⚠️ Nếu đường bị chặn. Tìm lối khác
+        </button>
 
         <div id="loadingStatus" style="margin-top: 15px; color: #ff6600; font-weight: 600;"></div>
 
@@ -237,88 +241,107 @@
         });
 
 
-        function getAndSendLocation() {
-            loadingStatus.textContent = "⏳ Chuẩn bị yêu cầu lộ trình...";
-            getDirectionsBtn.disabled = true;
-            
+        // --- HÀM 1: XỬ LÝ NÚT BẤM & LẤY VỊ TRÍ ---
+        function getAndSendLocation(isAlternative = false) {
+            // 1. Cập nhật giao diện (Loading)
+            if (isAlternative) {
+                loadingStatus.textContent = "🔄 Đang tìm đường vòng tránh khu vực bị chặn...";
+                altRouteBtn.disabled = true;
+            } else {
+                loadingStatus.textContent = "⏳ Chuẩn bị yêu cầu lộ trình...";
+                getDirectionsBtn.disabled = true;
+            }
+
+            // 2. Kiểm tra chế độ (Tĩnh hay Động)
             if (!useDynamicLocation) {
-                // Chế độ tĩnh: Chỉ gửi key để backend dùng tọa độ tĩnh
-                fetchDirectionsFromServer(null, null); 
+                // Chế độ tĩnh: Gửi null để server tự lấy tọa độ mẫu
+                fetchDirectionsFromServer(null, null, isAlternative);
                 return;
             }
 
+            // 3. Chế độ Động (GPS thực tế)
             if ("geolocation" in navigator) {
-                loadingStatus.textContent = "⏳ Đang lấy vị trí GPS hiện tại...";
-                
+                if (!isAlternative) loadingStatus.textContent = "⏳ Đang lấy vị trí GPS hiện tại...";
+
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
-                        loadingStatus.textContent = `✅ Đã lấy vị trí: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-                        
-                        // Gửi vị trí thực tế đến server
-                        fetchDirectionsFromServer(lat, lon);
+                        // Gửi yêu cầu với toạ độ thực tế
+                        fetchDirectionsFromServer(lat, lon, isAlternative);
                     },
                     (error) => {
+                        console.error(error);
                         loadingStatus.textContent = "❌ Lỗi: Không thể lấy vị trí. Vui lòng bật GPS.";
                         getDirectionsBtn.disabled = false;
-                        console.error(error);
+                        altRouteBtn.disabled = false;
                     },
                     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
                 );
             } else {
                 directionsBox.textContent = "Trình duyệt của bạn không hỗ trợ định vị GPS.";
                 getDirectionsBtn.disabled = false;
+                altRouteBtn.disabled = false;
             }
         }
 
-        async function fetchDirectionsFromServer(lat, lon) {
-            loadingStatus.textContent = "⏳ Đang gửi tọa độ và yêu cầu AI tạo lộ trình...";
-            
+        // --- HÀM 2: GỬI API LÊN SERVER ---
+        async function fetchDirectionsFromServer(lat, lon, isAlternative) {
+            if (!isAlternative) loadingStatus.textContent = "⏳ Đang gửi tọa độ và yêu cầu AI tạo lộ trình...";
+
             try {
                 const res = await fetch("/get-dynamic-directions", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ 
-                        current_lat: lat, 
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        current_lat: lat,
                         current_lon: lon,
-                        // TRUYỀN KEY ĐỊA ĐIỂM LÊN BACKEND
                         start: START_KEY,
-                        end: END_KEY
-                    }), 
+                        end: END_KEY,
+                        alternative: isAlternative // Quan trọng: Gửi cờ tìm đường khác
+                    }),
                 });
 
                 const data = await res.json();
-                
+
                 if (data.success) {
-                    directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>'); 
+                    directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>');
                     directionsBox.classList.add("show");
-                    loadingStatus.textContent = `🎉 Lộ trình đến ${DESTINATION_NAME} (${data.total_distance_km} km) đã sẵn sàng!`;
-                    
+
+                    if (isAlternative) {
+                        loadingStatus.textContent = `✅ Đã tìm thấy lộ trình thay thế!`;
+                    } else {
+                        loadingStatus.textContent = `🎉 Lộ trình đến ${DESTINATION_NAME} (${data.total_distance_km} km) đã sẵn sàng!`;
+                        // Chỉ hiện nút "Tìm đường khác" sau khi đã có lộ trình đầu tiên
+                        altRouteBtn.style.display = "inline-block";
+                    }
+
                     mapLink.href = data.map_url;
                     mapLink.style.display = 'inline-block';
                     photoChallenge.style.display = 'block';
 
                 } else {
-                    directionsBox.innerHTML = data.route_text; 
+                    directionsBox.innerHTML = data.route_text;
                     loadingStatus.textContent = "❌ Lỗi tạo lộ trình: " + data.message;
+                    // Nếu lỗi do địa điểm không hợp lệ, vẫn cho mở map
                     mapLink.style.display = 'inline-block';
-                    mapLink.href = `https://www.google.com/maps/dir/`; 
+                    mapLink.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(DESTINATION_NAME)}`;
                 }
 
             } catch (error) {
                 console.error("Lỗi Fetch:", error);
                 directionsBox.textContent = "❌ Lỗi kết nối Server. Vui lòng thử lại.";
                 loadingStatus.textContent = "❌ Lỗi kết nối.";
-
             } finally {
+                // Mở khóa nút bấm
                 getDirectionsBtn.disabled = false;
+                altRouteBtn.disabled = false;
             }
         }
 
-        getDirectionsBtn.addEventListener("click", getAndSendLocation);
+        // --- GÁN SỰ KIỆN CHO NÚT BẤM ---
+        getDirectionsBtn.addEventListener("click", () => getAndSendLocation(false)); // Lộ trình thường
+        altRouteBtn.addEventListener("click", () => getAndSendLocation(true));       // Lộ trình thay thế
         
     </script>
 

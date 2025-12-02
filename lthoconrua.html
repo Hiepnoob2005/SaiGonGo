@@ -1,153 +1,161 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lộ trình đến Hồ Con Rùa</title>
-  <link rel="stylesheet" href="./assets/css/style.css" />
-  <style>
-    /* CSS Tùy chỉnh */
-    body {
-      font-family: "Be Vietnam Pro", sans-serif;
-      background-color: #f8f8f8;
-      text-align: center;
-      padding-top: 50px; 
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lộ trình đến Hồ Con Rùa</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <style>
+        /* CSS Tùy chỉnh */
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #f8f8f8;
+            text-align: center;
+            padding-top: 50px;
+        }
 
-    .main-container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 30px;
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    
-    .instruction-box {
-  margin: 30px auto;
-  padding: 30px 35px;
-  border: 3px solid #e63946; 
-  background: linear-gradient(180deg, #fff6f6, #ffeaea); 
-  border-radius: 16px;
-  text-align: left;
-  white-space: pre-wrap; 
-  font-size: 1rem; 
-  line-height: 1.6;  
-  font-weight: 600;
-  color: #222; 
-  box-shadow: 0 6px 18px rgba(230, 57, 70, 0.2);
-  min-height: 130px;
-  max-width: 800px;
-  transition: all 0.3s ease;
-}
+        .main-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-.instruction-box.show {
-  transform: scale(1.02);
-  box-shadow: 0 8px 24px rgba(230, 57, 70, 0.35);
-}
+        .instruction-box {
+            margin: 30px auto;
+            padding: 30px 35px;
+            border: 3px solid #e63946;
+            background: linear-gradient(180deg, #fff6f6, #ffeaea);
+            border-radius: 16px;
+            text-align: left;
+            white-space: pre-wrap;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            font-weight: 600;
+            color: #222;
+            box-shadow: 0 6px 18px rgba(230, 57, 70, 0.2);
+            min-height: 130px;
+            max-width: 800px;
+            transition: all 0.3s ease;
+        }
 
-    /* Các nút */
-    .btn-action {
-  background-color: #d62828;       
-  color: #fff;                     
-  padding: 18px 50px;              
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 1.2rem;               
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  transition: all 0.25s ease;
-  margin-top: 25px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 14px rgba(214, 40, 40, 0.4); 
-}
+        .instruction-box.show {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(230, 57, 70, 0.35);
+        }
 
-.btn-action:hover {
-  background-color: #e63946;       
-  transform: translateY(-3px);     
-  box-shadow: 0 6px 18px rgba(230, 57, 70, 0.5);
-}
-    
-    .btn-map {
-        background-color: #007bff; 
-        padding: 12px 25px;
-        font-size: 1rem;
-    }
-    .btn-map:hover {
-        background-color: #0056b3;
-    }
-    
-    .challenge-section {
-        margin-top: 30px;
-        padding: 20px;
-        border-top: 1px solid #ddd;
-    }
-    
-    /* CSS cho toggle */
-    .toggle-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 20px;
-        font-size: 0.95rem;
-        color: #555;
-    }
-    .toggle-switch {
-        position: relative;
-        display: inline-block;
-        width: 45px;
-        height: 25px;
-    }
-    .toggle-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: 0.4s;
-        border-radius: 25px;
-    }
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: 0.4s;
-        border-radius: 50%;
-    }
-    input:checked + .slider {
-        background-color: #2196F3;
-    }
-    input:checked + .slider:before {
-        transform: translateX(18px);
-    }
+        /* Các nút */
+        .btn-action {
+            background-color: #d62828;
+            color: #fff;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            transition: all 0.25s ease;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 14px rgba(214, 40, 40, 0.4);
+        }
 
-  </style>
+        .btn-action:hover {
+            background-color: #e63946;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(230, 57, 70, 0.5);
+        }
+
+        .btn-map {
+            background-color: #007bff;
+            padding: 12px 25px;
+            font-size: 1rem;
+        }
+
+        .btn-map:hover {
+            background-color: #0056b3;
+        }
+
+        .challenge-section {
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* CSS cho toggle */
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 25px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(18px);
+        }
+    </style>
 </head>
+
 <body id="top">
-  <div id="score-display" class="score-badge">
-  💎 <span id="user-points">Loading...</span>
-  </div>
-  <div id="point-anim" class="point-animation"></div>
+    <div id="score-display" class="score-badge">
+        💎 <span id="user-points">Loading...</span>
+    </div>
+    <div id="point-anim" class="point-animation"></div>
     <header class="header" data-header>
         <div class="container">
             <a href="index.html">
-              <h1 class="logo">SaiGonGo</h1>
+                <h1 class="logo">SaiGonGo</h1>
             </a>
-            </div>
+        </div>
     </header>
 
     <main class="main-container">
@@ -167,8 +175,8 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   transition: all 0.3s ease;
 ">
-  📍 Đang xác định vị trí...
-</div>
+            📍 Đang xác định vị trí...
+        </div>
         <a href="quiz_buudientp.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về</a>
 
         <input type="text" id="locationName" value="Hồ Con Rùa" readonly style="margin-bottom: 20px;" />
@@ -181,21 +189,26 @@
             </label>
             <span id="locationModeLabel">Chế độ Thử nghiệm (Hồ Con Rùa)</span>
         </div>
-        
+
         <button id="getDirectionsBtn" class="btn-action">✅ Yêu cầu Lộ trình GPS</button>
+
+        <button id="altRouteBtn" class="btn-action" style="background-color: #ff9800; display: none; margin-top: 10px;">
+            ⚠️ Nếu đường bị chặn. Tìm lối khác
+        </button>
 
         <div id="loadingStatus" style="margin-top: 15px; color: #ff6600; font-weight: 600;"></div>
 
         <div id="directionsBox" class="instruction-box">
             Lộ trình sẽ xuất hiện ở đây sau khi bạn nhấn nút Yêu cầu Lộ trình.
         </div>
-        
+
         <a id="mapLink" class="btn-action btn-map" target="_blank" style="display: none; text-decoration: none;">
             <button onclick="openGoogleMap()">🗺️ Mở Map Trợ giúp</button>
         </a>
 
         <div style="margin-top: 25px;">
-            <a href="ketthuclt1.html" class="btn-action" style="display: inline-block; text-decoration: none; background-color: #f92929;">
+            <a href="ketthuclt1.html" class="btn-action"
+                style="display: inline-block; text-decoration: none; background-color: #f92929;">
                 ⏩ Bỏ qua lộ trình này sẽ kết thúc chuyến đi
             </a>
         </div>
@@ -206,9 +219,9 @@
             </a>
         </section>
     </main>
-    
+
     <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
-        </footer>
+    </footer>
 
     <script>
         // --- CẤU HÌNH ĐỊA ĐIỂM ---
@@ -221,8 +234,8 @@
         const loadingStatus = document.getElementById("loadingStatus");
         const mapLink = document.getElementById("mapLink");
         const photoChallenge = document.getElementById("photoChallenge");
-        const locationToggle = document.getElementById("dynamicLocationToggle"); 
-        const locationModeLabel = document.getElementById("locationModeLabel"); 
+        const locationToggle = document.getElementById("dynamicLocationToggle");
+        const locationModeLabel = document.getElementById("locationModeLabel");
         const DESTINATION_NAME = document.getElementById("locationName").value;
 
         let useDynamicLocation = false;
@@ -237,213 +250,233 @@
         });
 
 
-        function getAndSendLocation() {
-            loadingStatus.textContent = "⏳ Chuẩn bị yêu cầu lộ trình...";
-            getDirectionsBtn.disabled = true;
-            
+        // --- HÀM 1: XỬ LÝ NÚT BẤM & LẤY VỊ TRÍ ---
+        function getAndSendLocation(isAlternative = false) {
+            // 1. Cập nhật giao diện (Loading)
+            if (isAlternative) {
+                loadingStatus.textContent = "🔄 Đang tìm đường vòng tránh khu vực bị chặn...";
+                altRouteBtn.disabled = true;
+            } else {
+                loadingStatus.textContent = "⏳ Chuẩn bị yêu cầu lộ trình...";
+                getDirectionsBtn.disabled = true;
+            }
+
+            // 2. Kiểm tra chế độ (Tĩnh hay Động)
             if (!useDynamicLocation) {
-                // Chế độ tĩnh: Chỉ gửi key để backend dùng tọa độ tĩnh
-                fetchDirectionsFromServer(null, null); 
+                // Chế độ tĩnh: Gửi null để server tự lấy tọa độ mẫu
+                fetchDirectionsFromServer(null, null, isAlternative);
                 return;
             }
 
+            // 3. Chế độ Động (GPS thực tế)
             if ("geolocation" in navigator) {
-                loadingStatus.textContent = "⏳ Đang lấy vị trí GPS hiện tại...";
-                
+                if (!isAlternative) loadingStatus.textContent = "⏳ Đang lấy vị trí GPS hiện tại...";
+
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
-                        loadingStatus.textContent = `✅ Đã lấy vị trí: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-                        
-                        // Gửi vị trí thực tế đến server
-                        fetchDirectionsFromServer(lat, lon);
+                        // Gửi yêu cầu với toạ độ thực tế
+                        fetchDirectionsFromServer(lat, lon, isAlternative);
                     },
                     (error) => {
+                        console.error(error);
                         loadingStatus.textContent = "❌ Lỗi: Không thể lấy vị trí. Vui lòng bật GPS.";
                         getDirectionsBtn.disabled = false;
-                        console.error(error);
+                        altRouteBtn.disabled = false;
                     },
                     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
                 );
             } else {
                 directionsBox.textContent = "Trình duyệt của bạn không hỗ trợ định vị GPS.";
                 getDirectionsBtn.disabled = false;
+                altRouteBtn.disabled = false;
             }
         }
 
-        async function fetchDirectionsFromServer(lat, lon) {
-            loadingStatus.textContent = "⏳ Đang gửi tọa độ và yêu cầu AI tạo lộ trình...";
-            
+        // --- HÀM 2: GỬI API LÊN SERVER ---
+        async function fetchDirectionsFromServer(lat, lon, isAlternative) {
+            if (!isAlternative) loadingStatus.textContent = "⏳ Đang gửi tọa độ và yêu cầu AI tạo lộ trình...";
+
             try {
                 const res = await fetch("/get-dynamic-directions", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ 
-                        current_lat: lat, 
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        current_lat: lat,
                         current_lon: lon,
-                        // TRUYỀN KEY ĐỊA ĐIỂM LÊN BACKEND
                         start: START_KEY,
-                        end: END_KEY
-                    }), 
+                        end: END_KEY,
+                        alternative: isAlternative // Quan trọng: Gửi cờ tìm đường khác
+                    }),
                 });
 
                 const data = await res.json();
-                
+
                 if (data.success) {
-                    directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>'); 
+                    directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>');
                     directionsBox.classList.add("show");
-                    loadingStatus.textContent = `🎉 Lộ trình đến ${DESTINATION_NAME} (${data.total_distance_km} km) đã sẵn sàng!`;
-                    
+
+                    if (isAlternative) {
+                        loadingStatus.textContent = `✅ Đã tìm thấy lộ trình thay thế!`;
+                    } else {
+                        loadingStatus.textContent = `🎉 Lộ trình đến ${DESTINATION_NAME} (${data.total_distance_km} km) đã sẵn sàng!`;
+                        // Chỉ hiện nút "Tìm đường khác" sau khi đã có lộ trình đầu tiên
+                        altRouteBtn.style.display = "inline-block";
+                    }
+
                     mapLink.href = data.map_url;
                     mapLink.style.display = 'inline-block';
                     photoChallenge.style.display = 'block';
 
                 } else {
-                    directionsBox.innerHTML = data.route_text; 
+                    directionsBox.innerHTML = data.route_text;
                     loadingStatus.textContent = "❌ Lỗi tạo lộ trình: " + data.message;
+                    // Nếu lỗi do địa điểm không hợp lệ, vẫn cho mở map
                     mapLink.style.display = 'inline-block';
-                    mapLink.href = `https://www.google.com/maps/dir/`; 
+                    mapLink.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(DESTINATION_NAME)}`;
                 }
 
             } catch (error) {
                 console.error("Lỗi Fetch:", error);
                 directionsBox.textContent = "❌ Lỗi kết nối Server. Vui lòng thử lại.";
                 loadingStatus.textContent = "❌ Lỗi kết nối.";
-
             } finally {
+                // Mở khóa nút bấm
                 getDirectionsBtn.disabled = false;
+                altRouteBtn.disabled = false;
             }
         }
 
-        getDirectionsBtn.addEventListener("click", getAndSendLocation);
-        
+        // --- GÁN SỰ KIỆN CHO NÚT BẤM ---
+        getDirectionsBtn.addEventListener("click", () => getAndSendLocation(false)); // Lộ trình thường
+        altRouteBtn.addEventListener("click", () => getAndSendLocation(true));       // Lộ trình thay thế
+
     </script>
 
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-<script>
-    // --- 1. HÀM LOAD ĐIỂM KHI VÀO TRANG ---
-    async function loadUserScore() {
-        try {
-            const res = await fetch('/api/user');
-            const data = await res.json();
-            if (data.logged_in) {
-                document.getElementById('user-points').textContent = data.points;
-            } else {
-                document.getElementById('score-display').style.display = 'none';
+    <script>
+        // --- 1. HÀM LOAD ĐIỂM KHI VÀO TRANG ---
+        async function loadUserScore() {
+            try {
+                const res = await fetch('/api/user');
+                const data = await res.json();
+                if (data.logged_in) {
+                    document.getElementById('user-points').textContent = data.points;
+                } else {
+                    document.getElementById('score-display').style.display = 'none';
+                }
+            } catch (e) { console.error(e); }
+        }
+        window.addEventListener('load', loadUserScore);
+
+        async function openGoogleMap() {
+            // ⚙️ Điểm bắt đầu và đích (bạn có thể đổi tuỳ nơi)
+            const start = "Bưu điện TP, 2 Công xã Paris, Quận 1, TP.HCM";
+            const destination = "Hồ Con Rùa, Phường 6, Quận 3, TP.HCM";
+
+            // 🗺️ Tạo link Google Maps với mode = walking
+            const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+
+            // Gọi API trừ điểm (-2 điểm)
+            try {
+                const res = await fetch('/api/update-score', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        points: -2,
+                        routeId: 'route1' // ID của lộ trình hiện tại
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    // Cập nhật điểm trên màn hình
+                    document.getElementById('user-points').textContent = data.new_points;
+
+                    // Hiệu ứng -2 bay xuống
+                    const anim = document.getElementById('point-anim');
+                    anim.textContent = "-2 Điểm (Xem Map)";
+                    anim.className = "point-animation anim-minus";
+
+                    // Reset animation để có thể chạy lại lần sau
+                    setTimeout(() => { anim.className = "point-animation"; }, 2000);
+                } else {
+                    console.log(data.message); // "Lộ trình đã hoàn thành..."
+                }
+            } catch (e) {
+                console.error("Lỗi cập nhật điểm:", e);
+            } finally {
+                // LUÔN LUÔN mở map dù trừ điểm thành công hay thất bại (để không chặn người dùng)
+                window.open(url, "_blank");
             }
-        } catch (e) { console.error(e); }
-    }
-    window.addEventListener('load', loadUserScore);
 
-  async function openGoogleMap() {
-    // ⚙️ Điểm bắt đầu và đích (bạn có thể đổi tuỳ nơi)
-    const start = "Bưu điện TP, 2 Công xã Paris, Quận 1, TP.HCM";
-    const destination = "Hồ Con Rùa, Phường 6, Quận 3, TP.HCM";
+        }
+    </script>
+    <script>
 
-    // 🗺️ Tạo link Google Maps với mode = walking
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+        // 🎯 Tọa độ của điểm đến (ví dụ: Hồ Con Rùa)
+        const DEST_LAT = 10.782615630794004;
+        const DEST_LON = 106.69595372983176;
 
-// Gọi API trừ điểm (-2 điểm)
-        try {
-            const res = await fetch('/api/update-score', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    points: -2, 
-                    routeId: 'route1' // ID của lộ trình hiện tại
-                })
-            });
-            const data = await res.json();
 
-            if (data.success) {
-                // Cập nhật điểm trên màn hình
-                document.getElementById('user-points').textContent = data.new_points;
-                
-                // Hiệu ứng -2 bay xuống
-                const anim = document.getElementById('point-anim');
-                anim.textContent = "-2 Điểm (Xem Map)";
-                anim.className = "point-animation anim-minus";
-                
-                // Reset animation để có thể chạy lại lần sau
-                setTimeout(() => { anim.className = "point-animation"; }, 2000);
-            } else {
-                console.log(data.message); // "Lộ trình đã hoàn thành..."
-            }
-        } catch (e) {
-            console.error("Lỗi cập nhật điểm:", e);
-        } finally {
-            // LUÔN LUÔN mở map dù trừ điểm thành công hay thất bại (để không chặn người dùng)
-            window.open(url, "_blank");
+        const distanceBox = document.getElementById("distanceProgress");
+
+        // Hàm tính khoảng cách giữa 2 tọa độ (mét)
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // bán kính Trái Đất (m)
+            const toRad = deg => deg * Math.PI / 180;
+            const φ1 = toRad(lat1);
+            const φ2 = toRad(lat2);
+            const Δφ = toRad(lat2 - lat1);
+            const Δλ = toRad(lon2 - lon1);
+            const a = Math.sin(Δφ / 2) ** 2 +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ / 2) ** 2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
         }
 
-  }
-</script>
-<script>
+        // 🔄 Hàm cập nhật tiến độ
+        function updateDistance() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLat = position.coords.latitude;
+                        const userLon = position.coords.longitude;
+                        const distance = getDistance(userLat, userLon, DEST_LAT, DEST_LON);
+                        const km = (distance / 1000).toFixed(2);
 
-// 🎯 Tọa độ của điểm đến (ví dụ: Hồ Con Rùa)
-const DEST_LAT = 10.782615630794004;
-const DEST_LON = 106.69595372983176;
-
-
-const distanceBox = document.getElementById("distanceProgress");
-
-// Hàm tính khoảng cách giữa 2 tọa độ (mét)
-function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371e3; // bán kính Trái Đất (m)
-  const toRad = deg => deg * Math.PI / 180;
-  const φ1 = toRad(lat1);
-  const φ2 = toRad(lat2);
-  const Δφ = toRad(lat2 - lat1);
-  const Δλ = toRad(lon2 - lon1);
-  const a = Math.sin(Δφ / 2) ** 2 +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-// 🔄 Hàm cập nhật tiến độ
-function updateDistance() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userLat = position.coords.latitude;
-        const userLon = position.coords.longitude;
-        const distance = getDistance(userLat, userLon, DEST_LAT, DEST_LON);
-        const km = (distance / 1000).toFixed(2);
-
-        if (distance < 50) {
-          distanceBox.textContent = "🎉 Bạn đã đến điểm đến rồi!";
-          distanceBox.style.backgroundColor = "#e8ffe8";
-          distanceBox.style.color = "#0a8a0a";
-          distanceBox.style.border = "2px solid #9be59b";
-        } else {
-          distanceBox.textContent = `📍 Cách điểm đến: ${km} km`;
-          distanceBox.style.backgroundColor = "#e8f2ff";
-          distanceBox.style.color = "#0056b3";
-          distanceBox.style.border = "2px solid #bcd8ff";
+                        if (distance < 50) {
+                            distanceBox.textContent = "🎉 Bạn đã đến điểm đến rồi!";
+                            distanceBox.style.backgroundColor = "#e8ffe8";
+                            distanceBox.style.color = "#0a8a0a";
+                            distanceBox.style.border = "2px solid #9be59b";
+                        } else {
+                            distanceBox.textContent = `📍 Cách điểm đến: ${km} km`;
+                            distanceBox.style.backgroundColor = "#e8f2ff";
+                            distanceBox.style.color = "#0056b3";
+                            distanceBox.style.border = "2px solid #bcd8ff";
+                        }
+                    },
+                    (error) => {
+                        distanceBox.textContent = "⚠️ Không thể xác định vị trí. Hãy bật GPS.";
+                        distanceBox.style.backgroundColor = "#fff4e5";
+                        distanceBox.style.color = "#cc6600";
+                        distanceBox.style.border = "2px solid #f3c38d";
+                    }
+                );
+            } else {
+                distanceBox.textContent = "❌ Trình duyệt không hỗ trợ GPS.";
+            }
         }
-      },
-      (error) => {
-        distanceBox.textContent = "⚠️ Không thể xác định vị trí. Hãy bật GPS.";
-        distanceBox.style.backgroundColor = "#fff4e5";
-        distanceBox.style.color = "#cc6600";
-        distanceBox.style.border = "2px solid #f3c38d";
-      }
-    );
-  } else {
-    distanceBox.textContent = "❌ Trình duyệt không hỗ trợ GPS.";
-  }
-}
 
-// Gọi ngay và cập nhật mỗi 2 phút
-updateDistance();
-setInterval(updateDistance, 120000);
-</script>
+        // Gọi ngay và cập nhật mỗi 2 phút
+        updateDistance();
+        setInterval(updateDistance, 120000);
+    </script>
 
 </body>
+
 </html>

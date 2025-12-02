@@ -21,7 +21,7 @@ import threading
 import base64 # Giữ lại nếu cần cho xử lý ảnh
 import math
 from math import radians, sin, cos, sqrt, atan2
-# 🗺️ Danh sách toạ độ các địa điểm trong hành trình
+# 🗺️ Danh sách toạ độ các địa điểm trong................................................................................... hành trình
 LOCATIONS = {
     "bao_tang_chien_tich": {
         "name": "Bảo tàng Chiến tích Chiến tranh",
@@ -458,6 +458,7 @@ def get_dynamic_directions():
         data = request.get_json() or {}
         start_key = data.get("start")
         end_key = data.get("end")
+        is_alternative = data.get("alternative", False)
 
         if not start_key or not end_key:
             return jsonify({"success": False, "message": "Thiếu thông tin điểm bắt đầu hoặc kết thúc"}), 400
@@ -491,13 +492,22 @@ def get_dynamic_directions():
         model_name_for_text = "gemini-2.5-flash" 
         
         # Tạo prompt
-        prompt = (
-            f"Bạn là hướng dẫn viên du lịch TP.HCM. "
-            f"Hãy mô tả 4–6 bước chỉ đường bằng tiếng Việt, "
-            f"ngắn gọn, dễ hiểu, từ '{start['name']}' đến '{end['name']}'. "
-            f"Tổng khoảng cách là {round(distance_km, 2)} km. "
-            f"Không kèm liên kết hoặc ký hiệu đặc biệt."
-        )
+        if is_alternative:
+            prompt = (
+                f"Bạn là hướng dẫn viên du lịch TP.HCM. Người dùng báo rằng CON ĐƯỜNG CHÍNH ĐANG BỊ CHẶN hoặc KHÔNG ĐI ĐƯỢC. "
+                f"Hãy chỉ dẫn một LỘ TRÌNH THAY THẾ (đi đường vòng, đi qua hẻm lớn hoặc đường song song) "
+                f"từ '{start['name']}' đến '{end['name']}'. "
+                f"Tuyệt đối không chỉ dẫn đi lại con đường chính ngắn nhất. "
+                f"Hãy liệt kê 4-6 bước đi cụ thể. Bắt đầu câu trả lời bằng: '⚠️ Vì đường chính bị chặn, hãy đi theo lối này:...'"
+            )
+        else:
+            prompt = (
+                f"Bạn là hướng dẫn viên du lịch TP.HCM. "
+                f"Hãy mô tả 4–6 bước chỉ đường đi bộ ngắn nhất, dễ hiểu bằng tiếng Việt, "
+                f"từ '{start['name']}' đến '{end['name']}'. "
+                f"Tổng khoảng cách khoảng {round(distance_km, 2)} km. "
+                f"Không kèm liên kết hoặc ký hiệu đặc biệt."
+            )
         
         # Gọi generate_content bằng client.models
         response = client.models.generate_content(
