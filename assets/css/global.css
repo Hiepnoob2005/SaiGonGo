@@ -1,67 +1,68 @@
 /* -------------------------------------------------------------------------- */
-/* GLOBAL CSS - SAIGONGO (Updated Font)                     */
+/* GLOBAL CSS - SAIGONGO (Final Fix: Nunito & Safe Mode)        */
 /* -------------------------------------------------------------------------- */
 
-/* 1. Import Font Poppins từ Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* 1. Import Font Nunito */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* 2. Khai báo biến Font và Màu sắc (Giữ lại các màu cũ của bạn nếu cần) */
-  --font-primary: 'Poppins', sans-serif;
-
-  /* Màu sắc chủ đạo (Dựa trên các file cũ của bạn) */
-  --green-primary: #0098a1;     /* Màu xanh chủ đạo của logo */
-  --green-hover: #007c85;       /* Màu khi di chuột */
-  --text-dark: #333333;         /* Màu chữ chính */
-  --text-light: #666666;        /* Màu chữ phụ */
-  --white: #ffffff;
+  /* Khai báo biến dùng chung */
+  --font-primary: 'Nunito', sans-serif;
+  --green-primary: #0098a1;
 }
 
-/* 3. Reset cơ bản & Áp dụng Font toàn cục */
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  /* Dòng này ép buộc TẤT CẢ mọi thứ phải dùng font Poppins */
-  font-family: var(--font-primary) !important; 
-}
-
-html {
-  /* Đặt kích thước chữ gốc. 
-     10px giúp dễ tính toán (1.6rem = 16px). 
-     Nếu muốn chữ to hơn nữa, hãy tăng số này lên 11px hoặc 12px */
-  font-size: 10px; 
-  scroll-behavior: smooth;
-}
-
+/* 2. Thiết lập Font cho toàn trang (nhưng không ép icon) */
 body {
-  /* Kích thước chữ mặc định cho toàn trang */
-  font-size: 1.6rem; /* Tương đương 16px (trước đây thường là 14px khá nhỏ) */
-  line-height: 1.6;  /* Khoảng cách dòng thoáng hơn */
-  color: var(--text-dark);
-  background-color: var(--white);
-  overflow-x: hidden; /* Tránh thanh cuộn ngang không mong muốn */
+  font-family: var(--font-primary);
+  font-size: 1.6rem; /* Cỡ chữ mặc định 16px */
+  line-height: 1.6;
+  /* Lưu ý: Không set màu nền hay màu chữ ở đây để tránh đè style.css */
 }
 
-/* 4. Fix lỗi font chữ nhỏ/lỗi font trong các ô nhập liệu và nút bấm */
+/* 3. Fix lỗi ô nhập liệu bị sai font (Input, Select, Textarea) */
 input,
-button,
 textarea,
-select,
-a {
-  font-family: inherit !important; /* Kế thừa font từ body */
-  font-size: 1.6rem; /* Đảm bảo chữ trong ô input không bị bé xíu */
-  text-decoration: none;
+select {
+  font-family: var(--font-primary);
+  font-size: 1.6rem;
 }
 
-/* 5. Class tiện ích (nếu cần dùng nhanh) */
-.text-center { text-align: center; }
-.section-title {
-  font-size: 3.2rem; /* Tiêu đề to rõ */
-  font-weight: 700;
-  color: var(--green-primary);
-  margin-bottom: 2rem;
-  text-align: center;
+/* 4. CHỈNH RIÊNG CHO Ô GỢI Ý HƯỚNG ĐI (AI) */
+/* Mình gom nhiều ID phổ biến, code sẽ tự nhận diện đúng ID của bạn */
+#directions-result, 
+#direction-output, 
+.ai-response-content,
+.goi-y-huong-di {
+    font-size: 1.8rem !important; /* Chữ to hơn (18px) */
+    font-weight: 500;             /* Chữ đậm hơn một chút */
+    line-height: 1.8;             /* Dãn dòng cho dễ đọc */
+    color: #333;                  /* Màu chữ đậm rõ ràng */
+}
+
+/* 5. Không can thiệp vào Button và Icon để giữ nguyên màu gốc */
+button, .btn {
+    font-family: inherit; /* Chỉ kế thừa font, không chỉnh màu */
+}
+/* Tìm nút có class là btn-primary (nút Bắt đầu) */
+.btn-primary {
+    background-color: #0098a1 !important; /* Màu NỀN: Xanh chủ đạo */
+    color: #ffffff !important;            /* Màu CHỮ: Trắng */
+    border: 2px solid #0098a1 !important; /* Viền: Cùng màu nền */
+    
+    /* Làm nút to và đẹp hơn một chút */
+    padding: 12px 30px !important;
+    border-radius: 50px !important;       /* Bo tròn góc */
+    font-weight: 700 !important;          /* Chữ đậm */
+    transition: all 0.3s ease;            /* Hiệu ứng chuyển màu mượt */
+}
+
+/* Hiệu ứng khi di chuột vào nút */
+.btn-primary:hover {
+    background-color: #007c85 !important; /* Đổi sang màu xanh đậm hơn (không bị mất màu) */
+    color: #ffffff !important;            /* QUAN TRỌNG: Giữ chữ màu TRẮNG */
+    border-color: #007c85 !important;     /* Viền cùng màu nền */
+    
+    /* Đảm bảo nút không bị trong suốt */
+    opacity: 1 !important; 
+    background-image: none !important;    /* Loại bỏ ảnh nền nếu có gây lỗi */
 }

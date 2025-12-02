@@ -24,7 +24,7 @@
   {
     "username": "24127168",
     "email": "lthieu2435@clc.fitus.edu.vn",
-    "points": 0,
+    "points": 85,
     "routes": {
       "route1": {
         "status": "locked",

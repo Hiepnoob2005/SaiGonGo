@@ -118,7 +118,7 @@
       align-items: center;
       gap: 10px;
       margin: 10px auto 20px auto;
-      font-size: 1rem;
+      font-size: 1.4rem;
       color: #555;
       font-weight: 600;
     }
@@ -167,10 +167,23 @@
     input:checked+.slider:before {
       transform: translateX(22px);
     }
+
+    .main-container h2 {
+      font-family: 'Nunito', sans-serif !important;
+      background-color: #0098a1;    
+      color: white !important;       
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 2.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
   </style>
 </head>
 
-<body id="top">
+<body id="top"> 
   <div id="score-display" class="score-badge">
     💎 <span id="user-points">Loading...</span>
   </div>
@@ -208,36 +221,33 @@
       text-align: center;
     ">
 
-      <h2 style="
+      <!-- <h2 style="
         font-size: 2.2rem;
         color: #0056b3;
         font-weight: 800;
         text-transform: uppercase;
         margin-bottom: 20px;
-      ">
-        📍 Xác thực điểm đến
+      "> -->
+  </h2>
+           📍 Xác thực điểm đến
       </h2>
 
-      <p style="
-        font-size: 1.4rem;
-        color: #333;
-        line-height: 1.8;
-        margin-bottom: 25px;
-      ">
-        Bước 1: Hãy di chuyển đến <b>Bảo tàng chiến tích chiến tranh</b> (< 100m) để mở khóa camera. </p>
+    </p>
+        Bước 1: Hãy di chuyển đến <b>Bảo tàng chiến tích chiến tranh</b> (< 100m) để mở khóa camera.
+      </p>
 
-          <a href="ltbaotang.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;">← Quay
+          <a href="batdau1.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;">← Quay
             lại</a>
 
           <div style="margin-bottom: 20px;">
             <input type="text" id="locationName" value="Bảo tàng chiến tích chiến tranh" readonly style="
-                 font-size: 1.1rem;
+                 font-size: 1.5rem;
                  padding: 10px;
-                 border: 1.5px solid #ccc;
+                 border: 1.5px solid #656fa2;
                  border-radius: 8px;
                  text-align: center;
                  color: #333;
-                 background-color: #fafafa;
+                 background-color: #bdcced;
                  width: 80%;
                  max-width: 400px;
                " />
@@ -293,19 +303,10 @@
     margin-bottom: 25px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-family: 'Be Vietnam Pro', sans-serif;
   ">
               🏛️ Giới thiệu về Bảo tàng chiến tích chiến tranh
+            
             </h2>
-
-            <img src="./assets/images/BaoTangChienTichChienTranh.png" alt="Bảo tàng chiến tích chiến tranh" style="
-         width: 100%;
-         max-width: 600px;
-         border-radius: 14px;
-         margin: 25px auto 35px auto;
-         display: block;
-         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-       " />
 
             <p style="
     font-size: 1.7rem;
