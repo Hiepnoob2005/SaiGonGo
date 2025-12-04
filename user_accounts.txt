@@ -6,3 +6,5 @@ Kiwi11052006;lekienquoc1105@gmail.com;$2b$12$Rl.F4msAzcUQu0DkvFXI7OuYiP26CSEcI4l
 1234;lkquoc2416@clc.fitus.edu.vn;$2b$12$.FQVMeY7Hb88ouUjFt184.cHEkfZYzd9oOkZrE7l.g0z3Z2MvDSZi
 skibi;bruhbrubruh000@gmail.com;$2b$12$DBFcGNe4OtOxh0BDWBaYiOQIC4ZHgnwi.niGwlJ7TIhCIIb.SqBmq
 test1;abc@gmail.com;$2b$12$/Cfyt2hwg0jJPPdrlNHEgOvbWzAPxHOGbImZcbNm18nfHmJsey7uu
+test2;duykhenggg;$2b$12$wzH.WHofOV1NhoRZ4oWCkeFd.kBOgGWfLYY4f7JXJCYeq4jOzh6J.
+admin1;admin1@hcmus.edu.vn;$2b$12$YJ7iF9.eKCaySZkO2KThven55OTYkFsak7DBGM/fC.93oHlo8QKPi

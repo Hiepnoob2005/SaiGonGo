@@ -157,7 +157,36 @@
       animation: spin 1s linear infinite; margin: 10px auto; display: none;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    /* --- ADMIN BUTTON STYLE --- */
+    .admin-badge {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      z-index: 10000;
+      font-weight: bold;
+      font-family: sans-serif; /* Dùng font không chân cho hiện đại */
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid white;
+      cursor: pointer;
+      transition: transform 0.2s;
+      text-decoration: none; /* Đề phòng nếu thẻ là thẻ a */
+    }
 
+    .admin-badge:hover {
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    .admin-badge ion-icon {
+      font-size: 1.4rem;
+    }
   </style>
 </head>
 <body>
@@ -383,6 +412,27 @@
   // Chạy lần đầu
   initGrid();
 </script>
+
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    {% if is_admin %}
+  <button onclick="adminSkipAll('ltdinhdoclap.html')" class="admin-badge">
+    <ion-icon name="rocket-outline"></ion-icon>
+    ADMIN SKIP
+  </button>
+
+  <script>
+    // Sửa hàm nhận tham số nextUrl
+    function adminSkipAll(nextUrl) {
+      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
+        // Chuyển hướng ngay lập tức
+        window.location.href = nextUrl;
+      }
+    }
+  </script>
+  {% endif %}
+
 
 </body>
 </html>

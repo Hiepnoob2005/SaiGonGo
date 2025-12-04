@@ -20,5 +20,27 @@
         "reward_claimed": true
       }
     }
+  },
+  {
+    "username": "24127020",
+    "email": "oizooi12345@gmail.com",
+    "points": 13,
+    "routes": {
+      "route1": {
+        "status": "locked",
+        "reward_claimed": false
+      }
+    }
+  },
+  {
+    "username": "admin1",
+    "email": "admin1@hcmus.edu.vn",
+    "points": 50,
+    "routes": {
+      "route1": {
+        "status": "completed",
+        "reward_claimed": true
+      }
+    }
   }
 ]

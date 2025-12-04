@@ -244,7 +244,7 @@
                  max-width: 400px;
                " />
           </div>
-
+          {% if is_admin %}
           <div class="toggle-container">
             <span>Chế độ kiểm tra (Bỏ qua GPS)</span>
             <label class="toggle-switch">
@@ -252,7 +252,7 @@
               <span class="slider"></span>
             </label>
           </div>
-
+          {% endif %}
           <div id="gpsStatus">📡 Đang xác định vị trí của bạn...</div>
 
           <div style="margin-bottom: 25px; margin-top: 20px;">
@@ -371,56 +371,54 @@
       return R * c;
     }
 
-    // --- 3. HÀM CHECK VỊ TRÍ LIÊN TỤC ---
-    // --- 3. HÀM CHECK VỊ TRÍ & LOGIC DEV MODE ---
+// --- 3. HÀM CHECK VỊ TRÍ & LOGIC DEV MODE (ĐÃ SỬA LỖI CHO USER) ---
     const devModeToggle = document.getElementById("devModeToggle");
+    // Lấy thẻ hiển thị trạng thái GPS
+    const gpsStatusBox = document.getElementById("gpsStatus"); 
 
     function checkLocation() {
-      // 🛑 ƯU TIÊN 1: Kiểm tra xem có đang bật chế độ Dev không?
-      if (devModeToggle.checked) {
-        gpsStatus.innerHTML = `🛠️ <b>Chế độ Nhà phát triển:</b><br>Đã bỏ qua kiểm tra GPS. Camera đã mở!`;
-        gpsStatus.style.backgroundColor = "#fff8e1"; // Màu vàng nhạt
-        gpsStatus.style.color = "#b38600";
-        gpsStatus.style.border = "2px solid #ffe58f";
+      // 🛑 KIỂM TRA AN TOÀN: 
+      // Chỉ chạy logic Admin nếu nút gạt thực sự tồn tại (Tức là đang là Admin)
+      if (devModeToggle && devModeToggle.checked) {
+        gpsStatusBox.innerHTML = `🛠️ <b>Chế độ Nhà phát triển:</b><br>Đã bỏ qua kiểm tra GPS. Camera đã mở!`;
+        gpsStatusBox.style.backgroundColor = "#fff8e1"; 
+        gpsStatusBox.style.color = "#b38600";
+        gpsStatusBox.style.border = "2px solid #ffe58f";
 
-        // Mở khóa ngay lập tức
         photoInput.disabled = false;
         lockMessage.style.display = "none";
-        return; // Dừng hàm, không check GPS thật nữa
+        return; // Dừng hàm tại đây
       }
 
-      // 🛑 ƯU TIÊN 2: Nếu không bật Dev Mode, chạy GPS thật
+      // 🛑 LOGIC NGƯỜI DÙNG THƯỜNG (Hoặc Admin chưa bật gạt)
       if ("geolocation" in navigator) {
-        // Hiển thị trạng thái đang dò tìm (chỉ khi chưa có kết quả)
-        if (gpsStatus.textContent.includes("Chế độ")) {
-          gpsStatus.innerHTML = "📡 Đang lấy lại vị trí thực tế...";
-        }
-
+        
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            // Nếu người dùng vừa bật nút Dev Mode trong lúc GPS đang chạy, thì hủy cập nhật
-            if (devModeToggle.checked) return;
+            // Nếu trong lúc đang lấy vị trí mà Admin bất ngờ bật gạt -> Hủy cập nhật GPS
+            if (devModeToggle && devModeToggle.checked) return;
 
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
 
+            // Tính khoảng cách
             const distance = getDistance(userLat, userLon, TARGET_LAT, TARGET_LON);
 
             if (distance <= MAX_DISTANCE_METERS) {
               // ĐÃ ĐẾN NƠI
-              gpsStatus.innerHTML = `✅ Bạn đang ở cách điểm đến <b>${distance.toFixed(0)}m</b>. <br>Đã mở khóa camera!`;
-              gpsStatus.style.backgroundColor = "#e8ffe8";
-              gpsStatus.style.color = "green";
-              gpsStatus.style.border = "2px solid green";
+              gpsStatusBox.innerHTML = `✅ Bạn đang ở cách điểm đến <b>${distance.toFixed(0)}m</b>. <br>Đã mở khóa camera!`;
+              gpsStatusBox.style.backgroundColor = "#e8ffe8";
+              gpsStatusBox.style.color = "green";
+              gpsStatusBox.style.border = "2px solid green";
 
               photoInput.disabled = false;
               lockMessage.style.display = "none";
             } else {
               // CÒN XA
-              gpsStatus.innerHTML = `⚠️ Bạn đang cách điểm đến <b>${(distance / 1000).toFixed(2)} km</b>.<br>Hãy đến gần hơn 100m.`;
-              gpsStatus.style.backgroundColor = "#fff5f5";
-              gpsStatus.style.color = "#d62828";
-              gpsStatus.style.border = "2px solid #d62828";
+              gpsStatusBox.innerHTML = `⚠️ Bạn đang cách điểm đến <b>${(distance / 1000).toFixed(2)} km</b>.<br>Hãy đến gần hơn 100m.`;
+              gpsStatusBox.style.backgroundColor = "#fff5f5";
+              gpsStatusBox.style.color = "#d62828";
+              gpsStatusBox.style.border = "2px solid #d62828";
 
               photoInput.disabled = true;
               uploadBtn.disabled = true;
@@ -428,19 +426,31 @@
             }
           },
           (error) => {
-            if (devModeToggle.checked) return;
-            gpsStatus.textContent = "❌ Không thể lấy vị trí GPS.";
-            gpsStatus.style.backgroundColor = "#eee";
+            // Xử lý lỗi khi người dùng từ chối cấp quyền
+            console.warn("Lỗi GPS:", error);
+            if (error.code === error.PERMISSION_DENIED) {
+               gpsStatusBox.innerHTML = "❌ Bạn đã chặn quyền truy cập vị trí.<br>Hãy bật lại trong cài đặt trình duyệt.";
+            } else {
+               gpsStatusBox.innerHTML = "❌ Không thể lấy vị trí. Hãy kiểm tra kết nối mạng.";
+            }
+            gpsStatusBox.style.backgroundColor = "#eee";
           },
-          { enableHighAccuracy: true, timeout: 5000 }
+          { enableHighAccuracy: true, timeout: 10000 }
         );
       } else {
-        gpsStatus.textContent = "Trình duyệt không hỗ trợ GPS.";
+        gpsStatusBox.textContent = "Trình duyệt không hỗ trợ GPS.";
       }
     }
 
-    devModeToggle.addEventListener("change", checkLocation);
+    // Chỉ gán sự kiện click nếu nút toggle tồn tại
+    if (devModeToggle) {
+        devModeToggle.addEventListener("change", checkLocation);
+    }
+    
+    // Chạy hàm kiểm tra ngay khi tải trang
     checkLocation();
+    
+    // Cập nhật vị trí mỗi 5 giây
     setInterval(checkLocation, 5000);
 
     // --- 4. LOGIC XỬ LÝ ẢNH (GIỮ NGUYÊN) ---
@@ -550,6 +560,24 @@
 
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  {% if is_admin %}
+  <button onclick="adminSkipAll('quiz_baotang.html')" class="admin-badge">
+    <ion-icon name="rocket-outline"></ion-icon>
+    ADMIN SKIP
+  </button>
+
+  <script>
+    // Sửa hàm nhận tham số nextUrl
+    function adminSkipAll(nextUrl) {
+      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
+        // Chuyển hướng ngay lập tức
+        window.location.href = nextUrl;
+      }
+    }
+  </script>
+  {% endif %}
+
 </body>
 
 </html>

@@ -101,7 +101,7 @@ def sync_user_to_game_db(email, username):
     return user_record
 
 # --- KHỞI TẠO FLASK & CẤU HÌNH ---
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'mot-chuoi-bi-mat-mac-dinh-khong-an-toan')
 CORS(app, supports_credentials=True) 
 
@@ -673,9 +673,26 @@ def serve_index():
     """Phục vụ file index.html"""
     return send_from_directory(BASE_DIR, "index.html")
 
+# --- DANH SÁCH ADMIN (Thêm username khác vào đây) ---
+ADMIN_USERS = ["admin1", "admin2"] 
+
 @app.route("/<path:filename>")
 def serve_static(filename):
-    """Phục vụ các file tĩnh và HTML khác"""
+    """Phục vụ file tĩnh và render HTML với biến is_admin"""
+    
+    # Kiểm tra xem user có phải admin không
+    is_admin = False
+    if current_user.is_authenticated and current_user.username in ADMIN_USERS:
+        is_admin = True
+        
+    # Nếu là file HTML, dùng render_template để truyền biến is_admin
+    if filename.endswith('.html'):
+        try:
+            return render_template(filename, is_admin=is_admin)
+        except Exception as e:
+            return f"Lỗi render template: {e}", 500
+            
+    # Các file khác (css, js, ảnh...) giữ nguyên cách gửi cũ
     return send_from_directory(BASE_DIR, filename)
 
 # ----------------------------------------------------

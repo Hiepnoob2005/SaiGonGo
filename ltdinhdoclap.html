@@ -178,9 +178,9 @@
             📍 Đang xác định vị trí...
         </div>
         <a href="quiz_baotang.html" class="btn btn-outline" style="margin: 10px 0 20px 0;">← Trở về</a>
-
+ 
         <input type="text" id="locationName" value="Dinh Độc Lập" readonly style="margin-bottom: 20px;" />
-
+        {% if is_admin %}
         <div class="toggle-container">
             <span>Sử dụng vị trí thực tế</span>
             <label class="toggle-switch">
@@ -189,7 +189,7 @@
             </label>
             <span id="locationModeLabel">Chế độ Thử nghiệm (Bảo tàng)</span>
         </div>
-
+        {% endif %}
         <button id="getDirectionsBtn" class="btn-action">✅ Yêu cầu Lộ trình GPS</button>
 
         <button id="altRouteBtn" class="btn-action" style="background-color: #ff9800; display: none; margin-top: 10px;">
@@ -241,15 +241,30 @@
 
         let useDynamicLocation = false;
 
-        // Cập nhật trạng thái Toggle ban đầu
-        locationToggle.checked = !useDynamicLocation;
-        locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
+        // --- SỬA LỖI: CHỈ CHẠY LOGIC TOGGLE NẾU LÀ ADMIN ---
+        
+        // Mặc định cho User thường: LUÔN DÙNG GPS THẬT (True)
+        // Nếu bạn muốn user thường cũng dùng toạ độ giả lập thì để là false
+        if (!locationToggle) {
+            useDynamicLocation = true; 
+        }
 
-        // Sự kiện khi gạt nút Toggle
-        locationToggle.addEventListener('change', () => {
-            useDynamicLocation = !locationToggle.checked;
-            locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
-        });
+        // Chỉ thao tác với nút gạt nếu nó thực sự tồn tại (Admin)
+        if (locationToggle) {
+            // Cập nhật trạng thái Toggle ban đầu
+            locationToggle.checked = !useDynamicLocation;
+            if(locationModeLabel) {
+                 locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
+            }
+
+            // Sự kiện khi gạt nút Toggle
+            locationToggle.addEventListener('change', () => {
+                useDynamicLocation = !locationToggle.checked;
+                if(locationModeLabel) {
+                    locationModeLabel.textContent = locationToggle.checked ? "Chế độ Thử nghiệm (Bảo tàng)" : "Sử dụng vị trí thực tế";
+                }
+            });
+        }
 
         // --- HÀM 1: XỬ LÝ NÚT BẤM & LẤY VỊ TRÍ ---
         function getAndSendLocation(isAlternative = false) {
@@ -473,6 +488,28 @@
         updateDistance();
         setInterval(updateDistance, 120000);
     </script>
+
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+
+  {% if is_admin %}
+  <button onclick="adminSkipAll('dinhdoclap.html')" class="admin-badge">
+    <ion-icon name="rocket-outline"></ion-icon>
+    ADMIN SKIP
+  </button>
+
+  <script>
+    // Sửa hàm nhận tham số nextUrl
+    function adminSkipAll(nextUrl) {
+      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
+        // Chuyển hướng ngay lập tức
+        window.location.href = nextUrl;
+      }
+    }
+  </script>
+  {% endif %}
+
 
 </body>
 
