@@ -1,5 +1,4 @@
 // Nội dung cho file: assets/js/login.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
   if (!loginForm) return;
