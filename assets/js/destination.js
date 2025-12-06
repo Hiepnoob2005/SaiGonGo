@@ -34,6 +34,8 @@ const dropArea = document.getElementById("image-view");
 const photoInput = document.getElementById("photo");
 const imageView = document.getElementById("image-view");
 
+let checkStatus = true;
+
 
 // --- 2. HÀM TÍNH KHOẢNG CÁCH (Lấy từ trang lộ trình) ---
 function getDistance(lat1, lon1, lat2, lon2) {
@@ -55,6 +57,8 @@ function getDistance(lat1, lon1, lat2, lon2) {
 const devModeToggle = document.getElementById("devModeToggle");
 
 function checkLocation() {
+   if(!checkStatus) return;
+
    // 🛑 ƯU TIÊN 1: Kiểm tra xem có đang bật chế độ Dev không?
    if (devModeToggle.checked) {
       gpsStatus.innerHTML = `🛠️ <b>Chế độ Nhà phát triển:</b><br>Đã bỏ qua kiểm tra GPS. Camera đã mở!`;
@@ -224,6 +228,8 @@ uploadBtn.addEventListener("click", async () => {
          photoInput.disabled = true;
          nextDestinationBtn.disabled = false;
          uploadBtn.disabled = true;
+
+         checkStatus = false;
          // --- CODE CỘNG ĐIỂM (+5) ---
          try {
             const scoreRes = await fetch('/api/update-score', {
