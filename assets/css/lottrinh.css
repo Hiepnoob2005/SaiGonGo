@@ -12,7 +12,7 @@ body {
 }
 
 :root {
-   --primary-color: hsl(18, 74%, 52%);
+   --primary-color: hsl(180, 98%, 31%);
    --sub-color: color-mix(in srgb, var(--primary-color), rgba(0, 0, 0, 0.15) 15%);
 }
 
@@ -137,6 +137,7 @@ body {
    align-items: center;
 
    transition: 0.3s ease;
+   padding : 15px;
 }
 
 #directionsBox i {
@@ -146,6 +147,14 @@ body {
 #directionsBox:hover {
    background-color: #fff6f6;
 
+}
+
+#directionsBox strong, 
+#directionsBox b {
+  color: #d35400; /* Darker orange/rust for emphasis */
+  font-weight: 700;
+  display: inline-block; /* Helps with spacing */
+  margin-top: 8px;
 }
 
 .button-container {

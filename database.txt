@@ -24,7 +24,7 @@
   {
     "username": "24127020",
     "email": "oizooi12345@gmail.com",
-    "points": 55,
+    "points": 90,
     "routes": {
       "route1": {
         "status": "locked",

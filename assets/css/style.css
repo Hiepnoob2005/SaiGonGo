@@ -1303,12 +1303,12 @@ body {
       display: flex;
    }
 
-   .nav-item {
+   /* .nav-item {
       padding: 18px;
       height: auto;
       border-bottom: 1px solid #f0f0f0;
       justify-content: center;
-   }
+   } */
 
    .nav-item:last-child {
       border-bottom: none;
