@@ -8,6 +8,7 @@
 body {
    background-color: #f6f6f6;
    position: relative;
+   height: 100%;
 }
 
 .score-badge {
@@ -106,13 +107,17 @@ body {
 .navbar {
    background-color: hsl(18, 74%, 52%);
    color: white !important;
-   box-shadow: 0 10px 20x rgba(0, 0, 0, 0.2);
+   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
    padding: 0 25px;
    height: 10vh;
    width: 100%;
    display: flex;
    justify-content: space-between;
    position: relative;
+}
+
+.page-end {
+   display: none;
 }
 
 .logo {
@@ -271,6 +276,31 @@ body {
    min-width: fit-content;
 }
 
+#image-view {
+   width: 100%;
+   height: 120px;
+   padding: 10px 5px;
+   border-radius: inherit;
+
+   background-size: cover;
+   background-position: center;
+   background-repeat: no-repeat;
+}
+
+#image-view:disabled {
+   cursor: none;
+}
+
+#image-view:hover {
+   border-color: #4299e1;
+   background-color: #ebf8ff;
+}
+
+#image-view.dragover {
+   border-color: #4299e1;
+   background-color: #bee3f8;
+}
+
 .image-container {
    grid-area: image;
    width: 35vw;
@@ -281,6 +311,15 @@ body {
    align-items: center;
    justify-content: center;
    overflow: hidden;
+}
+
+#image-view img {
+   width: 100%;
+   height: 100%;
+
+   background-size: cover;
+   background-position: center;
+   background-repeat: no-repeat;
 }
 
 .image-container img {
@@ -313,18 +352,16 @@ body {
 
 .text-container {
    grid-area: text;
-   width: 30vw;
-}
+   width: 450px;
 
-.text-container {
    display: flex;
    flex-direction: column;
    gap: 25px;
-   max-width: 450px;
+
    position: relative;
 }
 
-.text-container .info {
+.info {
    display: flex;
    flex-direction: column;
    gap: 25px;
@@ -358,9 +395,6 @@ body {
 
 .verification-box {
    display: block;
-   position: absolute;
-   bottom: 0;
-   left: 0;
    width: 100%;
    /* make it full width */
    box-sizing: border-box;
@@ -464,21 +498,18 @@ input[type="checkbox"] {
 .upload-area {
    border: 2px dashed #cbd5e0;
    border-radius: 10px;
-   padding: 50px 25px;
+   padding: 0;
    margin-bottom: 25px;
    transition: all 0.3s ease;
    cursor: pointer;
    background-color: #f7fafc;
-}
+   height: 100%;
 
-.upload-area:hover {
-   border-color: #4299e1;
-   background-color: #ebf8ff;
-}
-
-.upload-area.drag-over {
-   border-color: #4299e1;
-   background-color: #bee3f8;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
 }
 
 .upload-icon {
