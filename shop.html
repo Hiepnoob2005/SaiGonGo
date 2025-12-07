@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Đổi Voucher - Bảo Tàng Khám Phá</title>
+    <title data-i18n="shop_page_title">Shop Đổi Voucher - Bảo Tàng Khám Phá</title>
     <style>
+        /* (Giữ nguyên CSS cũ của bạn) */
         body {
             font-family:"Times New Roman", Times, serif;
             margin: 0;
             padding: 0;
             color: #333;
-            background-image: url('https://via.placeholder.com/1920x1080?text=Shop+Background'); /* Thay đổi URL này bằng hình nền của bạn */
+            background-image: url('https://via.placeholder.com/1920x1080?text=Shop+Background');
             background-size: cover;
             background-attachment: fixed;
             background-position: center center;
@@ -27,19 +28,13 @@
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-        header p {
-            font-size: 1.1em;
-            margin-top: 5px;
-        }
+        header h1 { margin: 0; font-size: 2.5em; }
+        header p { font-size: 1.1em; margin-top: 5px; }
         .banner {
             text-align: center;
             padding: 80px 20px;
             color: white;
-            background-image: url('https://via.placeholder.com/1200x300?text=Voucher+Shop+Banner'); /* Thay đổi URL này bằng banner của bạn */
+            background-image: url('https://via.placeholder.com/1200x300?text=Voucher+Shop+Banner');
             background-size: cover;
             background-position: center;
             margin-bottom: 40px;
@@ -50,15 +45,8 @@
             align-items: center;
             min-height: 250px;
         }
-        .banner h2 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-        }
-        .banner p {
-            font-size: 1.5em;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
-        }
+        .banner h2 { font-size: 3em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+        .banner p { font-size: 1.5em; text-shadow: 1px 1px 3px rgba(0,0,0,0.6); }
         .container {
             width: 80%;
             margin: auto;
@@ -83,130 +71,99 @@
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .voucher-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-        }
+        .voucher-card:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
         .voucher-card img {
-            max-width: 100%;
-            height: 200px; /* Chiều cao cố định cho ảnh */
-            object-fit: contain; /* Giữ tỷ lệ khung hình, không cắt ảnh */
-            background-color: #f8f8f8; /* Nền nhẹ cho ảnh logo */
-            padding: 10px; /* Đệm xung quanh logo */
-            border-bottom: 1px solid #eee;
+            max-width: 100%; height: 200px; object-fit: contain;
+            background-color: #f8f8f8; padding: 10px; border-bottom: 1px solid #eee;
         }
-        .voucher-card h4 {
-            font-size: 1.5em;
-            color: #333;
-            margin: 15px 0 10px;
-        }
-        .voucher-card p {
-            padding: 0 15px 15px;
-            color: #666;
-            font-size: 0.95em;
-        }
-        .voucher-card .points {
-            font-size: 1.3em;
-            color: #e67e22;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
+        .voucher-card h4 { font-size: 1.5em; color: #333; margin: 15px 0 10px; }
+        .voucher-card p { padding: 0 15px 15px; color: #666; font-size: 0.95em; }
+        .voucher-card .points { font-size: 1.3em; color: #e67e22; font-weight: bold; margin-bottom: 15px; }
         .voucher-card .redeem-btn {
-            display: block;
-            background-color: #f39c12;
-            color: white;
-            padding: 12px 0;
-            text-decoration: none;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease;
+            display: block; background-color: #f39c12; color: white; padding: 12px 0;
+            text-decoration: none; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
+            font-size: 1.1em; transition: background-color 0.3s ease;
         }
-        .redeem-btn:hover {
-            background-color: #e08e0b;
-        }
+        .redeem-btn:hover { background-color: #e08e0b; }
         footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-            color: white;
-            background-color: rgba(51, 51, 51, 0.7);
-            position: relative;
-            bottom: 0;
-            width: 100%;
+            text-align: center; padding: 20px; margin-top: 40px; color: white;
+            background-color: rgba(51, 51, 51, 0.7); position: relative; bottom: 0; width: 100%;
         }
     </style>
 </head>
 <body>
     <div class="overlay">
         <header>
-            <h1>Shop Đổi Voucher</h1>
-            <p>Sử dụng điểm khám phá của bạn để nhận những ưu đãi đặc biệt!</p>
+            <h1 data-i18n="shop_header_title">Shop Đổi Voucher</h1>
+            <p data-i18n="shop_header_subtitle">Sử dụng điểm khám phá của bạn để nhận những ưu đãi đặc biệt!</p>
         </header>
 
         <div class="banner">
-            <h2>Ưu Đãi Độc Quyền Dành Cho Nhà Thám Hiểm</h2>
-            <p>Đổi điểm, nhận voucher từ các thương hiệu yêu thích!</p>
+            <h2 data-i18n="shop_banner_title">Ưu Đãi Độc Quyền Dành Cho Nhà Thám Hiểm</h2>
+            <p data-i18n="shop_banner_subtitle">Đổi điểm, nhận voucher từ các thương hiệu yêu thích!</p>
         </div>
 
         <div class="container">
-            <h3>Các Voucher Hiện Có</h3>
+            <h3 style="text-align: center;" data-i18n="shop_list_title">Các Voucher Hiện Có</h3>
             <div class="voucher-grid">
                 <div class="voucher-card">
                     <img src="./assets/images/voucher_momo_50K.png" alt="MoMo Voucher">
-                    <h4>Voucher MoMo 50K</h4>
-                    <p>Giảm 50.000 VNĐ cho giao dịch tối thiểu 100.000 VNĐ trên MoMo.</p>
-                    <div class="points">700 Điểm</div>
-                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                    <h4 data-i18n="voucher_momo_title">Voucher MoMo 50K</h4>
+                    <p data-i18n="voucher_momo_desc">Giảm 50.000 VNĐ cho giao dịch tối thiểu 100.000 VNĐ trên MoMo.</p>
+                    <div class="points">700 <span data-i18n="score_points">Điểm</span></div>
+                    <a href="#" class="redeem-btn" data-i18n="btn_redeem">Đổi Ngay</a>
                 </div>
 
                 <div class="voucher-card">
                     <img src="./assets/images/shopee_voucher_40k.png" alt="Shopee Food Voucher">
-                    <h4>Voucher ShopeeFood 40K</h4>
-                    <p>Giảm 40.000 VNĐ cho đơn hàng ShopeeFood tối thiểu 80.000 VNĐ.</p>
-                    <div class="points">600 Điểm</div>
-                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                    <h4 data-i18n="voucher_shopee_title">Voucher ShopeeFood 40K</h4>
+                    <p data-i18n="voucher_shopee_desc">Giảm 40.000 VNĐ cho đơn hàng ShopeeFood tối thiểu 80.000 VNĐ.</p>
+                    <div class="points">600 <span data-i18n="score_points">Điểm</span></div>
+                    <a href="#" class="redeem-btn" data-i18n="btn_redeem">Đổi Ngay</a>
                 </div>
 
                 <div class="voucher-card">
                     <img src="./assets/images/grab_food_60K.png" alt="GrabFood Voucher">
-                    <h4>Voucher GrabFood 60K</h4>
-                    <p>Giảm 60.000 VNĐ cho đơn hàng GrabFood tối thiểu 120.000 VNĐ.</p>
-                    <div class="points">800 Điểm</div>
-                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                    <h4 data-i18n="voucher_grab_title">Voucher GrabFood 60K</h4>
+                    <p data-i18n="voucher_grab_desc">Giảm 60.000 VNĐ cho đơn hàng GrabFood tối thiểu 120.000 VNĐ.</p>
+                    <div class="points">800 <span data-i18n="score_points">Điểm</span></div>
+                    <a href="#" class="redeem-btn" data-i18n="btn_redeem">Đổi Ngay</a>
                 </div>
 
                 <div class="voucher-card">
                     <img src="./assets/images/be_voucher_30k.jpg" alt="BeFood Voucher">
-                    <h4>Voucher BeFood 30K</h4>
-                    <p>Giảm 30.000 VNĐ cho đơn hàng BeFood tối thiểu 60.000 VNĐ.</p>
-                    <div class="points">500 Điểm</div>
-                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                    <h4 data-i18n="voucher_be_title">Voucher BeFood 30K</h4>
+                    <p data-i18n="voucher_be_desc">Giảm 30.000 VNĐ cho đơn hàng BeFood tối thiểu 60.000 VNĐ.</p>
+                    <div class="points">500 <span data-i18n="score_points">Điểm</span></div>
+                    <a href="#" class="redeem-btn" data-i18n="btn_redeem">Đổi Ngay</a>
                 </div>
 
                 <div class="voucher-card">
                     <img src="./assets/images/voucher_highlands_50K.jpg" alt="Highlands Coffee Voucher">
-                    <h4>Voucher Highlands Coffee</h4>
-                    <p>Tặng 1 đồ uống cỡ trung khi mua bất kỳ đồ uống khác.</p>
-                    <div class="points">900 Điểm</div>
-                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                    <h4 data-i18n="voucher_highlands_title">Voucher Highlands Coffee</h4>
+                    <p data-i18n="voucher_highlands_desc">Tặng 1 đồ uống cỡ trung khi mua bất kỳ đồ uống khác.</p>
+                    <div class="points">900 <span data-i18n="score_points">Điểm</span></div>
+                    <a href="#" class="redeem-btn" data-i18n="btn_redeem">Đổi Ngay</a>
                 </div>
 
                 <div class="voucher-card">
                     <img src="./assets/images/katinat_20%.jpg" alt="Katinat Saigon Kafe Voucher">
-                    <h4>Voucher Katinat 20%</h4>
-                    <p>Giảm 20% tổng hóa đơn tại Katinat Saigon Kafe.</p>
-                    <div class="points">750 Điểm</div>
-                    <a href="#" class="redeem-btn">Đổi Ngay</a>
+                    <h4 data-i18n="voucher_katinat_title">Voucher Katinat 20%</h4>
+                    <p data-i18n="voucher_katinat_desc">Giảm 20% tổng hóa đơn tại Katinat Saigon Kafe.</p>
+                    <div class="points">750 <span data-i18n="score_points">Điểm</span></div>
+                    <a href="#" class="redeem-btn" data-i18n="btn_redeem">Đổi Ngay</a>
                 </div>
             </div>
-            <p style="text-align: center; margin-top: 40px; font-style: italic;">Bạn cần đăng nhập để đổi điểm.</p>
+            <p style="text-align: center; margin-top: 40px; font-style: italic;" data-i18n="shop_login_note">Bạn cần đăng nhập để đổi điểm.</p>
         </div>
 
         <footer>
-            <p>&copy; 2023 Bảo Tàng Khám Phá. Tất cả bản quyền được bảo lưu.</p>
-            <a href="baotang.html" style="color: white; text-decoration: none;">Quay lại Trang Bảo Tàng</a>
+            <p data-i18n="footer_copyright_shop">© 2023 Bảo Tàng Khám Phá. Tất cả bản quyền được bảo lưu.</p>
+            <a href="baotang.html" style="color: white; text-decoration: none;" data-i18n="footer_back_museum">Quay lại Trang Bảo Tàng</a>
         </footer>
     </div>
+
+    <script src="./assets/js/translations.js"></script>
+    <script src="./assets/js/i18n.js"></script>
 </body>
 </html>

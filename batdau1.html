@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Điểm xuất phát - Bảo tàng Chiến tích Chiến tranh</title>
+  <title data-i18n="start_title">Điểm xuất phát - Bảo tàng Chiến tích Chiến tranh</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
   <style>
     body {
@@ -136,7 +136,8 @@
   </style>
 </head>
 <body>
-  <div class="back-button" onclick="goBack()">← Quay lại</div>
+  <div class="back-button" onclick="goBack()" data-i18n="btn_back">← Quay lại</div>
+
   <script>
     // ⚙️ Cấu hình: bật/tắt kiểm tra vị trí GPS
     const LOCATION_CHECK_ENABLED = false; // ← đổi thành true để bật định vị thật
@@ -166,7 +167,8 @@
       const startButton = document.querySelector(".start-btn");
 
       if (!LOCATION_CHECK_ENABLED) {
-        infoBox.textContent = "🔧 Kiểm tra vị trí đang tắt (chế độ thử nghiệm).";
+        // Dùng i18n.t() thay cho text cứng
+        infoBox.textContent = i18n.t('start_dev_mode');
         startButton.disabled = false;
         return;
       }
@@ -180,51 +182,60 @@
             const distText = Math.round(distance);
 
             if (distance < 100) {
-              infoBox.textContent = `🎉 Bạn đã ở điểm xuất phát! (Cách ${distText}m)`;
+              infoBox.textContent = i18n.t('start_arrived');
               infoBox.className = "distance-info ok";
               startButton.disabled = false;
               startButton.style.opacity = "1";
             } else {
-              infoBox.textContent = `📍 Cách điểm xuất phát khoảng ${distText} mét`;
+              // Sử dụng params cho i18n
+              infoBox.textContent = i18n.t('start_distance', { distance: distText });
               infoBox.className = "distance-info far";
               startButton.disabled = true;
               startButton.style.opacity = "0.5";
             }
           },
           (error) => {
-            infoBox.textContent = "❌ Không thể lấy vị trí. Hãy bật GPS hoặc cho phép truy cập vị trí.";
+            infoBox.textContent = i18n.t('start_gps_error');
             infoBox.className = "distance-info far";
             console.error(error);
           }
         );
       } else {
-        infoBox.textContent = "⚠️ Trình duyệt không hỗ trợ định vị GPS.";
+        infoBox.textContent = i18n.t('start_browser_error');
       }
     }
 
-    window.onload = checkUserLocation;
+    // Đợi i18n load xong mới chạy check location lần đầu
+    window.addEventListener('load', () => {
+         // Nếu cần thiết có thể gọi lại checkUserLocation khi đổi ngôn ngữ
+         checkUserLocation();
+    });
+    
+    // Lắng nghe sự kiện đổi ngôn ngữ để cập nhật lại text dynamic nếu đang hiển thị
+    window.addEventListener('languageChanged', () => {
+        checkUserLocation();
+    });
   </script>
 
   <div class="container">
-    <h1>Điểm xuất phát</h1>
-    <p>Bạn hãy đến đây để bắt đầu hành trình.</p>
+    <h1 data-i18n="start_title">Điểm xuất phát</h1>
+    <p data-i18n="start_instruction">Bạn hãy đến đây để bắt đầu hành trình.</p>
 
     <div class="location-icon">📍</div>
 
     <div class="place-info">
-      <div class="place-name">Bảo tàng Chiến tích Chiến tranh</div>
-      <div class="place-address">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</div>
-      <a class="map-link" href="https://www.google.com/maps?q=Bảo+tàng+Chiến+tích+Chiến+tranh,+28+Võ+Văn+Tần,+Quận+3,+TPHCM" target="_blank">
+      <div class="place-name" data-i18n="dest_museum">Bảo tàng Chiến tích Chiến tranh</div>
+      <div class="place-address" data-i18n="addr_museum">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</div>
+      <a class="map-link" href="https://www.google.com/maps?q=Bảo+tàng+Chiến+tích+Chiến+tranh,+28+Võ+Văn+Tần,+Quận+3,+TPHCM" target="_blank" data-i18n="start_view_map">
         🗺️ Xem bản đồ
       </a>
     </div>
 
-    <!-- 🔹 Vị trí hiển thị thông báo khoảng cách -->
-    <div id="distance-info" class="distance-info">Đang xác định vị trí...</div>
+    <div id="distance-info" class="distance-info" data-i18n="start_checking_location">Đang xác định vị trí...</div>
   </div>
 
   <div class="bottom-btn">
-    <button class="start-btn" onclick="window.location.href='baotang.html'">
+    <button class="start-btn" onclick="window.location.href='baotang.html'" data-i18n="btn_continue">
       Tiếp tục
     </button>
   </div>
@@ -246,5 +257,9 @@
   }
 }
   </script>
+  <script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
+<link rel="stylesheet" href="./assets/js/i18n.css">
+
 </body>
 </html>

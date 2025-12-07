@@ -1,30 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register - SaiGonGo</title>
+  <title data-i18n="register_page_title">Register - SaiGonGo</title>
   <link rel="stylesheet" href="./assets/css/register.css" />
-
-  <style>
-
-  </style>
 </head>
 
 <body>
-
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <h2>Start The Journey!</h2>
-        <p>Register your account</p>
+        <h2 data-i18n="register_header">Start The Journey!</h2>
+        <p data-i18n="register_subtitle">Register your account</p>
       </div>
 
       <form class="login-form" id="registerForm" novalidate>
         <div class="form-group">
           <div class="input-wrapper">
-            <input type="text" id="username" placeholder="Username">
+            <input type="text" id="username" placeholder="Username" data-i18n-placeholder="placeholder_username">
             <span class="focus-border"></span>
           </div>
           <span class="error-message" id="emailError"></span>
@@ -32,7 +26,7 @@
 
         <div class="form-group">
           <div class="input-wrapper">
-            <input type="text" id="email" placeholder="Email">
+            <input type="text" id="email" placeholder="Email" data-i18n-placeholder="placeholder_email">
             <span class="focus-border"></span>
           </div>
           <span class="error-message" id="emailError"></span>
@@ -40,7 +34,7 @@
 
         <div class="form-group">
           <div class="input-wrapper password-wrapper">
-            <input type="text" id="password" placeholder="Password">
+            <input type="text" id="password" placeholder="Password" data-i18n-placeholder="placeholder_password">
             <span class="focus-border"></span>
           </div>
           <span class="error-message" id="passwordError"></span>
@@ -48,26 +42,26 @@
 
         <div class="form-group">
           <div class="input-wrapper password-wrapper">
-            <input type="text" id="confirmPassword" placeholder="Confirm Password">
+            <input type="text" id="confirmPassword" placeholder="Confirm Password" data-i18n-placeholder="placeholder_confirm_pass">
             <span class="focus-border"></span>
           </div>
           <span class="error-message" id="passwordError"></span>
         </div>
 
         <button type="submit" class="login-btn btn">
-          <span class="btn-text">Register</span>
+          <span class="btn-text" data-i18n="btn_register">Register</span>
           <span class="btn-loader"></span>
         </button>
       </form>
 
       <div class="signup-link">
-        <p>Already have an account? <a href="login.html">Log in</a></p>
+        <p><span data-i18n="text_have_account">Already have an account?</span> <a href="login.html" data-i18n="link_login">Log in</a></p>
       </div>
 
       <div class="success-message" id="successMessage">
         <div class="success-icon">✓</div>
-        <h3>Registered Successful!</h3>
-        <p>Redirecting to your dashboard...</p>
+        <h3 data-i18n="register_success_title">Registered Successful!</h3>
+        <p data-i18n="login_redirect">Redirecting to your dashboard...</p>
       </div>
     </div>
 
@@ -75,6 +69,7 @@
   </div>
 
   <script src="./assets/js/register.js"></script>
+  <script src="./assets/js/translations.js"></script>
+  <script src="./assets/js/i18n.js"></script>
 </body>
-
 </html>
