@@ -2,7 +2,6 @@
  * SaiGonGo - Translations / Bản dịch đa ngôn ngữ
  * Hỗ trợ: Tiếng Việt (vi) và English (en)
  * 
- * Cập nhật: Bao gồm tất cả các trang trong lộ trình 1
  */
 
 const translations = {
