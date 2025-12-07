@@ -252,7 +252,7 @@
               <span class="slider"></span>
             </label>
           </div>
-
+          {% endif %}
           <div id="gpsStatus" data-i18n="status_locating">📡 Đang xác định vị trí của bạn...</div>
 
           <div style="margin-bottom: 25px; margin-top: 20px;">
@@ -370,7 +370,7 @@
 
     function checkLocation() {
       // 🛑 ƯU TIÊN 1: Kiểm tra xem có đang bật chế độ Dev không?
-      if (devModeToggle.checked) {
+      if (devModeToggle && devModeToggle.checked) {
         gpsStatus.innerHTML = i18n.t('museum_dev_mode_desc');
         gpsStatus.style.backgroundColor = "#fff8e1"; // Màu vàng nhạt
         gpsStatus.style.color = "#b38600";
@@ -389,7 +389,7 @@
 
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            if (devModeToggle.checked) return;
+            if (devModeToggle && devModeToggle.checked) return;
 
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
@@ -417,7 +417,7 @@
             }
           },
           (error) => {
-            if (devModeToggle.checked) return;
+            if (devModeToggle && devModeToggle.checked) return;
             gpsStatus.textContent = i18n.t('status_gps_error');
             gpsStatus.style.backgroundColor = "#eee";
           },

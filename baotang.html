@@ -379,7 +379,7 @@
 
     function checkLocation() {
       // 🛑 ƯU TIÊN 1: Kiểm tra xem có đang bật chế độ Dev không?
-      if (devModeToggle.checked) {
+      if (devModeToggle && devModeToggle.checked) {
         gpsStatus.innerHTML = i18n.t('museum_dev_mode_desc');
         gpsStatus.style.backgroundColor = "#fff8e1"; // Màu vàng nhạt
         gpsStatus.style.color = "#b38600";
@@ -430,7 +430,7 @@
             }
           },
           (error) => {
-            if (devModeToggle.checked) return;
+            if (devModeToggle.checked && devModeToggle.checked) return;
             gpsStatus.textContent = i18n.t('status_gps_error');
             gpsStatus.style.backgroundColor = "#eee";
           },

@@ -133,20 +133,112 @@
       background-color: #fff4e5;
       color: #cc6600;
     }
+        /* --- CSS CHO NÚT GẠT (TOGGLE) --- */
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 10px auto 20px auto;
+      font-size: 1rem;
+      color: #555;
+      font-weight: 600;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(22px);
+    }
   </style>
 </head>
 <body>
   <div class="back-button" onclick="goBack()" data-i18n="btn_back">← Quay lại</div>
 
-  <script>
-    // ⚙️ Cấu hình: bật/tắt kiểm tra vị trí GPS
-    const LOCATION_CHECK_ENABLED = false; // ← đổi thành true để bật định vị thật
+  <div class="container">
+    <h1 data-i18n="start_title">Điểm xuất phát</h1>
+    <p data-i18n="start_instruction">Bạn hãy đến đây để bắt đầu hành trình.</p>
 
-    // Tọa độ của Bảo tàng Chiến tích Chiến tranh
-    const targetLat = 10.7797839;
-    const targetLng = 106.6893418;
+    <div class="location-icon">📍</div>
 
-    // Hàm tính khoảng cách giữa 2 tọa độ (m)
+    <div class="place-info">
+      <div class="place-name" data-i18n="dest_museum">Bảo tàng Chiến tích Chiến tranh</div>
+      <div class="place-address" data-i18n="addr_museum">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</div>
+      <a class="map-link" href="https://www.google.com/maps?q=Bảo+tàng+Chiến+tích+Chiến+tranh,+28+Võ+Văn+Tần,+Quận+3,+TPHCM" target="_blank" data-i18n="start_view_map">
+        🗺️ Xem bản đồ
+      </a>
+      {% if is_admin %}
+          <div class="toggle-container">
+            <span data-i18n="museum_dev_mode">Chế độ kiểm tra (Bỏ qua GPS)</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="devModeToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          {% endif %}
+    </div>
+      
+
+    <div id="distance-info" class="distance-info" data-i18n="start_checking_location">Đang xác định vị trí...</div>
+  </div>
+
+  <div class="bottom-btn">
+    <button class="start-btn" onclick="window.location.href='baotang.html'" data-i18n="btn_continue">
+      Tiếp tục
+    </button>
+  </div>
+
+<script>
+    // --- CẤU HÌNH ---
+    const TARGET_LAT = 10.7797839;
+    const TARGET_LNG = 106.6893418;
+    const MAX_DISTANCE = 100; // mét
+
+    // Lấy các phần tử DOM
+    const devModeToggle = document.getElementById("devModeToggle");
+    const distanceInfo = document.getElementById("distance-info");
+    const startBtn = document.querySelector(".start-btn");
+
+    // Hàm tính khoảng cách (Giữ lại hàm này để dùng)
     function getDistance(lat1, lon1, lat2, lon2) {
       const R = 6371e3;
       const toRad = deg => deg * Math.PI / 180;
@@ -161,101 +253,89 @@
       return R * c;
     }
 
-    // ✅ Hiển thị khoảng cách ngay trên trang
-    function checkUserLocation() {
-      const infoBox = document.getElementById("distance-info");
-      const startButton = document.querySelector(".start-btn");
+    // --- 1. SỰ KIỆN GẠT NÚT ADMIN ---
+    if (devModeToggle) {
+      devModeToggle.addEventListener('change', () => {
+        // Gọi hàm kiểm tra ngay khi gạt nút
+        checkLocation();
+      });
+    }
 
-      if (!LOCATION_CHECK_ENABLED) {
-        // Dùng i18n.t() thay cho text cứng
-        infoBox.textContent = i18n.t('start_dev_mode');
-        startButton.disabled = false;
-        return;
+    // --- 2. HÀM CHECK LOCATION (LOGIC CHUNG) ---
+    function checkLocation() {
+      // 🛑 TRƯỜNG HỢP 1: ADMIN MODE BẬT
+      if (devModeToggle && devModeToggle.checked) {
+        // Ẩn dòng thông báo khoảng cách
+        if(distanceInfo) distanceInfo.style.display = 'none';
+        
+        // Mở khóa nút Tiếp tục
+        if(startBtn) {
+            startBtn.disabled = false;
+            startBtn.style.opacity = "1";
+            startBtn.style.cursor = "pointer";
+        }
+        return; // Dừng, không check GPS nữa
       }
 
-      if (navigator.geolocation) {
+      // 🛑 TRƯỜNG HỢP 2: USER THƯỜNG (CHECK GPS)
+      // Hiện lại dòng thông báo nếu nó đang bị ẩn
+      if(distanceInfo) distanceInfo.style.display = 'inline-block';
+
+      if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
+            // Anti-flicker: Nếu user bật toggle trong lúc đang chờ GPS
+            if (devModeToggle && devModeToggle.checked) return;
+
             const userLat = position.coords.latitude;
             const userLng = position.coords.longitude;
-            const distance = getDistance(userLat, userLng, targetLat, targetLng);
+            const distance = getDistance(userLat, userLng, TARGET_LAT, TARGET_LNG);
             const distText = Math.round(distance);
 
-            if (distance < 100) {
-              infoBox.textContent = i18n.t('start_arrived');
-              infoBox.className = "distance-info ok";
-              startButton.disabled = false;
-              startButton.style.opacity = "1";
+            if (distance < MAX_DISTANCE) {
+              // ĐÃ ĐẾN NƠI
+              distanceInfo.textContent = (typeof i18n !== 'undefined') ? i18n.t('start_arrived') : "Bạn đã đến nơi!";
+              distanceInfo.className = "distance-info ok";
+              startBtn.disabled = false;
+              startBtn.style.opacity = "1";
             } else {
-              // Sử dụng params cho i18n
-              infoBox.textContent = i18n.t('start_distance', { distance: distText });
-              infoBox.className = "distance-info far";
-              startButton.disabled = true;
-              startButton.style.opacity = "0.5";
+              // CÒN XA
+              distanceInfo.textContent = (typeof i18n !== 'undefined') ? i18n.t('start_distance', {distance: distText}) : `Cách ${distText}m`;
+              distanceInfo.className = "distance-info far";
+              startBtn.disabled = true;
+              startBtn.style.opacity = "0.5";
             }
           },
           (error) => {
-            infoBox.textContent = i18n.t('start_gps_error');
-            infoBox.className = "distance-info far";
-            console.error(error);
+            if (devModeToggle && devModeToggle.checked) return;
+            distanceInfo.textContent = (typeof i18n !== 'undefined') ? i18n.t('start_gps_error') : "Lỗi GPS";
+            distanceInfo.className = "distance-info far";
           }
         );
       } else {
-        infoBox.textContent = i18n.t('start_browser_error');
+        distanceInfo.textContent = "Trình duyệt không hỗ trợ GPS";
       }
     }
 
-    // Đợi i18n load xong mới chạy check location lần đầu
-    window.addEventListener('load', () => {
-         // Nếu cần thiết có thể gọi lại checkUserLocation khi đổi ngôn ngữ
-         checkUserLocation();
-    });
+    // --- 3. KHỞI CHẠY ---
+    window.addEventListener('load', checkLocation);
+    setInterval(checkLocation, 5000);
     
-    // Lắng nghe sự kiện đổi ngôn ngữ để cập nhật lại text dynamic nếu đang hiển thị
+    // Hỗ trợ i18n
     window.addEventListener('languageChanged', () => {
-        checkUserLocation();
+         if (!devModeToggle || !devModeToggle.checked) checkLocation();
     });
-  </script>
 
-  <div class="container">
-    <h1 data-i18n="start_title">Điểm xuất phát</h1>
-    <p data-i18n="start_instruction">Bạn hãy đến đây để bắt đầu hành trình.</p>
-
-    <div class="location-icon">📍</div>
-
-    <div class="place-info">
-      <div class="place-name" data-i18n="dest_museum">Bảo tàng Chiến tích Chiến tranh</div>
-      <div class="place-address" data-i18n="addr_museum">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</div>
-      <a class="map-link" href="https://www.google.com/maps?q=Bảo+tàng+Chiến+tích+Chiến+tranh,+28+Võ+Văn+Tần,+Quận+3,+TPHCM" target="_blank" data-i18n="start_view_map">
-        🗺️ Xem bản đồ
-      </a>
-    </div>
-
-    <div id="distance-info" class="distance-info" data-i18n="start_checking_location">Đang xác định vị trí...</div>
-  </div>
-
-  <div class="bottom-btn">
-    <button class="start-btn" onclick="window.location.href='baotang.html'" data-i18n="btn_continue">
-      Tiếp tục
-    </button>
-  </div>
-
-  <script>
     function goBack() {
-  const ref = document.referrer;
-
-  // Nếu đến từ batdau1 hoặc từ trang chính → quay lại lotrinh1
-  if (!ref || ref.includes("batdau1.html") || ref.includes("index.html")) {
-    window.location.href = "lotrinh1.html";
-  } 
-  // Nếu đến từ baotang → vẫn cho quay lại baotang (không vòng lặp)
-  else if (ref.includes("baotang.html")) {
-    window.location.href = "lotrinh1.html";
-  } 
-  else {
-    window.history.back();
-  }
-}
+      const ref = document.referrer;
+      if (!ref || ref.includes("batdau1.html") || ref.includes("index.html")) {
+        window.location.href = "lotrinh1.html";
+      } else if (ref.includes("baotang.html")) {
+        window.location.href = "lotrinh1.html";
+      } else {
+        window.history.back();
+      }
+    }
   </script>
   <script src="./assets/js/translations.js"></script>
 <script src="./assets/js/i18n.js"></script>

@@ -395,7 +395,7 @@
             const destination = "Dinh Độc Lập, 135 Nam Kỳ Khởi Nghĩa, Quận 1, TP.HCM";
 
             // 🗺️ Tạo link Google Maps với mode = walking
-            const url = `http://googleusercontent.com/maps.google.com/5{encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+            const url = `http://googleusercontent.com/maps.google.com/${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
             // Gọi API trừ điểm (-2 điểm)
             try {
                 const res = await fetch('/api/update-score', {
@@ -499,7 +499,7 @@
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 
-  {% if is_admin %}
+{% if is_admin %}
   <button onclick="adminSkipAll('dinhdoclap.html')" class="admin-badge">
     <ion-icon name="rocket-outline"></ion-icon>
     ADMIN SKIP
@@ -514,8 +514,5 @@
       }
     }
   </script>
-  {% endif %}
-
-
-</body>
+  {% endif %} </body>
 </html>

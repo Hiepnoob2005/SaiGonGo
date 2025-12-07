@@ -252,7 +252,7 @@
               <span class="slider"></span>
             </label>
           </div>
-
+          {% endif %}
           <div id="gpsStatus" data-i18n="status_locating">📡 Đang xác định vị trí của bạn...</div>
 
           <div style="margin-bottom: 25px; margin-top: 20px;">
@@ -365,7 +365,7 @@
     const gpsStatusBox = document.getElementById("gpsStatus"); 
 
     function checkLocation() {
-      if (devModeToggle.checked) {
+      if (devModeToggle && devModeToggle.checked) {
         gpsStatus.innerHTML = i18n.t('museum_dev_mode_desc');
         gpsStatus.style.backgroundColor = "#fff8e1";
         gpsStatus.style.color = "#b38600";
@@ -383,7 +383,7 @@
 
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            if (devModeToggle.checked) return;
+            if (devModeToggle && devModeToggle.checked) return;
 
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
@@ -411,7 +411,7 @@
             }
           },
           (error) => {
-            if (devModeToggle.checked) return;
+            if (devModeToggle && devModeToggle.checked) return;
             gpsStatus.textContent = i18n.t('status_gps_error');
             gpsStatus.style.backgroundColor = "#eee";
           },
@@ -571,7 +571,7 @@
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
   {% if is_admin %}
-  <button onclick="adminSkipAll('quiz_baotang.html')" class="admin-badge">
+  <button onclick="adminSkipAll('ketthuclt1.html')" class="admin-badge">
     <ion-icon name="rocket-outline"></ion-icon>
     ADMIN SKIP
   </button>
