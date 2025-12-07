@@ -3,58 +3,251 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Truy tìm hiện vật - Nhà thờ Đức Bà</title>
+  <title data-i18n="quiz_cathedral_title">Truy tìm hiện vật - Nhà thờ Đức Bà</title>
   <style>
-    :root { --primary: #ff7043; --secondary: #4a90e2; --success: #66bb6a; --bg: #fffaf0; --card-bg: #ffffff; --text: #333; }
-    body { font-family: "Times New Roman", Times, serif; background: linear-gradient(135deg, #fffaf0, #ffe0b2); margin: 0; padding: 20px; color: var(--text); }
-    .container { max-width: 800px; margin: 0 auto; background: var(--card-bg); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    header { text-align: center; margin-bottom: 30px; }
-    h1 { color: var(--primary); margin-bottom: 5px; }
-    p.subtitle { color: #666; font-size: 0.95rem; }
-    .progress-container { background: #eee; height: 20px; border-radius: 10px; overflow: hidden; margin: 20px 0; position: relative; }
-    .progress-bar { height: 100%; background: var(--success); width: 0%; transition: width 0.5s ease; }
-    .progress-text { position: absolute; width: 100%; text-align: center; top: 0; font-size: 12px; font-weight: bold; color: #333; line-height: 20px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-    .card { background: #fff; border: 2px solid #eee; border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
-    .card:hover { transform: translateY(-3px); border-color: var(--secondary); }
-    .card.completed { border-color: var(--success); background: #f0fdf4; }
-    .card.completed::after { content: "✓"; position: absolute; top: 5px; right: 5px; background: var(--success); color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; }
-    .icon { font-size: 2rem; margin-bottom: 10px; display: block; }
-    .card-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
-    .card-hint { font-size: 0.75rem; color: #777; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
-    .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
-    .modal-img-preview { width: 100%; max-height: 250px; object-fit: cover; border-radius: 10px; margin: 15px 0; background: #eee; display: none; }
-    .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; margin: 5px; width: 100%; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-secondary { background: #ccc; color: #333; }
-    .btn-danger { background: transparent; border: 1px solid #ef5350; color: #ef5350; font-size: 0.8rem; margin-top: 10px; }
-    #nextStep { display: none; margin-top: 30px; text-align: center; }
-    .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    /* --- VARIABLES --- */
+    :root {
+      --primary: #ff7043;
+      --secondary: #4a90e2;
+      --success: #66bb6a;
+      --bg: #fffaf0;
+      --card-bg: #ffffff;
+      --text: #333;
+    }
+
+    /* --- BASE STYLES --- */
+    body {
+      font-family: "Times New Roman", Times, serif;
+      background: linear-gradient(135deg, #fffaf0, #ffe0b2);
+      margin: 0;
+      padding: 20px;
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+
+    p.subtitle {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* --- PROGRESS BAR --- */
+    .progress-container {
+      background: #eee;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .progress-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 0;
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+      line-height: 20px;
+    }
+
+    /* --- GRID SYSTEM --- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+    }
+
+    /* --- CARD STYLES --- */
+    .card {
+      background: #fff;
+      border: 2px solid #eee;
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--secondary);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .card.completed {
+      border-color: var(--success);
+      background: #f0fdf4;
+    }
+
+    .card.completed::after {
+      content: "✓";
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: var(--success);
+      color: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .card-hint {
+      font-size: 0.75rem;
+      color: #777;
+    }
+
+    /* --- MODAL / POPUP --- */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal-img-preview {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 15px 0;
+      background: #eee;
+      display: none;
+    }
+
+    /* --- BUTTONS --- */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 5px;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #ccc;
+      color: #333;
+    }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid #ef5350;
+      color: #ef5350;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+
+    /* --- RESULT SECTION --- */
+    #nextStep {
+      display: none;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    /* --- LOADER ANIMATION --- */
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <a href="nhathoducba.html" style="text-decoration: none; color: var(--primary); font-weight: bold;">← Quay lại</a>
+  <a href="nhathoducba.html" style="text-decoration: none; color: var(--primary); font-weight: bold;" data-i18n="btn_back">← Quay lại</a>
   
   <header>
-    <h1>⛪ Spot the Detail: Nhà thờ Đức Bà</h1>
-    <p class="subtitle">Tìm <b>3 chi tiết</b> kiến trúc độc đáo. Nếu đang sửa chữa, hãy dùng nút "Báo cáo"!</p>
+    <h1 data-i18n="quiz_cathedral_title">⛪ Spot the Detail: Nhà thờ Đức Bà</h1>
+    <p class="subtitle" data-i18n="quiz_cathedral_subtitle">Tìm <b>3 chi tiết</b> kiến trúc độc đáo. Nếu đang sửa chữa, hãy dùng nút "Báo cáo"!</p>
     
     <div class="progress-container">
       <div class="progress-bar" id="progressBar"></div>
-      <div class="progress-text" id="progressText">0/3 Hoàn thành</div>
+      <div class="progress-text" id="progressText" data-i18n="quiz_progress" data-i18n-params='{"count": 0}'>0/3 Hoàn thành</div>
     </div>
   </header>
 
   <div class="grid" id="gridContainer"></div>
 
   <div id="nextStep">
-    <h3>🎉 Chúc mừng!</h3>
-    <p>Bạn đã khám phá xong biểu tượng kiến trúc của Sài Gòn.</p>
-    <button class="btn btn-primary" onclick="window.location.href='ltbuudientp.html'">Tiếp tục: Bưu điện TP →</button>
+    <h3 data-i18n="quiz_complete_title">🎉 Chúc mừng!</h3>
+    <p data-i18n="quiz_complete_text">Bạn đã khám phá xong biểu tượng kiến trúc của Sài Gòn.</p>
+    <button class="btn btn-primary" onclick="window.location.href='ltbuudientp.html'" data-i18n="quiz_continue_post">Tiếp tục: Bưu điện TP →</button>
   </div>
 </div>
 
@@ -65,28 +258,28 @@
     <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
     <img id="preview" class="modal-img-preview">
     <div id="actionButtons">
-      <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()">📸 Chụp ảnh ngay</button>
-      <button class="btn btn-secondary" onclick="closeModal()">Đóng</button>
-      <button class="btn btn-danger" onclick="reportMissing()">⚠️ Tôi không tìm thấy (Do trùng tu)</button>
+      <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()" data-i18n="btn_take_photo">📸 Chụp ảnh ngay</button>
+      <button class="btn btn-secondary" onclick="closeModal()" data-i18n="btn_close">Đóng</button>
+      <button class="btn btn-danger" onclick="reportMissing()" data-i18n="btn_report_renovation">⚠️ Tôi không tìm thấy (Do trùng tu)</button>
     </div>
     <div id="verifySection" style="display:none;">
       <div class="loader" id="loader"></div>
-      <p id="statusMsg">Đang phân tích...</p>
-      <button class="btn btn-primary" id="confirmBtn" style="display:none;" onclick="closeModal()">Tuyệt vời!</button>
-      <button class="btn btn-secondary" id="retryBtn" style="display:none;" onclick="resetModal()">Thử lại</button>
+      <p id="statusMsg" data-i18n="quiz_analyzing">Đang phân tích...</p>
+      <button class="btn btn-primary" id="confirmBtn" style="display:none;" onclick="closeModal()" data-i18n="btn_great">Tuyệt vời!</button>
+      <button class="btn btn-secondary" id="retryBtn" style="display:none;" onclick="resetModal()" data-i18n="btn_retry">Thử lại</button>
     </div>
   </div>
 </div>
 
 <script>
-  // DANH SÁCH CHI TIẾT NHÀ THỜ ĐỨC BÀ
+  // DANH SÁCH CHI TIẾT NHÀ THỜ ĐỨC BÀ (Chỉ giữ ID và Icon)
   const details = [
-    { id: 'mary_statue', name: 'Tượng Đức Mẹ', icon: '🗽', hint: 'Đứng trên quả địa cầu ở công viên trước nhà thờ.' },
-    { id: 'bell_towers', name: 'Hai tháp chuông', icon: '⛪', hint: 'Đỉnh cao nhất của nhà thờ (nhìn từ xa).' },
-    { id: 'rose_window', name: 'Cửa sổ hoa hồng', icon: '🏵️', hint: 'Cửa sổ tròn lớn ở mặt tiền (giữa 2 tháp).' },
-    { id: 'red_brick', name: 'Tường gạch đỏ', icon: '🧱', hint: 'Loại gạch trần đặc trưng từ Marseille.' },
-    { id: 'main_gate', name: 'Cổng chính', icon: '🚪', hint: 'Cổng vòm lớn hướng ra công viên.' },
-    { id: 'scaffolding', name: 'Giàn giáo (Tu sửa)', icon: '🏗️', hint: 'Chụp phần công trình đang được che chắn.' }
+    { id: 'mary_statue', icon: '🗽' },
+    { id: 'bell_towers', icon: '⛪' },
+    { id: 'rose_window', icon: '🏵️' },
+    { id: 'red_brick', icon: '🧱' },
+    { id: 'main_gate', icon: '🚪' },
+    { id: 'scaffolding', icon: '🏗️' }
   ];
 
   let completedCount = 0; const targetCount = 3; let currentDetailId = null; const completedDetails = new Set();
@@ -96,10 +289,14 @@
   function initGrid() {
     grid.innerHTML = '';
     details.forEach(item => {
+      // Lấy tên và gợi ý từ i18n
+      const name = i18n.t('artifact_' + item.id);
+      const hint = i18n.t('artifact_' + item.id + '_hint');
+
       const card = document.createElement('div');
       card.className = `card ${completedDetails.has(item.id) ? 'completed' : ''}`;
-      card.onclick = () => openModal(item);
-      card.innerHTML = `<span class="icon">${item.icon}</span><div class="card-title">${item.name}</div><div class="card-hint">${item.hint}</div>`;
+      card.onclick = () => openModal(item, name, hint);
+      card.innerHTML = `<span class="icon">${item.icon}</span><div class="card-title">${name}</div><div class="card-hint">${hint}</div>`;
       grid.appendChild(card);
     });
     updateProgress();
@@ -108,15 +305,15 @@
   function updateProgress() {
     const pct = (completedCount / targetCount) * 100;
     progressBar.style.width = `${Math.min(pct, 100)}%`;
-    progressText.innerText = `${completedCount}/${targetCount} Hoàn thành`;
+    progressText.innerText = i18n.t('quiz_progress', {count: completedCount});
     if (completedCount >= targetCount) document.getElementById('nextStep').style.display = 'block';
   }
 
-  function openModal(item) {
+  function openModal(item, name, hint) {
     if (completedDetails.has(item.id)) return;
     currentDetailId = item.id;
-    document.getElementById('modalTitle').innerText = item.name;
-    document.getElementById('modalHint').innerText = item.hint;
+    document.getElementById('modalTitle').innerText = name;
+    document.getElementById('modalHint').innerText = hint;
     resetModal();
     modal.style.display = 'flex';
   }
@@ -129,7 +326,7 @@
   }
 
   function reportMissing() {
-    if(confirm("Xác nhận chụp ảnh hiện trường đang thi công/trống?")) {
+    if(confirm(i18n.t('quiz_report_confirm'))) {
       document.getElementById('cameraInput').setAttribute('data-mode', 'missing');
       document.getElementById('cameraInput').click();
     }
@@ -153,7 +350,7 @@
     document.getElementById('actionButtons').style.display = 'none';
     document.getElementById('verifySection').style.display = 'block';
     document.getElementById('loader').style.display = 'block';
-    document.getElementById('statusMsg').innerText = "AI đang xử lý...";
+    document.getElementById('statusMsg').innerText = isReportMissing ? i18n.t('quiz_checking_scene') : i18n.t('quiz_analyzing');
     
     const formData = new FormData();
     formData.append('image', file);
@@ -161,21 +358,32 @@
     formData.append('report_missing', isReportMissing);
 
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/verify-detail', { method: 'POST', body: formData });
+      const res = await fetch('/api/verify-detail', { method: 'POST', body: formData });
       const data = await res.json();
       document.getElementById('loader').style.display = 'none';
       
-      if (data.success && (data.data?.valid || data.status === 'skipped')) {
-        document.getElementById('statusMsg').innerHTML = data.status === 'skipped' ? 
-            `⚠️ Đã xác nhận.` : `✅ Chính xác!<br><br><small>${data.data.fact}</small>`;
-        markCompleted();
+      if (data.success) {
+          if (data.data && data.data.valid) {
+            const correctMsg = i18n.t('quiz_correct');
+            const funFactLabel = i18n.t('quiz_fun_fact');
+            document.getElementById('statusMsg').innerHTML = `${correctMsg}<br><br><b>${funFactLabel}</b><br>${data.data.fact}`;
+            markCompleted();
+        } else if (data.status === 'skipped') {
+            const skippedMsg = i18n.t('quiz_skipped');
+            document.getElementById('statusMsg').innerHTML = `${skippedMsg}<br>${data.message}`;
+            markCompleted();
+        } else {
+            const wrongMsg = i18n.t('quiz_wrong');
+            const reason = data.data ? data.data.reason : data.message;
+            document.getElementById('statusMsg').innerHTML = `${wrongMsg}<br>${reason}`;
+            document.getElementById('retryBtn').style.display = 'inline-block';
+        }
       } else {
-        const reason = data.data ? data.data.reason : data.message;
-        document.getElementById('statusMsg').innerHTML = `❌ Chưa đúng.<br>${reason}`;
+        document.getElementById('statusMsg').innerText = `❌ ${data.message}`;
         document.getElementById('retryBtn').style.display = 'inline-block';
       }
     } catch (err) {
-      document.getElementById('statusMsg').innerText = "❌ Lỗi kết nối server.";
+      document.getElementById('statusMsg').innerText = i18n.t('quiz_connection_error');
       document.getElementById('retryBtn').style.display = 'inline-block';
     }
   }
@@ -188,7 +396,17 @@
     initGrid();
   }
 
-  initGrid();
+  window.addEventListener('languageChanged', () => {
+      initGrid();
+  });
+
+  window.addEventListener('load', () => {
+       if(typeof i18n !== 'undefined') initGrid();
+  });
 </script>
+
+<script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
+
 </body>
 </html>

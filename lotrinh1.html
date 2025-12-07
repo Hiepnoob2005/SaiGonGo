@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bảo tàng Chiến tích Chiến tranh</title>
+    <title data-i18n="dest_museum">Bảo tàng Chiến tích Chiến tranh</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -79,10 +79,11 @@
         color: #040c69;
         text-transform: uppercase;
         font-family: 'Times New Roman', Times, serif;
-      ">
+      " data-i18n="dest_route_1">
       Lộ trình 1
     </div>
-    <a href="index.html" class="btn btn-outline">← Quay lại trang chính</a>
+    
+    <a href="index.html" class="btn btn-outline" data-i18n="btn_back_home">← Quay lại trang chính</a>
   </div>
 </header>
 
@@ -91,6 +92,7 @@
             <div class="museum-image" style="flex: 1; text-align: center;">
                 <img
                     src="./assets/images/BTCTCT.png"
+                    data-i18n-alt="dest_museum"
                     alt="Bảo tàng Chiến tích Chiến tranh"
                     style="
                         width: 100%;
@@ -100,21 +102,6 @@
                     "
                 />
             </div>
-
-            <!-- <div class="museum-info" style="flex: 1; min-width: 320px;">
-                <h2 style="font-size: 2.2rem; color: #1b1b1b; margin-bottom: 20px;">Giới thiệu sơ lược</h2>
-
-                <p style="font-size: 1.4rem; color: #444; line-height: 1.8; text-align: justify;">
-                    Nằm tại số <b>28 Võ Văn Tần, Quận 3, TP. Hồ Chí Minh</b>, Bảo tàng Chiến tích Chiến tranh là một trong những địa điểm du lịch
-                    được yêu thích nhất, thu hút hàng triệu lượt khách trong và ngoài nước mỗi năm. 
-                    <br><br>
-                    Nơi đây trưng bày hơn 20.000 hiện vật, hình ảnh và tư liệu quý giá về chiến tranh Việt Nam,
-                    phản ánh chân thực những mất mát, hy sinh và khát vọng hòa bình của dân tộc.
-                    <br><br>
-                    Bên ngoài khuôn viên, du khách có thể chiêm ngưỡng các khí tài quân sự thật như máy bay, xe tăng, pháo
-                    — tất cả tạo nên một không gian lịch sử sống động và sâu sắc.
-                </p>
-            </div> -->
 
             <div class="museum-info" style="flex: 1; min-width: 320px;">
                 <h2 style="
@@ -129,16 +116,14 @@
                   color: #e65c00;
                   margin-bottom: 25px;
                   font-family: 'Times New Roman', Times, serif;
-                  ">
+                  " data-i18n="route1_intro_title">
                   Giới thiệu sơ lược về lộ trình 1
                 </h2>
 
-                <p style="font-size: 1.6rem; color: #444; line-height: 1.8; text-align: justify;">
+                <p style="font-size: 1.6rem; color: #444; line-height: 1.8; text-align: justify;" data-i18n="route1_intro_text">
                     Lộ trình sẽ xuất phát từ <b>Bảo tàng Chiến tích Chiến tranh</b> tại số <b>28 Võ Văn Tần, Quận 3, TP. Hồ Chí Minh</b>.
                     Lần lượt đi qua các địa điểm nổi bật trong thành phố như <b>Dinh Độc Lập</b>, <b>Công viên 30/4</b>, <b>Nhà thờ Đức Bà</b>, <b>Bưu điện Thành phố</b>, <b>Đường sách Nguyễn Văn Bình</b>, <b>Hồ con rùa</b>. Từ đó, 
                     giúp du khách khám phá lịch sử, văn hóa và kiến trúc độc đáo của Sài Gòn.
-                    
-                    
                 </p>
             </div>
         </section>
@@ -156,7 +141,7 @@
                   color: #e65c00;
                   margin-bottom: 25px;
                   font-family: 'Times New Roman', Times, serif;
-                  ">
+                  " data-i18n="route1_next_dest_title">
                   Những địa điểm tiếp theo trong lộ trình
                 </h2>
 
@@ -170,7 +155,6 @@
     margin: 0 auto;
   ">
 
-    <!-- Dinh Độc Lập -->
     <div class="destination-item" style="text-align: center;">
       <div style="
         width: 100%;
@@ -179,17 +163,16 @@
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       ">
-        <img src="./assets/images/DinhDocLap.jpg" alt="Dinh Độc Lập" style="
+        <img src="./assets/images/DinhDocLap.jpg" data-i18n-alt="dest_palace" alt="Dinh Độc Lập" style="
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
         ">
       </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Dinh Độc Lập</p>
+      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;" data-i18n="dest_palace">Dinh Độc Lập</p>
     </div>
 
-    <!-- Công viên 30/4 -->
     <div class="destination-item" style="text-align: center;">
       <div style="
         width: 100%;
@@ -198,17 +181,16 @@
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       ">
-        <img src="./assets/images/cv30th4.jpg" alt="Công viên 30/4" style="
+        <img src="./assets/images/cv30th4.jpg" data-i18n-alt="dest_park" alt="Công viên 30/4" style="
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
         ">
       </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Công viên 30/4</p>
+      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;" data-i18n="dest_park">Công viên 30/4</p>
     </div>
 
-    <!-- Nhà thờ Đức Bà -->
     <div class="destination-item" style="text-align: center;">
       <div style="
         width: 100%;
@@ -217,17 +199,16 @@
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       ">
-        <img src="./assets/images/NhaThoDucBa.jpg" alt="Nhà thờ Đức Bà" style="
+        <img src="./assets/images/NhaThoDucBa.jpg" data-i18n-alt="dest_cathedral" alt="Nhà thờ Đức Bà" style="
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
         ">
       </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Nhà thờ Đức Bà</p>
+      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;" data-i18n="dest_cathedral">Nhà thờ Đức Bà</p>
     </div>
 
-    <!-- Bưu điện Thành phố -->
     <div class="destination-item" style="text-align: center;">
       <div style="
         width: 100%;
@@ -236,17 +217,16 @@
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       ">
-        <img src="./assets/images/BuuDienTP.png" alt="Bưu điện Thành phố" style="
+        <img src="./assets/images/BuuDienTP.png" data-i18n-alt="dest_post_office" alt="Bưu điện Thành phố" style="
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
         ">
       </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Bưu điện Thành phố</p>
+      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;" data-i18n="dest_post_office">Bưu điện Thành phố</p>
     </div>
 
-    <!-- Đường sách Nguyễn Văn Bình -->
     <div class="destination-item" style="text-align: center;">
       <div style="
         width: 100%;
@@ -255,17 +235,16 @@
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       ">
-        <img src="./assets/images/DuongSachNVB.jpg" alt="Đường sách Nguyễn Văn Bình" style="
+        <img src="./assets/images/DuongSachNVB.jpg" data-i18n-alt="dest_book_street" alt="Đường sách Nguyễn Văn Bình" style="
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
         ">
       </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Đường sách Nguyễn Văn Bình</p>
+      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;" data-i18n="dest_book_street">Đường sách Nguyễn Văn Bình</p>
     </div>
 
-    <!-- Hồ Con Rùa -->
     <div class="destination-item" style="text-align: center;">
       <div style="
         width: 100%;
@@ -274,14 +253,14 @@
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       ">
-        <img src="./assets/images/HoConRua.jpg" alt="Hồ Con Rùa" style="
+        <img src="./assets/images/HoConRua.jpg" data-i18n-alt="dest_turtle_lake" alt="Hồ Con Rùa" style="
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
         ">
       </div>
-      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;">Hồ Con Rùa</p>
+      <p style="margin-top: 12px; font-size: 1.05rem; color: #444; font-weight: 700;" data-i18n="dest_turtle_lake">Hồ Con Rùa</p>
     </div>
 
   </div>
@@ -290,31 +269,30 @@
         <section class="map-and-ranking"
          style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 40px; margin-top: 60px;">
     
-  <!-- Cột bên trái: Bản đồ -->
   <div class="start-point" style="flex: 1 1 500px; max-width: 600px; text-align: center;">
-    <h2 style="font-size: 1.6rem; color: #222; margin-bottom: 20px;">Điểm xuất phát</h2>
+    <h2 style="font-size: 1.6rem; color: #222; margin-bottom: 20px;" data-i18n="route1_start_point">Điểm xuất phát</h2>
     <div style="width: 100%; border-radius: 12px; overflow: hidden;">
       <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7838.822421986659!2d106.689342!3d10.779784!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f30a23708cf%3A0x7cd94adf2b1474aa!2zQuG6o28gdMOgbmcgQ2jhu6luZyB0w61jaCBDaGnhur9uIHRyYW5o!5e0!3m2!1svi!2sus!4v1761832010042!5m2!1svi!2sus"
               width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
     <div style="margin-top: 15px;">
-      <h3 style="font-size: 1.2rem; font-weight: 800;">Bảo tàng Chiến tích Chiến tranh</h3>
-      <p style="color: #555;">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</p>
+      <h3 style="font-size: 1.2rem; font-weight: 800;" data-i18n="dest_museum">Bảo tàng Chiến tích Chiến tranh</h3>
+      <p style="color: #555;" data-i18n="addr_museum">28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh</p>
     </div>
   </div>
 
-  <!-- Cột bên phải: Xếp hạng -->
   <div class="ranking" style="flex: 1 1 300px; max-width: 400px; text-align: center;">
-    <h2 style="font-size: 1.5rem; color: #222;">Xếp hạng</h2>
+    <h2 style="font-size: 1.5rem; color: #222;" data-i18n="route1_ranking">Xếp hạng</h2>
     <p id="xp-score" style="color: #ff6b00; font-weight: 600; font-size: 1.1rem; margin-top: 10px;">
-      Điểm cao nhất 💎 0 XP
+        <span data-i18n="score_highest">Điểm cao nhất</span> 💎 0 XP
     </p>
 
     <div style="margin-top: 20px;">
       <img 
         id="treasure-chest"
         src="./assets/images/Ruong_dong.png"
+        data-i18n-alt="chest_closed"
         alt="Rương kho báu đóng"
         data-closed-src="./assets/images/Ruong_dong.png"
         data-open-src="./assets/images/Ruong.jpeg"
@@ -324,7 +302,8 @@
 
     <div class="shop-button-container" style="margin-top: 25px;">
       <a href="shop.html" class="btn-shop"
-         style="display: inline-block; background-color: #007bff; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 600;">
+         style="display: inline-block; background-color: #007bff; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 600;"
+         data-i18n="btn_exchange_voucher">
         🛍️ Đổi Voucher
       </a>
     </div>
@@ -347,7 +326,7 @@
                    line-height: 1.6;
                    z-index: 100;
                  ">
-            <h3 style="margin: 0 0 5px 0; font-size: 1.05rem; font-weight: 700;">📞 Hỗ trợ</h3>
+            <h3 style="margin: 0 0 5px 0; font-size: 1.05rem; font-weight: 700;" data-i18n="route1_support">📞 Hỗ trợ</h3>
             <p style="margin: 0;">
               Email: <a href="mailto:hello@ontripquest.com" style="color: #fff; font-weight: 600; text-decoration: underline;">hello@ontripquest.com</a><br>
               Hotline: <a href="tel:0906488443" style="color: #fff; font-weight: 600; text-decoration: underline;">0906 488 443</a>
@@ -377,13 +356,15 @@
                "
                onmouseover="this.style.transform='translateY(-4px)'"
                onmouseout="this.style.transform='translateY(0)'"
+               data-i18n="btn_start"
             >
                 🚀 Bắt đầu
             </a>
         </div>
     </main>
 
-    <div id="toast-notification">Đây là thông báo của bạn!</div>
+    <div id="toast-notification" data-i18n="route1_toast_default">Đây là thông báo của bạn!</div>
+
 <script>
     const chestImage = document.getElementById('treasure-chest');
     const toast = document.getElementById('toast-notification');
@@ -412,7 +393,9 @@
                         // Nếu đã nhận thưởng rồi -> Hiện rương mở luôn
                         chestImage.src = openSrc;
                         chestImage.style.cursor = 'default';
-                        xpScoreElement.textContent = `Điểm hiện tại 💎 ${data.points} XP`;
+                        // Update text using i18n logic (manual for dynamic content)
+                        const scoreCurrentText = i18n.t('score_current');
+                        xpScoreElement.innerHTML = `${scoreCurrentText} 💎 ${data.points} XP`;
                     } else {
                         // Nếu đã xong nhưng chưa mở -> Rương đóng, hiệu ứng rung lắc mời gọi
                         chestImage.style.cursor = 'pointer';
@@ -422,7 +405,7 @@
                     // Chưa xong lộ trình
                     chestImage.style.filter = "grayscale(100%)"; // Làm xám rương
                     chestImage.style.cursor = "not-allowed";
-                    chestImage.title = "Bạn cần hoàn thành lộ trình để mở khóa!";
+                    chestImage.title = i18n.t('route1_chest_locked');
                 }
             }
         } catch (e) { console.error(e); }
@@ -431,12 +414,12 @@
     // 2. Xử lý click rương
     chestImage.addEventListener('click', async () => {
         if (!isRouteCompleted) {
-            showToast("🔒 Hãy hoàn thành hết các địa điểm để mở khóa rương!");
+            showToast(i18n.t('route1_chest_locked'));
             return;
         }
 
         if (isRewardClaimed) {
-            showToast("Bạn đã nhận quà của lộ trình này rồi!");
+            showToast(i18n.t('route1_chest_claimed'));
             return;
         }
 
@@ -456,8 +439,9 @@
                 chestImage.style.animation = 'none'; // Tắt rung
                 
                 // Cập nhật giao diện
-                xpScoreElement.textContent = `Điểm hiện tại 💎 ${data.newPoints} XP`;
-                showToast(`🎉 Xuất sắc! Bạn nhận được 50 XP!`);
+                const scoreCurrentText = i18n.t('score_current');
+                xpScoreElement.innerHTML = `${scoreCurrentText} 💎 ${data.newPoints} XP`;
+                showToast(i18n.t('route1_chest_reward'));
                 
                 isRewardClaimed = true;
             } else {
@@ -465,7 +449,7 @@
             }
         } catch (e) {
             console.error(e);
-            showToast("Lỗi kết nối server");
+            showToast(i18n.t('status_connection_error'));
         }
     });
 
@@ -491,5 +475,10 @@
   100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 </style>
+
+<script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
+<link rel="stylesheet" href="./assets/js/i18n.css">
+
 </body>
 </html>
