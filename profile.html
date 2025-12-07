@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hồ sơ người dùng - SaiGonGo</title>
+    <title data-i18n="profile_page_title">Hồ sơ người dùng - SaiGonGo</title>
     <link rel="stylesheet" href="./assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
@@ -78,7 +78,7 @@
     <header class="header" data-header>
         <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
             <a href="index.html" class="logo">SaiGonGo</a>
-            <a href="index.html" class="btn btn-outline">Quay về trang chủ</a>
+            <a href="index.html" class="btn btn-outline" data-i18n="btn_back_home">Quay về trang chủ</a>
         </div>
     </header>
 
@@ -87,10 +87,10 @@
             <div class="avatar-circle">
                 <ion-icon name="person"></ion-icon>
             </div>
-            <h2 class="user-name" id="p-username">Đang tải...</h2>
+            <h2 class="user-name" id="p-username" data-i18n="status_loading">Đang tải...</h2>
             <p class="user-email" id="p-email">...</p>
-            <button class="btn btn-primary w-100" style="margin-top: 15px;">Chỉnh sửa hồ sơ</button>
-            <button id="logoutBtn" class="btn btn-outline w-100" style="margin-top: 10px; border-color: #dc3545; color: #dc3545;">Đăng xuất</button>
+            <button class="btn btn-primary w-100" style="margin-top: 15px;" data-i18n="btn_edit_profile">Chỉnh sửa hồ sơ</button>
+            <button id="logoutBtn" class="btn btn-outline w-100" style="margin-top: 10px; border-color: #dc3545; color: #dc3545;" data-i18n="nav_logout">Đăng xuất</button>
         </div>
 
         <div class="profile-content">
@@ -98,73 +98,81 @@
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3 id="p-points">0</h3>
-                        <p>Điểm thưởng (XP)</p>
+                        <p data-i18n="stat_xp">Điểm thưởng (XP)</p>
                     </div>
                     <div class="stat-icon">💎</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3 id="p-routes">0</h3>
-                        <p>Lộ trình hoàn thành</p>
+                        <p data-i18n="stat_routes">Lộ trình hoàn thành</p>
                     </div>
                     <div class="stat-icon">🗺️</div>
                 </div>
             </div>
 
             <div class="history-section">
-                <h3 class="section-header">Lịch sử hành trình</h3>
+                <h3 class="section-header" data-i18n="history_title">Lịch sử hành trình</h3>
                 <div id="route-list">
-                    <p style="text-align: center; color: #999;">Đang tải dữ liệu...</p>
+                    <p style="text-align: center; color: #999;" data-i18n="status_loading">Đang tải dữ liệu...</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="./assets/js/translations.js"></script>
+    <script src="./assets/js/i18n.js"></script>
+
     <script>
         // Gọi API lấy thông tin User
-        fetch('/api/user')
-            .then(res => res.json())
-            .then(data => {
-                if (!data.logged_in) {
-                    window.location.href = 'login.html'; // Chưa đăng nhập thì đá về login
-                    return;
-                }
+        // Đảm bảo i18n đã sẵn sàng
+        window.addEventListener('load', () => {
+            fetch('/api/user')
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.logged_in) {
+                        window.location.href = 'login.html'; 
+                        return;
+                    }
 
-                // Điền dữ liệu vào giao diện
-                document.getElementById('p-username').textContent = data.username;
-                document.getElementById('p-email').textContent = data.email;
-                document.getElementById('p-points').textContent = data.points;
+                    document.getElementById('p-username').textContent = data.username;
+                    document.getElementById('p-email').textContent = data.email;
+                    document.getElementById('p-points').textContent = data.points;
 
-                // Xử lý danh sách lộ trình
-                const routes = data.routes || {};
-                const routeList = document.getElementById('route-list');
-                const completedCount = Object.values(routes).filter(r => r.status === 'completed').length;
-                
-                document.getElementById('p-routes').textContent = completedCount;
+                    const routes = data.routes || {};
+                    const routeList = document.getElementById('route-list');
+                    const completedCount = Object.values(routes).filter(r => r.status === 'completed').length;
+                    
+                    document.getElementById('p-routes').textContent = completedCount;
 
-                if (Object.keys(routes).length > 0) {
-                    routeList.innerHTML = ''; // Xóa loading
-                    // Demo hiển thị Route 1
-                    const r1 = routes['route1'] || { status: 'Chưa tham gia' };
-                    let statusClass = r1.status === 'completed' ? 'status-completed' : 'status-locked';
-                    let statusText = r1.status === 'completed' ? 'Đã hoàn thành' : 'Chưa hoàn thành';
+                    if (Object.keys(routes).length > 0) {
+                        routeList.innerHTML = ''; 
+                        
+                        const r1 = routes['route1'] || { status: 'Chưa tham gia' };
+                        let statusClass = r1.status === 'completed' ? 'status-completed' : 'status-locked';
+                        
+                        // Sử dụng i18n để lấy text trạng thái và tên lộ trình
+                        // Nếu r1.status chưa có trong file dịch thì dùng fallback
+                        let statusText = r1.status === 'completed' ? i18n.t('status_completed') : i18n.t('status_incomplete');
+                        let routeTitle = i18n.t('route1_title'); // Lấy tên từ file dịch
+                        let routeDesc = i18n.t('route1_desc_short', {}, "Bảo tàng - Dinh Độc Lập - Hồ Con Rùa");
 
-                    const html = `
-                        <div class="route-item">
-                            <div>
-                                <h4 style="font-weight: 700; margin-bottom: 5px;">Lộ trình 1: Kí ức Sài Gòn</h4>
-                                <span style="font-size: 0.85rem; color: #777;">Bảo tàng - Dinh Độc Lập - Hồ Con Rùa</span>
+                        const html = `
+                            <div class="route-item">
+                                <div>
+                                    <h4 style="font-weight: 700; margin-bottom: 5px;">${routeTitle}</h4>
+                                    <span style="font-size: 0.85rem; color: #777;">${routeDesc}</span>
+                                </div>
+                                <span class="route-status ${statusClass}">${statusText}</span>
                             </div>
-                            <span class="route-status ${statusClass}">${statusText}</span>
-                        </div>
-                    `;
-                    routeList.innerHTML = html;
-                } else {
-                    routeList.innerHTML = '<p style="text-align:center">Chưa có hành trình nào.</p>';
-                }
-            });
+                        `;
+                        routeList.innerHTML = html;
+                    } else {
+                        routeList.innerHTML = `<p style="text-align:center">${i18n.t('history_empty')}</p>`;
+                    }
+                });
+        });
 
-        // Xử lý nút Đăng xuất
         document.getElementById('logoutBtn').addEventListener('click', () => {
             fetch('/api/logout', { method: 'POST' }).then(() => window.location.href = 'index.html');
         });
