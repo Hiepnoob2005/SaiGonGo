@@ -10,6 +10,7 @@ const translations = {
     vi: {
         // === Navigation ===
         nav_home: "Trang chủ",
+        nav_create_route: "Tạo lộ trình",
         nav_about: "Về chúng tôi",
         nav_tours: "Tour",
         nav_destinations: "Điểm đến",
