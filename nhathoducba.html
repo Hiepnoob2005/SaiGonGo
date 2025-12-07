@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Xác thực hình ảnh điểm đến - Nhà thờ Đức Bà</title>
+  <title data-i18n="cathedral_verify_title">Xác thực hình ảnh điểm đến - Nhà thờ Đức Bà</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap"
     rel="stylesheet">
@@ -190,9 +190,9 @@
 
       <nav class="navbar">
         <ul class="navbar-list">
-          <li><a href="index.html" class="navbar-link">Home</a></li>
-          <li><a href="#" class="navbar-link">Tours</a></li>
-          <li><a href="#" class="navbar-link">Destinations</a></li>
+          <li><a href="index.html" class="navbar-link" data-i18n="nav_home">Home</a></li>
+          <li><a href="#" class="navbar-link" data-i18n="nav_tours">Tours</a></li>
+          <li><a href="#" class="navbar-link" data-i18n="nav_destinations">Destinations</a></li>
         </ul>
       </nav>
     </div>
@@ -216,7 +216,7 @@
         font-weight: 800;
         text-transform: uppercase;
         margin-bottom: 20px;
-      ">
+      " data-i18n="cathedral_verify_title">
         📍 Xác thực điểm đến
       </h2>
 
@@ -225,11 +225,11 @@
         color: #333;
         line-height: 1.8;
         margin-bottom: 25px;
-      ">
-        Bước 1: Hãy di chuyển đến <b>Nhà thờ Đức Bà</b> (< 100m) để mở khóa camera. </p>
+      " data-i18n="cathedral_verify_step1">
+        Bước 1: Hãy di chuyển đến <b>Nhà thờ Đức Bà</b> (< 100m) để mở khóa camera. 
+      </p>
 
-          <a href="ltnhathoducba.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;">← Quay
-            lại</a>
+          <a href="ltnhathoducba.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;" data-i18n="btn_back">← Quay lại</a>
 
           <div style="margin-bottom: 20px;">
             <input type="text" id="locationName" value="Nhà thờ Đức Bà" readonly style="
@@ -246,32 +246,32 @@
           </div>
 
           <div class="toggle-container">
-            <span>Chế độ kiểm tra (Bỏ qua GPS)</span>
+            <span data-i18n="museum_dev_mode">Chế độ kiểm tra (Bỏ qua GPS)</span>
             <label class="toggle-switch">
               <input type="checkbox" id="devModeToggle">
               <span class="slider"></span>
             </label>
           </div>
 
-          <div id="gpsStatus">📡 Đang xác định vị trí của bạn...</div>
+          <div id="gpsStatus" data-i18n="status_locating">📡 Đang xác định vị trí của bạn...</div>
 
           <div style="margin-bottom: 25px; margin-top: 20px;">
             <input type="file" id="photo" accept="image/*" capture="camera" disabled
               style="font-size: 1rem; border: none; background: none;" />
-            <p id="lockMessage" style="color: #d62828; font-size: 0.9rem; margin-top: 5px; display: none;">
+            <p id="lockMessage" style="color: #d62828; font-size: 0.9rem; margin-top: 5px; display: none;" data-i18n="museum_camera_locked">
               🔒 Camera bị khóa do bạn ở quá xa.
             </p>
           </div>
 
           <img id="preview" class="preview" />
 
-          <button id="uploadBtn" disabled>
+          <button id="uploadBtn" disabled data-i18n="btn_verify">
             Xác thực bằng AI
           </button>
 
           <div id="result"></div>
 
-          <button id="nextDestinationBtn" onclick="window.location.href='quiz_dinhdoclap.html'">
+          <button id="nextDestinationBtn" onclick="window.location.href='quiz_nhathoducba.html'" data-i18n="btn_continue">
             Tiếp tục đến với các câu hỏi →
           </button>
 
@@ -296,11 +296,11 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     font-family: 'Be Vietnam Pro', sans-serif;
-  ">
+  " data-i18n="cathedral_intro_title">
               🏛️ Giới thiệu về Nhà thờ Đức Bà
             </h2>
 
-            <img src="./assets/images/NhaThoDucBa.jpg" alt="Nhà thờ Đức Bà" style="
+            <img src="./assets/images/NhaThoDucBa.jpg" data-i18n-alt="dest_cathedral" alt="Nhà thờ Đức Bà" style="
          width: 100%;
          max-width: 600px;
          border-radius: 14px;
@@ -315,19 +315,8 @@
     line-height: 2;
     text-align: justify;
     padding: 0 10px;
-  ">
-              <b>Nhà thờ Đức Bà Sài Gòn</b> (tên chính thức là <b>Nhà thờ Chính tòa Đức Bà Sài Gòn</b>) là một công
-              trình kiến trúc tiêu biểu
-              của Thành phố Hồ Chí Minh, nằm tại <b>Quảng trường Công xã Paris, Quận 1</b>.
-              <br><br>
-              Được người Pháp xây dựng từ năm <b>1877</b> và hoàn thành vào năm <b>1880</b>, nhà thờ là biểu tượng của
-              phong cách kiến trúc Roman
-              kết hợp Gothic, với hai tháp chuông cao 58 mét và toàn bộ vật liệu được mang từ Pháp sang.
-              <br><br>
-              Trước nhà thờ là tượng <b>Đức Mẹ Hòa Bình</b> được đặt vào năm <b>1959</b>, mang ý nghĩa cầu nguyện cho
-              hòa bình thế giới.
-              Ngày nay, đây không chỉ là công trình tôn giáo quan trọng mà còn là địa điểm du lịch, biểu tượng văn hóa
-              của Sài Gòn.
+  " data-i18n="cathedral_info_text">
+              Nhà thờ Đức Bà Sài Gòn...
             </p>
           </section>
   </main>
@@ -336,9 +325,8 @@
     <div class="container">
       <div class="footer-bottom">
         <a href="#" class="logo">SaiGonGo</a>
-        <p class="copyright">
-          &copy; 2022 <a href="#" class="copyright-link">codewithsadee</a>.
-          All Rights Reserved
+        <p class="copyright" data-i18n="footer_copyright">
+          © 2022 All Rights Reserved
         </p>
       </div>
     </div>
@@ -358,8 +346,9 @@
     const resultBox = document.getElementById("result");
     const nextDestinationBtn = document.getElementById("nextDestinationBtn");
     const preview = document.getElementById("preview");
+    const locationNameInput = document.getElementById("locationName");
 
-    // --- 2. HÀM TÍNH KHOẢNG CÁCH (Lấy từ trang lộ trình) ---
+    // --- 2. HÀM TÍNH KHOẢNG CÁCH ---
     function getDistance(lat1, lon1, lat2, lon2) {
       const R = 6371e3; // Bán kính Trái Đất (m)
       const toRad = deg => deg * Math.PI / 180;
@@ -375,13 +364,12 @@
     }
 
     // --- 3. HÀM CHECK VỊ TRÍ LIÊN TỤC ---
-    // --- 3. HÀM CHECK VỊ TRÍ & LOGIC DEV MODE ---
     const devModeToggle = document.getElementById("devModeToggle");
 
     function checkLocation() {
       // 🛑 ƯU TIÊN 1: Kiểm tra xem có đang bật chế độ Dev không?
       if (devModeToggle.checked) {
-        gpsStatus.innerHTML = `🛠️ <b>Chế độ Nhà phát triển:</b><br>Đã bỏ qua kiểm tra GPS. Camera đã mở!`;
+        gpsStatus.innerHTML = i18n.t('museum_dev_mode_desc');
         gpsStatus.style.backgroundColor = "#fff8e1"; // Màu vàng nhạt
         gpsStatus.style.color = "#b38600";
         gpsStatus.style.border = "2px solid #ffe58f";
@@ -394,14 +382,12 @@
 
       // 🛑 ƯU TIÊN 2: Nếu không bật Dev Mode, chạy GPS thật
       if ("geolocation" in navigator) {
-        // Hiển thị trạng thái đang dò tìm (chỉ khi chưa có kết quả)
         if (gpsStatus.textContent.includes("Chế độ")) {
-          gpsStatus.innerHTML = "📡 Đang lấy lại vị trí thực tế...";
+          gpsStatus.innerHTML = i18n.t('status_locating');
         }
 
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            // Nếu người dùng vừa bật nút Dev Mode trong lúc GPS đang chạy, thì hủy cập nhật
             if (devModeToggle.checked) return;
 
             const userLat = position.coords.latitude;
@@ -410,8 +396,7 @@
             const distance = getDistance(userLat, userLon, TARGET_LAT, TARGET_LON);
 
             if (distance <= MAX_DISTANCE_METERS) {
-              // ĐÃ ĐẾN NƠI
-              gpsStatus.innerHTML = `✅ Bạn đang ở cách điểm đến <b>${distance.toFixed(0)}m</b>. <br>Đã mở khóa camera!`;
+              gpsStatus.innerHTML = i18n.t('museum_camera_unlocked', {distance: distance.toFixed(0)});
               gpsStatus.style.backgroundColor = "#e8ffe8";
               gpsStatus.style.color = "green";
               gpsStatus.style.border = "2px solid green";
@@ -419,8 +404,7 @@
               photoInput.disabled = false;
               lockMessage.style.display = "none";
             } else {
-              // CÒN XA
-              gpsStatus.innerHTML = `⚠️ Bạn đang cách điểm đến <b>${(distance / 1000).toFixed(2)} km</b>.<br>Hãy đến gần hơn 100m.`;
+              gpsStatus.innerHTML = i18n.t('museum_too_far', {distance: (distance / 1000).toFixed(2)});
               gpsStatus.style.backgroundColor = "#fff5f5";
               gpsStatus.style.color = "#d62828";
               gpsStatus.style.border = "2px solid #d62828";
@@ -432,13 +416,13 @@
           },
           (error) => {
             if (devModeToggle.checked) return;
-            gpsStatus.textContent = "❌ Không thể lấy vị trí GPS.";
+            gpsStatus.textContent = i18n.t('status_gps_error');
             gpsStatus.style.backgroundColor = "#eee";
           },
           { enableHighAccuracy: true, timeout: 5000 }
         );
       } else {
-        gpsStatus.textContent = "Trình duyệt không hỗ trợ GPS.";
+        gpsStatus.textContent = i18n.t('start_browser_error');
       }
     }
 
@@ -446,7 +430,14 @@
     checkLocation();
     setInterval(checkLocation, 5000);
 
-    // --- 4. LOGIC XỬ LÝ ẢNH (GIỮ NGUYÊN) ---
+    // Init language name for input
+    window.addEventListener('load', () => {
+        if(typeof i18n !== 'undefined') {
+            locationNameInput.value = i18n.t('dest_cathedral');
+        }
+    });
+
+    // --- 4. LOGIC XỬ LÝ ẢNH ---
     photoInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -462,14 +453,15 @@
 
     uploadBtn.addEventListener("click", async () => {
       const file = photoInput.files[0];
-      const locationName = document.getElementById("locationName").value.trim();
+      // Use standard Vietnamese name for backend consistency
+      const locationName = "Nhà thờ Đức Bà";
 
       if (!file) {
         alert("Vui lòng chọn ảnh trước khi xác thực!");
         return;
       }
 
-      resultBox.textContent = "⏳ Đang gửi hình ảnh để AI xử lý...";
+      resultBox.textContent = i18n.t('status_sending');
       uploadBtn.disabled = true;
 
       const formData = new FormData();
@@ -484,7 +476,6 @@
         uploadBtn.disabled = false;
 
         if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
-          // --- CODE CỘNG ĐIỂM (+5) ---
           try {
             const scoreRes = await fetch('/api/update-score', {
               method: 'POST',
@@ -494,53 +485,37 @@
             const scoreData = await scoreRes.json();
 
             if (scoreData.success) {
-              // Cập nhật UI
               document.getElementById('user-points').textContent = scoreData.new_points;
-
-              // Hiệu ứng +5 bay lên
               const anim = document.getElementById('point-anim');
-              anim.textContent = "+5 Điểm (Xác thực)";
+              anim.textContent = i18n.t('score_plus_verify');
               anim.className = "point-animation anim-plus";
             }
           } catch (err) { console.error(err); }
-          // --- [CODE MỚI] ẨN CÁC NÚT ĐỂ CHỐNG SPAM ---
-          uploadBtn.style.display = "none";       // Ẩn nút xác thực
-          photoInput.style.display = "none";      // Ẩn ô chọn file
-          preview.style.display = "none";         // Ẩn ảnh xem trước
 
-          // Thay dòng thông báo kết quả bằng thông báo hoàn thành
-          resultBox.innerHTML = "✅ <b style='color:green'>Xác thực thành công! Bạn đã nhận điểm.</b>";
-          // ---------------------------------------------
+          uploadBtn.style.display = "none";
+          photoInput.style.display = "none";
+          preview.style.display = "none";
+
+          resultBox.innerHTML = i18n.t('museum_verify_success');
 
           nextDestinationBtn.style.display = "block";
           document.getElementById("museum-info").style.display = "block";
 
-          // (Code lưu ảnh cũ của bạn giữ nguyên ở đây nếu cần...)
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = function (event) {
-            // ... Code nén ảnh và lưu localStorage ...
-            // Bạn có thể copy lại đoạn logic resize canvas từ file cũ vào đây
-          };
-
         } else {
-          // --- TRƯỜNG HỢP SAI ---
-          resultBox.textContent = data.message; // Hiện thông báo sai
+          resultBox.textContent = i18n.t('museum_verify_wrong');
           resultBox.style.color = "red";
-
-          uploadBtn.disabled = false; // Mở lại nút để cho phép thử lại
-
+          uploadBtn.disabled = false;
           nextDestinationBtn.style.display = "none";
           document.getElementById("museum-info").style.display = "none";
         }
 
       } catch (err) {
         console.error(err);
-        resultBox.textContent = "❌ Lỗi kết nối với server.";
+        resultBox.textContent = i18n.t('status_connection_error');
         uploadBtn.disabled = false;
       }
     });
-    // Load điểm khi vào trang
+    
     async function loadUserScore() {
       try {
         const res = await fetch('/api/user');
@@ -553,6 +528,10 @@
 
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  <script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
+
 </body>
 
 </html>
