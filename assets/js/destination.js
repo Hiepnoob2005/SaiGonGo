@@ -35,6 +35,8 @@ const dropArea = document.getElementById("image-view");
 const photoInput = document.getElementById("photo");
 const imageView = document.getElementById("image-view");
 
+let checkStatus = true;
+
 
 // --- 2. HÀM TÍNH KHOẢNG CÁCH (Lấy từ trang lộ trình) ---
 function getDistance(lat1, lon1, lat2, lon2) {
@@ -57,6 +59,7 @@ const devModeToggle = document.getElementById("devModeToggle");
 
 function checkLocation() {
    if (checkLocationStatus == false) return;
+
    // 🛑 ƯU TIÊN 1: Kiểm tra xem có đang bật chế độ Dev không?
    console.log("aaaaaaaaaaa");
    if (devModeToggle.checked) {
@@ -228,6 +231,8 @@ uploadBtn.addEventListener("click", async () => {
          nextDestinationBtn.disabled = false;
          checkLocationStatus = false;
          uploadBtn.disabled = true;
+
+         checkStatus = false;
          // --- CODE CỘNG ĐIỂM (+5) ---
          try {
             const scoreRes = await fetch('/api/update-score', {
