@@ -493,7 +493,8 @@
       formData.append("image", file);
       // Gửi tên mặc định (Tiếng Việt) về server để xử lý, tránh lỗi AI không nhận diện được tên tiếng Anh
       // Hoặc server phải xử lý đa ngôn ngữ. Ở đây tôi hardcode gửi về tiếng Việt nếu server chỉ hiểu tiếng Việt
-      formData.append("location", "Bảo tàng chiến tích chiến tranh"); 
+      formData.append("location", locationName);
+      formData.append("language", localStorage.getItem('selectedLang') || 'vi');
 
       try {
         const res = await fetch("/verify-image", { method: "POST", body: formData });
