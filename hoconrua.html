@@ -4,119 +4,591 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="turtle_verify_title">Xác thực hình ảnh điểm đến - Hồ Con Rùa</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: "Times New Roman", Times, serif;
+      background-color: #f8f8f8;
+    }
 
-  <title>Xác thực hình ảnh điểm đến - Hồ Con Rùa</title>
+    .main-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="./assets/css/destination.css" />
+    .preview {
+      display: none;
+      width: 90%;
+      max-width: 380px;
+      height: auto;
+      border-radius: 10px;
+      margin: 25px auto;
+      border: 4px solid var(--orange-soda);
+      box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 80%;
+      max-width: 400px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      margin-top: 15px;
+      display: block;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* CSS cho trạng thái Disabled của input file */
+    input[type="file"]:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      margin-top: 30px;
+    }
+
+    button:hover:enabled {
+      background-color: #0056b3;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      color: black;
+      cursor: not-allowed;
+    }
+
+    #result {
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+
+    #nextDestinationBtn {
+      display: none;
+      margin: 30px auto 10px auto;
+      background-color: #ff6600;
+    }
+
+    #nextDestinationBtn:hover {
+      background-color: #e65c00;
+    }
+
+    /* CSS cho hộp thông báo khoảng cách */
+    #gpsStatus {
+      margin: 15px auto;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #eee;
+      color: #555;
+      font-weight: 600;
+      border: 2px dashed #ccc;
+      max-width: 600px;
+    }
+
+    /* --- CSS CHO NÚT GẠT (TOGGLE) --- */
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 10px auto 20px auto;
+      font-size: 1rem;
+      color: #555;
+      font-weight: 600;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(22px);
+    }
+  </style>
 </head>
 
-<aside id="sidebar">
-  <button class="close-btn" onclick="closeSidebar()">
-    <i class="fas fa-times"></i>
-  </button>
-
-  <div id="sidebar-content">
-    <a href="index.html" style="text-decoration: none;">
-      <i class="fas fa-home"></i> Home Page
-    </a>
-
-    <a href="lthoconrua.html" style="text-decoration: none;">
-      <i class="fas fa-arrow-left"></i> Go Back
-    </a>
-  </div>
-</aside>
-
-<body>
-  <input type="text" id="locationName" value="Dinh Độc Lập" readonly style="display: none;">
-
-  <header class="navbar">
-    <div class="logo">
-      <a href="index.html" style="text-decoration: none;"> SaiGonGo </a>
-    </div>
-
-    <ul class="nav-links" id="navLinks">
-      <li class="nav-item">
-        <i class="fa-solid fa-bars" onclick="toggleSidebar()"></i>
-      </li>
-    </ul>
-  </header>
-
-  <div id="point-anim" class="point-animation"></div>
-
+<body id="top">
   <div id="score-display" class="score-badge">
     💎 <span id="user-points">Loading...</span>
   </div>
+  <div id="point-anim" class="point-animation"></div>
+  <header class="header" data-header>
+    <div class="container">
+      <a href="index.html">
+        <h1 class="logo">SaiGonGo</h1>
+      </a>
 
-  <main class="grid-layout">
-    <div class="image-container">
-      <img src="./assets/images/HoConRua.jpg" alt="Hồ Con Rùa" />
+      <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
+        <ion-icon name="menu-outline" class="open"></ion-icon>
+        <ion-icon name="close-outline" class="close"></ion-icon>
+      </button>
+
+      <nav class="navbar">
+        <ul class="navbar-list">
+          <li><a href="index.html" class="navbar-link" data-i18n="nav_home">Home</a></li>
+          <li><a href="#" class="navbar-link" data-i18n="nav_tours">Tours</a></li>
+          <li><a href="#" class="navbar-link" data-i18n="nav_destinations">Destinations</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <div class="text-container">
-      <div class="info">
-        <div class="title">
-          Hồ Con Rùa
-        </div>
+  <main class="main-container">
+    <section style="
+      background-color: #f0f7ff;
+      border: 3px solid #007bff;
+      border-radius: 16px;
+      padding: 35px 45px;
+      max-width: 800px;
+      margin: 40px auto;
+      box-shadow: 0 6px 18px rgba(0, 123, 255, 0.15);
+      text-align: center;
+    ">
 
-        <div class="text">
-          Hồ Con Rùa tọa lạc tại <b>Công trường Quốc Tế, Phường Võ Thị Sáu, Quận 3, TP. Hồ Chí Minh</b>,
-          <span class="sub-text">là một trong những vòng xoay giao thông và địa danh mang tính biểu tượng nhất của thành
-            phố.</span>
-        </div>
+      <h2 style="
+        font-size: 2.2rem;
+        color: #0056b3;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      " data-i18n="turtle_verify_title">
+        📍 Xác thực điểm đến
+      </h2>
 
-        <div class="text">
-          Nơi đây là một công trình kiến trúc độc đáo được xây dựng từ 1965-1967, <b>với thiết kế tháp cao
-            và hồ nước bao quanh</b><span class="sub-text">phản ánh một giai đoạn phát triển và những giai thoại đô thị
-            của Sài Gòn.</span>
-        </div>
+      <p style="
+        font-size: 1.4rem;
+        color: #333;
+        line-height: 1.8;
+        margin-bottom: 25px;
+      " data-i18n="turtle_verify_step1">
+        Bước 1: Hãy di chuyển đến <b>Hồ Con Rùa</b> (< 100m) để mở khóa camera. 
+      </p>
 
-        <div class="text">
-          Ngoài khu vực hồ nước và đài phun, du khách còn có thể chiêm ngưỡng tòa tháp trung tâm với con đường dốc
-          xoắn ốc
-          và không khí nhộn nhịp xung quanh
-          <span class="sub-text">một biểu tượng cho sức sống và giao thoa văn hóa của thành phố.</span>
-        </div>
+          <a href="lthoconrua.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;" data-i18n="btn_back">← Quay lại</a>
 
-        <div id="gpsStatus">📡 Đang xác định vị trí của bạn...</div>
-
-        <label for="photo" class="upload-area">
-          <input type="file" id="photo" accept="image/*" capture="camera" hidden disabled />
-          <div id="image-view">
-            <i class="fa-solid fa-folder-open upload-icon"></i>
-            <p>Drag & Drop or Click here <br> to upload image</p>
+          <div style="margin-bottom: 20px;">
+            <input type="text" id="locationName" value="Hồ Con Rùa" readonly style="
+                 font-size: 1.1rem;
+                 padding: 10px;
+                 border: 1.5px solid #ccc;
+                 border-radius: 8px;
+                 text-align: center;
+                 color: #333;
+                 background-color: #fafafa;
+                 width: 80%;
+                 max-width: 400px;
+               " />
           </div>
-        </label>
+          {% if is_admin %}
+          <div class="toggle-container">
+            <span data-i18n="museum_dev_mode">Chế độ kiểm tra (Bỏ qua GPS)</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="devModeToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          {% endif %}
+          <div id="gpsStatus" data-i18n="status_locating">📡 Đang xác định vị trí của bạn...</div>
 
-        <div class="verification-box">
+          <div style="margin-bottom: 25px; margin-top: 20px;">
+            <input type="file" id="photo" accept="image/*" capture="camera" disabled
+              style="font-size: 1rem; border: none; background: none;" />
+            <p id="lockMessage" style="color: #d62828; font-size: 0.9rem; margin-top: 5px; display: none;" data-i18n="museum_camera_locked">
+              🔒 Camera bị khóa do bạn ở quá xa.
+            </p>
+          </div>
+
+          <img id="preview" class="preview" />
+
+          <button id="uploadBtn" disabled data-i18n="btn_verify">
+            Xác thực bằng AI
+          </button>
+
           <div id="result"></div>
 
-          <img id="preview" src="" alt="Ảnh xem trước"
-            style="max-width: 100%; display: none; margin-top: 10px; border-radius: 8px;">
+          <button id="nextDestinationBtn" onclick="window.location.href='ketthuclt1.html'" data-i18n="btn_continue">
+            Tiếp tục đến với các câu hỏi →
+          </button>
 
-          <p id="lockMessage" style="display: none;">
-            🔒 Camera bị khóa do bạn ở quá xa.
-          </p>
+          <section id="museum-info" style="
+  display: none;
+  margin: 60px auto;
+  max-width: 900px;
+  background-color: #f8fbff;
+  border: 3px solid #007bff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.15);
+  padding: 40px 50px;
+  text-align: center;
+  transition: all 0.5s ease;
+">
 
-          <div class="button-container">
-            <label class="checkbox">
-              <input type="checkbox" id="devModeToggle">
-              <span class="checkmark"> Bypass GPS </span>
-            </label>
+            <h2 style="
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #0056b3;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Times New Roman', Times, serif;
+  " data-i18n="turtle_intro_title">
+              🏛️ Giới thiệu về Hồ con Rùa
+            </h2>
 
-            <button id="uploadBtn" disabled>Bắt đầu xác thực</button>
+            <img src="./assets/images/HoConRua.jpg" data-i18n-alt="dest_turtle_lake" alt="Hồ Con Rùa" style="
+         width: 100%;
+         max-width: 600px;
+         border-radius: 14px;
+         margin: 25px auto 35px auto;
+         display: block;
+         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+       " />
 
-            <button class="select-btn" id="nextDestinationBtn" onclick="window.location.href='quiz_baotang.html'"
-              disabled>
-              Tiếp tục
-            </button>
-          </div>
-        </div>
-      </div>
+            <p style="
+    font-size: 1.7rem;
+    color: #333;
+    line-height: 2;
+    text-align: justify;
+    padding: 0 10px;
+  " data-i18n="turtle_info_text">
+              Hồ Con Rùa tọa lạc tại <b>Công trường Quốc Tế...</b>
+            </p>
+          </section>
   </main>
 
-  <div class="page-end"></div>
-  <script src="./assets/js/destination.js"></script>
+  <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+    <div class="container">
+      <div class="footer-bottom">
+        <a href="#" class="logo">SaiGonGo</a>
+        <p class="copyright" data-i18n="footer_copyright">
+          © 2022 All Rights Reserved
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const TARGET_LAT = 10.782615630794004;
+    const TARGET_LON = 106.69595372983176;
+    const MAX_DISTANCE_METERS = 100; // Khoảng cách cho phép
+
+    const gpsStatus = document.getElementById("gpsStatus");
+    const photoInput = document.getElementById("photo");
+    const lockMessage = document.getElementById("lockMessage");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const resultBox = document.getElementById("result");
+    const nextDestinationBtn = document.getElementById("nextDestinationBtn");
+    const preview = document.getElementById("preview");
+    const locationNameInput = document.getElementById("locationName");
+
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3; // Bán kính Trái Đất (m)
+      const toRad = deg => deg * Math.PI / 180;
+      const φ1 = toRad(lat1);
+      const φ2 = toRad(lat2);
+      const Δφ = toRad(lat2 - lat1);
+      const Δλ = toRad(lon2 - lon1);
+      const a = Math.sin(Δφ / 2) ** 2 +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    const devModeToggle = document.getElementById("devModeToggle");
+    // Lấy thẻ hiển thị trạng thái GPS
+    const gpsStatusBox = document.getElementById("gpsStatus"); 
+
+    function checkLocation() {
+      if (devModeToggle && devModeToggle.checked) {
+        gpsStatus.innerHTML = i18n.t('museum_dev_mode_desc');
+        gpsStatus.style.backgroundColor = "#fff8e1";
+        gpsStatus.style.color = "#b38600";
+        gpsStatus.style.border = "2px solid #ffe58f";
+
+        photoInput.disabled = false;
+        lockMessage.style.display = "none";
+        return;
+      }
+
+      if ("geolocation" in navigator) {
+        if (gpsStatus.textContent.includes("Chế độ")) {
+          gpsStatus.innerHTML = i18n.t('status_locating');
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            if (devModeToggle && devModeToggle.checked) return;
+
+            const userLat = position.coords.latitude;
+            const userLon = position.coords.longitude;
+
+            // Tính khoảng cách
+            const distance = getDistance(userLat, userLon, TARGET_LAT, TARGET_LON);
+
+            if (distance <= MAX_DISTANCE_METERS) {
+              gpsStatus.innerHTML = i18n.t('museum_camera_unlocked', {distance: distance.toFixed(0)});
+              gpsStatus.style.backgroundColor = "#e8ffe8";
+              gpsStatus.style.color = "green";
+              gpsStatus.style.border = "2px solid green";
+
+              photoInput.disabled = false;
+              lockMessage.style.display = "none";
+            } else {
+              gpsStatus.innerHTML = i18n.t('museum_too_far', {distance: (distance / 1000).toFixed(2)});
+              gpsStatus.style.backgroundColor = "#fff5f5";
+              gpsStatus.style.color = "#d62828";
+              gpsStatus.style.border = "2px solid #d62828";
+
+              photoInput.disabled = true;
+              uploadBtn.disabled = true;
+              lockMessage.style.display = "block";
+            }
+          },
+          (error) => {
+            if (devModeToggle && devModeToggle.checked) return;
+            gpsStatus.textContent = i18n.t('status_gps_error');
+            gpsStatus.style.backgroundColor = "#eee";
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      } else {
+        gpsStatus.textContent = i18n.t('start_browser_error');
+      }
+    }
+
+    // Chỉ gán sự kiện click nếu nút toggle tồn tại
+    if (devModeToggle) {
+        devModeToggle.addEventListener("change", checkLocation);
+    }
+    
+    // Chạy hàm kiểm tra ngay khi tải trang
+    checkLocation();
+    
+    // Cập nhật vị trí mỗi 5 giây
+    setInterval(checkLocation, 5000);
+    
+    // Auto translate input value
+    window.addEventListener('load', () => {
+        if(typeof i18n !== 'undefined') locationNameInput.value = i18n.t('dest_turtle_lake');
+    });
+    window.addEventListener('languageChanged', () => {
+        locationNameInput.value = i18n.t('dest_turtle_lake');
+    });
+
+    photoInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+        uploadBtn.disabled = false;
+        resultBox.textContent = "";
+      } else {
+        uploadBtn.disabled = true;
+        preview.style.display = "none";
+      }
+    });
+
+    uploadBtn.addEventListener("click", async () => {
+      const file = photoInput.files[0];
+      const locationName = "Hồ Con Rùa"; // Send VN name to server
+
+      if (!file) {
+        alert("Vui lòng chọn ảnh trước khi xác thực!");
+        return;
+      }
+
+      resultBox.textContent = i18n.t('status_sending');
+      uploadBtn.disabled = true;
+
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("location", locationName);
+
+      try {
+        const res = await fetch("/verify-image", { method: "POST", body: formData });
+        const data = await res.json();
+
+        resultBox.textContent = data.message;
+        uploadBtn.disabled = false;
+
+        if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
+          try {
+            const scoreRes = await fetch('/api/update-score', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ points: 5, routeId: 'route1' })
+            });
+            const scoreData = await scoreRes.json();
+
+            if (scoreData.success) {
+              document.getElementById('user-points').textContent = scoreData.new_points;
+              const anim = document.getElementById('point-anim');
+              anim.textContent = i18n.t('score_plus_verify');
+              anim.className = "point-animation anim-plus";
+            }
+          } catch (err) { console.error(err); }
+          
+          uploadBtn.style.display = "none";
+          photoInput.style.display = "none";
+          preview.style.display = "none";
+
+          resultBox.innerHTML = i18n.t('museum_verify_success');
+
+          nextDestinationBtn.style.display = "block";
+          document.getElementById("museum-info").style.display = "block";
+
+          // Save image logic
+          const reader = new FileReader();
+          reader.readAsDataURL(file); 
+
+          reader.onload = function (event) {
+            const img = new Image();
+            img.src = event.target.result;
+
+            img.onload = function () {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              const maxWidth = 600;
+              const scaleFactor = maxWidth / img.width;
+
+              if (img.width > maxWidth) {
+                canvas.width = maxWidth;
+                canvas.height = img.height * scaleFactor;
+              } else {
+                canvas.width = img.width;
+                canvas.height = img.height;
+              }
+
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+              let myTripAlbum = JSON.parse(localStorage.getItem("SaiGonGo_Album")) || [];
+              myTripAlbum.push({
+                location: locationName,
+                image: compressedBase64,
+                time: new Date().toLocaleString("vi-VN")
+              });
+
+              try {
+                localStorage.setItem("SaiGonGo_Album", JSON.stringify(myTripAlbum));
+              } catch (e) {
+                console.error("Lỗi lưu ảnh:", e);
+              }
+            };
+          };
+        } else {
+          resultBox.textContent = i18n.t('museum_verify_wrong');
+          resultBox.style.color = "red";
+          uploadBtn.disabled = false;
+          nextDestinationBtn.style.display = "none";
+          document.getElementById("museum-info").style.display = "none";
+        }
+
+      } catch (err) {
+        console.error(err);
+        resultBox.textContent = i18n.t('status_connection_error');
+        uploadBtn.disabled = false;
+      }
+    });
+    
+    async function loadUserScore() {
+      try {
+        const res = await fetch('/api/user');
+        const data = await res.json();
+        if (data.logged_in) document.getElementById('user-points').textContent = data.points;
+      } catch (e) { }
+    }
+    window.addEventListener('load', loadUserScore);
+  </script>
+
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  {% if is_admin %}
+  <button onclick="adminSkipAll('ketthuclt1.html')" class="admin-badge">
+    <ion-icon name="rocket-outline"></ion-icon>
+    ADMIN SKIP
+  </button>
+
+  <script>
+    // Sửa hàm nhận tham số nextUrl
+    function adminSkipAll(nextUrl) {
+      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
+        // Chuyển hướng ngay lập tức
+        window.location.href = nextUrl;
+      }
+    }
+  </script>
+  {% endif %}
+  <script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
+
 </body>
 
 </html>

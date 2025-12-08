@@ -13,49 +13,175 @@
       font-family: "Times New Roman", Times, serif;
       background-color: #f8f8f8;
     }
-</style>
-  <title>Xác thực hình ảnh điểm đến - Dinh Độc Lập</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="./assets/css/destination.css" />
+    .main-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .preview {
+      display: none;
+      width: 90%;
+      max-width: 380px;
+      height: auto;
+      border-radius: 10px;
+      margin: 25px auto;
+      border: 4px solid var(--orange-soda);
+      box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 80%;
+      max-width: 400px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      margin-top: 15px;
+      display: block;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* CSS cho trạng thái Disabled của input file */
+    input[type="file"]:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      margin-top: 30px;
+    }
+
+    button:hover:enabled {
+      background-color: #0056b3;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      color: black;
+      cursor: not-allowed;
+    }
+
+    #result {
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+
+    #nextDestinationBtn {
+      display: none;
+      margin: 30px auto 10px auto;
+      background-color: #ff6600;
+    }
+
+    #nextDestinationBtn:hover {
+      background-color: #e65c00;
+    }
+
+    /* CSS cho hộp thông báo khoảng cách */
+    #gpsStatus {
+      margin: 15px auto;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #eee;
+      color: #555;
+      font-weight: 600;
+      border: 2px dashed #ccc;
+      max-width: 600px;
+    }
+
+    /* --- CSS CHO NÚT GẠT (TOGGLE) --- */
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 10px auto 20px auto;
+      font-size: 1rem;
+      color: #555;
+      font-weight: 600;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(22px);
+    }
+  </style>
 </head>
 
-<aside id="sidebar">
-  <button class="close-btn" onclick="closeSidebar()">
-    <i class="fas fa-times"></i>
-  </button>
-
-  <div id="sidebar-content">
-    <a href="index.html" style="text-decoration: none;">
-      <i class="fas fa-home"></i> Home Page
-    </a>
-
-    <a href="ltnhathoducba.html" style="text-decoration: none;">
-      <i class="fas fa-arrow-left"></i> Go Back
-    </a>
-  </div>
-</aside>
-
-<body>
-  <input type="text" id="locationName" value="Nhà thờ Đức Bà" readonly style="display: none;">
-
-  <header class="navbar">
-    <div class="logo">
-      <a href="index.html" style="text-decoration: none;"> SaiGonGo </a>
-    </div>
-
-    <ul class="nav-links" id="navLinks">
-      <li class="nav-item">
-        <i class="fa-solid fa-bars" onclick="toggleSidebar()"></i>
-      </li>
-    </ul>
-  </header>
-
-  <div id="point-anim" class="point-animation"></div>
-
+<body id="top">
   <div id="score-display" class="score-badge">
     💎 <span id="user-points">Loading...</span>
   </div>
+  <div id="point-anim" class="point-animation"></div>
+  <header class="header" data-header>
+    <div class="container">
+      <a href="index.html">
+        <h1 class="logo">SaiGonGo</h1>
+      </a>
 
       <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
         <ion-icon name="menu-outline" class="open"></ion-icon>
@@ -70,49 +196,19 @@
         </ul>
       </nav>
     </div>
+  </header>
 
-    <div class="text-container">
-      <div class="info">
-        <div class="title">
-          Nhà thờ Đức Bà
-        </div>
-
-        <div class="text"><b>Nhà thờ Đức Bà Sài Gòn</b> (tên chính thức là <b>Nhà thờ Chính tòa Đức Bà Sài Gòn</b>)
-          <span class="sub-text">
-            là một công
-            trình kiến trúc tiêu biểu
-            của Thành phố Hồ Chí Minh, nằm tại <b>Quảng trường Công xã Paris, Quận 1</b>.
-          </span>
-        </div>
-
-
-        <div class="text">Được người Pháp xây dựng từ năm <b>1877</b> và hoàn thành vào năm <b>1880</b>
-          <span class="sub-text">
-            nhà thờ là biểu tượng của
-            phong cách kiến trúc Roman
-            kết hợp Gothic, với hai tháp chuông cao 58 mét và toàn bộ vật liệu được mang từ Pháp sang.
-          </span>
-        </div>
-
-
-        <div class="text">Trước nhà thờ là tượng <b>Đức Mẹ Hòa Bình</b> được đặt vào năm <b>1959</b>, mang ý nghĩa cầu
-          nguyện cho
-          hòa bình thế giới.
-          <span class="sub-text">
-            Ngày nay, đây không chỉ là công trình tôn giáo quan trọng mà còn là địa điểm du lịch, biểu tượng văn hóa
-            của Sài Gòn.
-          </span>
-        </div>
-
-        <div id="gpsStatus">📡 Đang xác định vị trí của bạn...</div>
-
-        <label for="photo" class="upload-area">
-          <input type="file" id="photo" accept="image/*" capture="camera" hidden disabled />
-          <div id="image-view">
-            <i class="fa-solid fa-folder-open upload-icon"></i>
-            <p>Drag & Drop or Click here <br> to upload image</p>
-          </div>
-        </label>
+  <main class="main-container">
+    <section style="
+      background-color: #f0f7ff;
+      border: 3px solid #007bff;
+      border-radius: 16px;
+      padding: 35px 45px;
+      max-width: 800px;
+      margin: 40px auto;
+      box-shadow: 0 6px 18px rgba(0, 123, 255, 0.15);
+      text-align: center;
+    ">
 
       <h2 style="
         font-size: 2.2rem;
@@ -153,7 +249,7 @@
             <span data-i18n="museum_dev_mode">Chế độ kiểm tra (Bỏ qua GPS)</span>
             <label class="toggle-switch">
               <input type="checkbox" id="devModeToggle">
-              <span class="checkmark"> Bypass GPS </span>
+              <span class="slider"></span>
             </label>
           </div>
           {% endif %}
