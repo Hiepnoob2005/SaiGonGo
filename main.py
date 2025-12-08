@@ -491,23 +491,24 @@ def get_dynamic_directions():
         # Sử dụng model gemini-2.5-flash để đồng nhất và tối ưu tốc độ/chi phí
         model_name_for_text = "gemini-2.5-flash" 
         
-        # Tạo prompt
+            # --- PROMPT TIẾNG VIỆT (CŨ) ---
+            # --- PROMPT TIẾNG VIỆT (CŨ) ---
         if is_alternative:
-            prompt = (
-                f"Bạn là hướng dẫn viên du lịch TP.HCM. Người dùng báo rằng CON ĐƯỜNG CHÍNH ĐANG BỊ CHẶN hoặc KHÔNG ĐI ĐƯỢC. "
-                f"Hãy chỉ dẫn một LỘ TRÌNH THAY THẾ (đi đường vòng, đi qua hẻm lớn hoặc đường song song) "
-                f"từ '{start['name']}' đến '{end['name']}'. "
-                f"Tuyệt đối không chỉ dẫn đi lại con đường chính ngắn nhất. "
-                f"Hãy liệt kê 4-6 bước đi cụ thể. Bắt đầu câu trả lời bằng: '⚠️ Vì đường chính bị chặn, hãy đi theo lối này:...'"
-            )
+                prompt = (
+                    f"Bạn là hướng dẫn viên du lịch TP.HCM. Người dùng báo rằng CON ĐƯỜNG CHÍNH ĐANG BỊ CHẶN hoặc KHÔNG ĐI ĐƯỢC. "
+                    f"Hãy chỉ dẫn một LỘ TRÌNH THAY THẾ (đi đường vòng, đi qua hẻm lớn hoặc đường song song) "
+                    f"từ '{start['name']}' đến '{end['name']}'. "
+                    f"Tuyệt đối không chỉ dẫn đi lại con đường chính ngắn nhất. "
+                    f"Hãy liệt kê 4-6 bước đi cụ thể. Bắt đầu câu trả lời bằng: '⚠️ Vì đường chính bị chặn, hãy đi theo lối này:...'"
+                )
         else:
-            prompt = (
-                f"Bạn là hướng dẫn viên du lịch TP.HCM. "
-                f"Hãy mô tả 4–6 bước chỉ đường đi bộ ngắn nhất, dễ hiểu bằng tiếng Việt, "
-                f"từ '{start['name']}' đến '{end['name']}'. "
-                f"Tổng khoảng cách khoảng {round(distance_km, 2)} km. "
-                f"Không kèm liên kết hoặc ký hiệu đặc biệt."
-            )
+                prompt = (
+                    f"Bạn là hướng dẫn viên du lịch TP.HCM. "
+                    f"Hãy mô tả 4–6 bước chỉ đường đi bộ ngắn nhất, dễ hiểu bằng tiếng Việt, "
+                    f"từ '{start['name']}' đến '{end['name']}'. "
+                    f"Tổng khoảng cách khoảng {round(distance_km, 2)} km. "
+                    f"Không kèm liên kết hoặc ký hiệu đặc biệt."
+                )
         
         # Gọi generate_content bằng client.models
         response = client.models.generate_content(
@@ -539,10 +540,18 @@ def verify_image():
         
         file = request.files["image"]
         location_name = request.form["location"]
+        user_lang = request.form.get("language", "vi")
         image_bytes = file.read()
         img = Image.open(BytesIO(image_bytes))
-
-        prompt = (
+        
+        if user_lang == 'en':
+            prompt = (
+            f"You are an AI assistant verifying locations. "
+            f"Compare this image with '{location_name}'. "
+            f"Answer briefly ONLY with one of these two phrases: 'Correct location' or 'Incorrect location'."
+        )
+        else:
+            prompt = (
             f"Bạn là trợ lý giúp xác định chính xác địa điểm trong ảnh. "
             f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'."
             f"Trả lời ngắn gọn **CHỈ** bằng 1 trong 2 cụm từ sau: 'Đúng địa điểm' hoặc 'Không đúng địa điểm'."

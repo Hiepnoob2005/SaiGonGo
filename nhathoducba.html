@@ -477,6 +477,7 @@
       formData.append("image", file);
       formData.append("location", locationName);
 
+
       try {
         const res = await fetch("/verify-image", { method: "POST", body: formData });
         const data = await res.json();
