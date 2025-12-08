@@ -41,6 +41,11 @@
         "status": "completed",
         "reward_claimed": true
       }
-    }
+    },
+    "current_tour_plan": [
+      "bao_tang_chien_tich",
+      "cho_ben_thanh"
+    ],
+    "current_step_index": 0
   }
 ]

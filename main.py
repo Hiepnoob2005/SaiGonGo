@@ -25,29 +25,40 @@ from math import radians, sin, cos, sqrt, atan2
 LOCATIONS = {
     "bao_tang_chien_tich": {
         "name": "Bảo tàng Chiến tích Chiến tranh",
-        "lat": 10.779552675731349,
-        "lon": 106.69221830657582
+        "address": "28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh", # 👈 Thêm dòng này
+        "lat": 10.779552, "lon": 106.692218,
+        "main_file": "baotang.html"
     },
     "dinh_doc_lap": {
         "name": "Dinh Độc Lập",
-        "lat": 10.778226,
-        "lon": 106.696445
+        "address": "135 Nam Kỳ Khởi Nghĩa, Quận 1, TP. Hồ Chí Minh",
+        "lat": 10.778226, "lon": 106.696445,
+        "main_file": "dinhdoclap.html"
     },
     "nha_tho_duc_ba": {
         "name": "Nhà thờ Đức Bà Sài Gòn",
-        "lat": 10.779783,
-        "lon": 106.699018
+        "address": "01 Công xã Paris, Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+        "lat": 10.779783, "lon": 106.699018,
+        "main_file": "nhathoducba.html"
     },
     "buu_dien_thanh_pho": {
         "name": "Bưu điện Thành Phố",
-        "lat": 10.779839286053278,
-        "lon": 106.70002391994127
+        "address": "02 Công xã Paris, Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+        "lat": 10.779839, "lon": 106.700023,
+        "main_file": "buudientp.html"
     },
     "ho_con_rua": {
         "name": "Hồ Con Rùa",
-        "lat": 10.782615630794004,
-        "lon": 106.69595372983176
+        "address": "Vòng xoay Công trường Quốc tế, Quận 3, TP. Hồ Chí Minh",
+        "lat": 10.782615, "lon": 106.695953,
+        "main_file": "hoconrua.html"
     },
+    "cho_ben_thanh": {
+        "name": "Chợ Bến Thành",
+        "address": "Đ. Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh",
+        "lat": 10.772444, "lon": 106.698055,
+        "main_file": "chobenthanh.html"
+    }
 }
 
 # --- Khai báo API key và Khởi tạo GenAI ---
@@ -413,10 +424,6 @@ def reset_password():
 # Các hàm OSRM và Gemini từ bước trước được giữ nguyên và tích hợp vào đây.
 
 USE_STATIC_START_LOCATION = True 
-STATIC_START_LAT = 10.779544664004435
-STATIC_START_LON = 106.69208222854601
-DINH_DOC_LAP_LAT = 10.778226
-DINH_DOC_LAP_LON = 106.696445
 
 # Hàm hỗ trợ dịch OSRM (Đã lược bớt để code gọn hơn)
 def get_vietnamese_instruction(maneuver_type, street_name):
@@ -498,6 +505,7 @@ def get_dynamic_directions():
                     f"Bạn là hướng dẫn viên du lịch TP.HCM. Người dùng báo rằng CON ĐƯỜNG CHÍNH ĐANG BỊ CHẶN hoặc KHÔNG ĐI ĐƯỢC. "
                     f"Hãy chỉ dẫn một LỘ TRÌNH THAY THẾ (đi đường vòng, đi qua hẻm lớn hoặc đường song song) "
                     f"từ '{start['name']}' đến '{end['name']}'. "
+                    f"Nếu vị trí đã quá gần (dưới 100 mét), hãy trả về kết quả người dùng đã đến nơi rồi."
                     f"Tuyệt đối không chỉ dẫn đi lại con đường chính ngắn nhất. "
                     f"Hãy liệt kê 4-6 bước đi cụ thể. Bắt đầu câu trả lời bằng: '⚠️ Vì đường chính bị chặn, hãy đi theo lối này:...'"
                 )
@@ -506,6 +514,7 @@ def get_dynamic_directions():
                     f"Bạn là hướng dẫn viên du lịch TP.HCM. "
                     f"Hãy mô tả 4–6 bước chỉ đường đi bộ ngắn nhất, dễ hiểu bằng tiếng Việt, "
                     f"từ '{start['name']}' đến '{end['name']}'. "
+                    f"Nếu vị trí đã quá gần (dưới 100 mét), hãy trả về kết quả người dùng đã đến nơi rồi."
                     f"Tổng khoảng cách khoảng {round(distance_km, 2)} km. "
                     f"Không kèm liên kết hoặc ký hiệu đặc biệt."
                 )
@@ -774,6 +783,98 @@ def update_score():
         "success": True, 
         "new_points": new_points,
         "added": points_to_change
+    })
+
+@app.route("/api/create-custom-tour", methods=["POST"])
+def create_custom_tour():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Vui lòng đăng nhập!"}), 401
+
+    data = request.json
+    selected_keys = data.get("locations", [])
+    
+    if len(selected_keys) < 2:
+        return jsonify({"success": False, "message": "Chọn ít nhất 2 địa điểm."}), 400
+
+    # 1. Thuật toán Sắp xếp (Nearest Neighbor)
+    start_key = selected_keys[0] 
+    optimized_order = [start_key]
+    unvisited = [k for k in selected_keys if k != start_key]
+    
+    current_key = start_key
+    
+    while unvisited:
+        nearest_key = None
+        min_dist = float('inf')
+        
+        curr_info = LOCATIONS[current_key]
+        
+        for candidate in unvisited:
+            cand_info = LOCATIONS[candidate]
+            dist = calculate_distance(curr_info['lat'], curr_info['lon'], cand_info['lat'], cand_info['lon'])
+            
+            if dist < min_dist:
+                min_dist = dist
+                nearest_key = candidate
+        
+        optimized_order.append(nearest_key)
+        unvisited.remove(nearest_key)
+        current_key = nearest_key
+
+    # 2. Lưu lộ trình vào Database
+    users = load_db()
+    for user in users:
+        if user['email'] == current_user.email:
+            user['current_tour_plan'] = optimized_order
+            user['current_step_index'] = 0
+            save_db(users)
+            break
+            
+    return jsonify({
+        "success": True, 
+        "message": "Đã tạo lộ trình!",
+        "redirect_url": "batdau_cus.html"
+    })
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    R = 6371.0
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
+
+@app.route("/api/get-current-target", methods=["GET"])
+def get_current_target():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Chưa đăng nhập"}), 401
+        
+    users = load_db()
+    user_record = next((u for u in users if u['email'] == current_user.email), None)
+    
+    if not user_record or 'current_tour_plan' not in user_record:
+        return jsonify({"success": False, "message": "Chưa có lộ trình nào."}), 404
+        
+    plan = user_record['current_tour_plan']
+    index = user_record.get('current_step_index', 0)
+    
+    if index >= len(plan):
+        return jsonify({"success": False, "finished": True})
+    
+    current_key = plan[index]
+    info = LOCATIONS.get(current_key)
+    
+    if not info:
+        return jsonify({"success": False, "message": "Lỗi dữ liệu địa điểm"}), 500
+
+    return jsonify({
+        "success": True,
+        "key": current_key,
+        "name": info['name'],
+        "address": info.get('address', ''),
+        "lat": info['lat'],
+        "lon": info['lon'],
+        "next_url": info.get('main_file', 'index.html')
     })
 
 # ----------------------------------------------

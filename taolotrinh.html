@@ -216,7 +216,8 @@
             // 1. Lấy danh sách các ô đã tick
             const checkboxes = document.querySelectorAll('input[name="destinations"]:checked');
             const selectedKeys = Array.from(checkboxes).map(cb => cb.value);
-            const preference = document.getElementById('userPref').value;
+            const prefElement = document.getElementById('userPref');
+            const preference = prefElement ? prefElement.value : "";    
             
             const btn = document.getElementById('createBtn');
             const loading = document.getElementById('loadingOverlay');
@@ -249,7 +250,7 @@
                     // Thành công -> Chuyển hướng đến trang đầu tiên của lộ trình
                     loading.textContent = "✅ Đã xong! Đang chuyển hướng...";
                     setTimeout(() => {
-                        window.location.href = data.redirect_url;
+                        window.location.href = "batdau_cus.html";
                     }, 1000);
                 } else {
                     alert("❌ Lỗi: " + data.message);
