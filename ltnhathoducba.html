@@ -81,80 +81,47 @@
             background-color: #0056b3;
         }
 
-        .challenge-section {
-            margin-top: 30px;
-            padding: 20px;
-            border-top: 1px solid #ddd;
-        }
+    <title>Lo Trinh</title>
 
-        /* CSS cho toggle */
-        .toggle-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            color: #555;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 45px;
-            height: 25px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 25px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background-color: #2196F3;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(18px);
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./assets/css/lottrinh.css" />
 </head>
 
-<body id="top">
-    <div id="score-display" class="score-badge">
-        💎 <span id="user-points">Loading...</span>
+<aside id="sidebar">
+    <div id="sidebar-content">
+        <div class="sidebar-item">
+            <i class="fa-regular fa-gem"></i><span id="user-points" class="sidebar-text">User Score: Loading...</span>
+        </div>
+
+        <div class="sidebar-item">
+            <i class="fa-solid fa-map-location"></i><span id="mapLink" target="_blank" class="sidebar-text">Open in
+                Google
+                Maps </span>
+        </div>
+
+        <div class="sidebar-item">
+            <i class="fa-solid fa-house"></i><span class="sidebar-text"><a href="index.html">Home Page</a></span>
+        </div>
+
+        <div class="sidebar-item">
+            <i class="fa-solid fa-arrow-left"></i><span class="sidebar-text"><a href="quiz_nhathoducba.html">Go
+                    Back</a></span>
+        </div>
+
+        <div class="sidebar-item">
+            <i class="fa-solid fa-arrow-right"></i><span class="sidebar-text"><a href="lthoconrua.html"> Skip This
+                    Location
+                </a></span>
+        </div>
     </div>
-    <div id="point-anim" class="point-animation"></div>
-    <header class="header" data-header>
-        <div class="container">
-            <a href="index.html">
-                <h1 class="logo">SaiGonGo</h1>
-            </a>
+</aside>
+
+<body>
+    <input type="text" id="locationName" value="Bưu điện Thành Phố" readonly style="display: none;" />
+
+    <header class=" navbar">
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none;"> SaiGonGo </a>
         </div>
     </header>
 
@@ -222,8 +189,18 @@
         </section>
     </main>
 
-    <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
-    </footer>
+    <div id="photoChallenge" class="pop-up" style="display: none;">
+        <div class="pop-up-box">
+            <h2>Have you reached the destination?</h2>
+            <p>If so, click 'continue' otherwise click 'cancel'</p>
+
+            <div class="pop-up-actions">
+                <button class="pop-up-btn"
+                    onclick="document.getElementById('photoChallenge').style.display = 'none'">cancel</button>
+                <a class="pop-up-btn" href="buudientp.html" style="text-decoration: none;">continue</a>
+            </div>
+        </div>
+    </div>
 
     <script>
         // --- CẤU HÌNH ĐỊA ĐIỂM ---

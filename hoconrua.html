@@ -83,110 +83,48 @@
       cursor: not-allowed;
     }
 
-    #result {
-      padding: 10px;
-      border-radius: 5px;
-      font-weight: 600;
-      font-size: 1.2rem;
-      margin-top: 20px;
-    }
+  <title>Xác thực hình ảnh điểm đến - Hồ Con Rùa</title>
 
-    #nextDestinationBtn {
-      display: none;
-      margin: 30px auto 10px auto;
-      background-color: #ff6600;
-    }
-
-    #nextDestinationBtn:hover {
-      background-color: #e65c00;
-    }
-
-    /* CSS cho hộp thông báo khoảng cách */
-    #gpsStatus {
-      margin: 15px auto;
-      padding: 15px;
-      border-radius: 8px;
-      background-color: #eee;
-      color: #555;
-      font-weight: 600;
-      border: 2px dashed #ccc;
-      max-width: 600px;
-    }
-
-    /* --- CSS CHO NÚT GẠT (TOGGLE) --- */
-    .toggle-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin: 10px auto 20px auto;
-      font-size: 1rem;
-      color: #555;
-      font-weight: 600;
-    }
-
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 28px;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 34px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-    }
-
-    input:checked+.slider {
-      background-color: #2196F3;
-    }
-
-    input:checked+.slider:before {
-      transform: translateX(22px);
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="./assets/css/destination.css" />
 </head>
 
-<body id="top">
+<aside id="sidebar">
+  <button class="close-btn" onclick="closeSidebar()">
+    <i class="fas fa-times"></i>
+  </button>
+
+  <div id="sidebar-content">
+    <a href="index.html" style="text-decoration: none;">
+      <i class="fas fa-home"></i> Home Page
+    </a>
+
+    <a href="lthoconrua.html" style="text-decoration: none;">
+      <i class="fas fa-arrow-left"></i> Go Back
+    </a>
+  </div>
+</aside>
+
+<body>
+  <input type="text" id="locationName" value="Dinh Độc Lập" readonly style="display: none;">
+
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html" style="text-decoration: none;"> SaiGonGo </a>
+    </div>
+
+    <ul class="nav-links" id="navLinks">
+      <li class="nav-item">
+        <i class="fa-solid fa-bars" onclick="toggleSidebar()"></i>
+      </li>
+    </ul>
+  </header>
+
+  <div id="point-anim" class="point-animation"></div>
+
   <div id="score-display" class="score-badge">
     💎 <span id="user-points">Loading...</span>
   </div>
-  <div id="point-anim" class="point-animation"></div>
-  <header class="header" data-header>
-    <div class="container">
-      <a href="index.html">
-        <h1 class="logo">SaiGonGo</h1>
-      </a>
-
-      <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
-        <ion-icon name="menu-outline" class="open"></ion-icon>
-        <ion-icon name="close-outline" class="close"></ion-icon>
-      </button>
 
       <nav class="navbar">
         <ul class="navbar-list">
@@ -196,7 +134,6 @@
         </ul>
       </nav>
     </div>
-  </header>
 
   <main class="main-container">
     <section style="
@@ -249,7 +186,7 @@
             <span data-i18n="museum_dev_mode">Chế độ kiểm tra (Bỏ qua GPS)</span>
             <label class="toggle-switch">
               <input type="checkbox" id="devModeToggle">
-              <span class="slider"></span>
+              <span class="checkmark"> Bypass GPS </span>
             </label>
           </div>
           {% endif %}

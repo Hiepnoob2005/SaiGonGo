@@ -93,7 +93,7 @@ def sync_user_to_game_db(email, username):
             "email": email,
             "points": 0,
             "routes": {
-                "route1": { "status": "locked", "reward_claimed": False }
+            "route1": { "status": "locked", "reward_claimed": False }
             }
         }
         users.append(user_record)
