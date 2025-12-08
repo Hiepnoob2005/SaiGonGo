@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Xác thực hình ảnh điểm đến - Chợ Bến Thành</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="./assets/css/destination.css" />
+</head>
+
+<aside id="sidebar">
+  <button class="close-btn" onclick="closeSidebar()">
+    <i class="fas fa-times"></i>
+  </button>
+
+  <div id="sidebar-content">
+    <a href="index.html" style="text-decoration: none;">
+      <i class="fas fa-home"></i> Trang chủ
+    </a>
+
+    <a href="ltchobenthanh.html" style="text-decoration: none;">
+      <i class="fas fa-arrow-left"></i> Quay lại
+    </a>
+  </div>
+</aside>
+
+<body>
+  <input type="text" id="locationName" value="Cho Ben Thanh" readonly style="display: none;">
+
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html" style="text-decoration: none;"> SaiGonGo </a>
+    </div>
+
+    <ul class="nav-links" id="navLinks">
+      <li class="nav-item">
+        <i class="fa-solid fa-bars" onclick="toggleSidebar()"></i>
+      </li>
+    </ul>
+  </header>
+
+  <div id="point-anim" class="point-animation"></div>
+
+  <div id="score-display" class="score-badge">
+    💎 <span id="user-points">Loading...</span>
+  </div>
+
+  <main class="grid-layout">
+    <div class="image-container">
+      <img src="./assets/images/ChoBenThanh.jpg" alt="Chợ Bến Thành"/>
+    </div>
+
+    <div class="text-container">
+      <div class="info">
+        <div class="title">
+          Chợ Bến Thành
+        </div>
+
+        <div class="text">
+          Chợ Bến Thành nằm tại <b>Đường Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh</b>
+          <span class="sub-text">là biểu tượng lịch sử lâu đời và sầm uất bậc nhất Sài Gòn.</span>
+        </div>
+
+        <div class="text">
+          Nổi bật với <b>tháp đồng hồ ở cửa Nam</b>, nơi đây không chỉ là khu chợ thương mại mà còn là <span class="sub-text">chứng nhân lịch sử qua bao thăng trầm của thành phố mang tên Bác.</span>
+        </div>
+
+        <div class="text">
+          Hãy check-in tại cổng chính (Cửa Nam) để ghi lại khoảnh khắc đẹp nhất với
+          <b>biểu tượng đồng hồ 3 mặt</b> <span class="sub-text"> nét kiến trúc độc đáo không thể nhầm lẫn.</span>
+        </div>
+
+        <div id="gpsStatus">📡 Đang xác định vị trí của bạn...</div>
+
+        <label for="photo" class="upload-area">
+          <input type="file" id="photo" accept="image/*" capture="camera" hidden disabled />
+          <div id="image-view">
+            <i class="fa-solid fa-folder-open upload-icon"></i>
+            <p>Kéo thả hoặc Nhấn vào đây <br> để tải ảnh lên</p>
+          </div>
+        </label>
+
+        <div class="verification-box">
+          <div id="result"></div>
+
+          <img id="preview" src="" alt="Ảnh xem trước"
+            style="max-width: 100%; display: none; margin-top: 10px; border-radius: 8px;">
+
+          <p id="lockMessage" style="display: none;">
+            🔒 Camera bị khóa do bạn ở quá xa.
+          </p>
+
+          <div class="button-container">
+            <label class="checkbox">
+              <input type="checkbox" id="devModeToggle">
+              <span class="checkmark"> Bypass GPS </span>
+            </label>
+
+            <button id="uploadBtn" disabled>Bắt đầu xác thực</button>
+
+            <button class="select-btn" id="nextDestinationBtn" onclick="window.location.href='quiz_chobenthanh.html'"
+              disabled>
+              Tiếp tục
+            </button>
+          </div>
+        </div>
+      </div>
+  </main>
+
+  <div class="page-end"></div>
+  
+  <script>
+    // Định nghĩa biến toàn cục trước khi load destination.js
+    window.DESTINATION_CONFIG = {
+        lat: 10.772500, // Vĩ độ Chợ Bến Thành
+        lon: 106.698000 // Kinh độ Chợ Bến Thành
+    };
+  </script>
+
+  <script src="./assets/js/destination.js"></script>
+</body>
+</html>
