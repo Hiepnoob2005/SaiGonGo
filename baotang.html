@@ -4,6 +4,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="museum_verify_title">Xác thực hình ảnh điểm đến - Bảo tàng chiến tích chiến tranh</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: "Times New Roman", sans-serif;
+      background-color: #f8f8f8;
+    }
+
+    .main-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .preview {
+      display: none;
+      width: 90%;
+      max-width: 380px;
+      height: auto;
+      border-radius: 10px;
+      margin: 25px auto;
+      border: 4px solid var(--orange-soda);
+      box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 80%;
+      max-width: 400px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      margin-top: 15px;
+      display: block;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* CSS cho trạng thái Disabled của input file */
+    input[type="file"]:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      margin-top: 30px;
+    }
+
+    button:hover:enabled {
+      background-color: #0056b3;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      color: black;
+      cursor: not-allowed;
+    }
 
   <title>Xác thực hình ảnh điểm đến - Bảo tàng chiến tích chiến tranh</title>
 
@@ -48,73 +126,409 @@
     💎 <span id="user-points">Loading...</span>
   </div>
 
-  <main class="grid-layout">
-    <div class="image-container">
-      <img src="./assets/images/BTCTCT.png" alt="BTCTCT" />
+      <nav class="navbar">
+        <ul class="navbar-list">
+          <li><a href="index.html" class="navbar-link" data-i18n="nav_home">Home</a></li>
+          <li><a href="#" class="navbar-link" data-i18n="nav_tours">Tours</a></li>
+          <li><a href="#" class="navbar-link" data-i18n="nav_destinations">Destinations</a></li>
+        </ul>
+      </nav>
     </div>
 
-    <div class="text-container">
-      <div class="info">
-        <div class="title">
-          Bảo tàng Chiến tích Chiến tranh
-        </div>
+  <main class="main-container">
+    <section style="
+      background-color: #f0f7ff;
+      border: 3px solid #007bff;
+      border-radius: 16px;
+      padding: 35px 45px;
+      max-width: 800px;
+      margin: 40px auto;
+      box-shadow: 0 6px 18px rgba(0, 123, 255, 0.15);
+      text-align: center;
+    ">
 
-        <div class="text">
-          Bảo tàng Chiến tích Chiến tranh nằm tại <b>28 Võ Văn Tần, Quận 3, TP. Hồ Chí Minh</b>
-          <span class="sub-text">là một trong những điểm đến lịch sử nổi tiếng nhất của Việt Nam.</span>
-        </div>
+      <h2 style="
+        font-size: 2.2rem;
+        color: #0056b3;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      " data-i18n="museum_verify_title">
+        📍 Xác thực điểm đến
+      </h2>
 
-        <div class="text">
-          Nơi đây lưu giữ hơn <b>20.000 hiện vật và hình ảnh tư liệu quý giá</b> <span class="sub-text">phản ánh
-            chân thực về cuộc chiến tranh, nỗi đau mất mát và khát vọng hòa bình của dân tộc.</span>
-        </div>
+      <p style="
+        font-size: 1.4rem;
+        color: #333;
+        line-height: 1.8;
+        margin-bottom: 25px;
+      " data-i18n="museum_verify_step1">
+        Bước 1: Hãy di chuyển đến <b>Bảo tàng chiến tích chiến tranh</b> (< 100m) để mở khóa camera. 
+      </p>
 
-        <div class="text">
-          Ngoài khu trưng bày chính, du khách còn có thể chiêm ngưỡng các khí tài chiến đấu thật như
-          <b>máy bay, xe tăng, pháo</b> <span class="sub-text"> tái hiện sinh động những dấu ấn lịch sử oai
-            hùng.</span>
-        </div>
+          <a href="batdau1.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;" data-i18n="btn_back">← Quay lại</a>
 
-        <div id="gpsStatus">📡 Đang xác định vị trí của bạn...</div>
+          <div style="margin-bottom: 20px;">
+            <input type="text" id="locationName" value="Bảo tàng chiến tích chiến tranh" readonly style="
+                 font-size: 1.1rem;
+                 padding: 10px;
+                 border: 1.5px solid #ccc;
+                 border-radius: 8px;
+                 text-align: center;
+                 color: #333;
+                 background-color: #fafafa;
+                 width: 80%;
+                 max-width: 400px;
+               " />
+             </div>
 
-        <label for="photo" class="upload-area">
-          <input type="file" id="photo" accept="image/*" capture="camera" hidden disabled />
-          <div id="image-view">
-            <i class="fa-solid fa-folder-open upload-icon"></i>
-            <p>Drag & Drop or Click here <br> to upload image</p>
-          </div>
-        </label>
-
-        <div class="verification-box">
-          <div id="result"></div>
-
-          <img id="preview" src="" alt="Ảnh xem trước"
-            style="max-width: 100%; display: none; margin-top: 10px; border-radius: 8px;">
-
-          <p id="lockMessage" style="display: none;">
-            🔒 Camera bị khóa do bạn ở quá xa.
-          </p>
-
-          <div class="button-container">
-            <label class="checkbox">
+          {% if is_admin %}
+          <div class="toggle-container">
+            <span data-i18n="museum_dev_mode">Chế độ kiểm tra (Bỏ qua GPS)</span>
+            <label class="toggle-switch">
               <input type="checkbox" id="devModeToggle">
               <span class="checkmark"> Bypass GPS </span>
             </label>
-
-            <button id="uploadBtn" disabled>Bắt đầu xác thực</button>
-
-            <button class="select-btn" id="nextDestinationBtn" onclick="window.location.href='quiz_baotang.html'"
-              disabled>
-              Tiếp tục
-            </button>
           </div>
-        </div>
-      </div>
+          {% endif %}
+
+          <div id="gpsStatus" data-i18n="status_locating">📡 Đang xác định vị trí của bạn...</div>
+
+          <div style="margin-bottom: 25px; margin-top: 20px;">
+            <input type="file" id="photo" accept="image/*" capture="camera" disabled
+              style="font-size: 1rem; border: none; background: none;" />
+            <p id="lockMessage" style="color: #d62828; font-size: 0.9rem; margin-top: 5px; display: none;" data-i18n="museum_camera_locked">
+              🔒 Camera bị khóa do bạn ở quá xa.
+            </p>
+          </div>
+
+          <img id="preview" class="preview" />
+
+          <button id="uploadBtn" disabled data-i18n="btn_verify">
+            Xác thực bằng AI
+          </button>
+
+          <div id="result"></div>
+
+          <button id="nextDestinationBtn" onclick="window.location.href='quiz_baotang.html'" data-i18n="btn_continue">
+            Tiếp tục →
+          </button>
+
+          <section id="museum-info" style="
+  display: none;
+  margin: 60px auto;
+  max-width: 900px;
+  background-color: #f8fbff;
+  border: 3px solid #007bff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.15);
+  padding: 40px 50px;
+  text-align: center;
+  transition: all 0.5s ease;
+">
+
+            <h2 style="
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #0056b3;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Times New Roman', Times, serif;
+  " data-i18n="museum_info_title">
+              🏛️ Giới thiệu về Bảo tàng chiến tích chiến tranh
+            </h2>
+
+            <img src="./assets/images/BTCTCT.png" data-i18n-alt="dest_museum" alt="Bảo tàng chiến tích chiến tranh" style="
+         width: 100%;
+         max-width: 600px;
+         border-radius: 14px;
+         margin: 25px auto 35px auto;
+         display: block;
+         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+       " />
+
+            <p style="
+    font-size: 1.7rem;
+    color: #333;
+    line-height: 2;
+    text-align: justify;
+    padding: 0 10px;
+  " data-i18n="museum_info_text">
+              Bảo tàng Chiến tích Chiến tranh nằm tại <b>28 Võ Văn Tần, Quận 3, TP. Hồ Chí Minh</b>,
+              là một trong những điểm đến lịch sử nổi tiếng nhất của Việt Nam.
+              <br><br>
+              Nơi đây lưu giữ hơn <b>20.000 hiện vật và hình ảnh tư liệu quý giá</b>, phản ánh chân thực về
+              cuộc chiến tranh, nỗi đau mất mát và khát vọng hòa bình của dân tộc.
+              <br><br>
+              Ngoài khu trưng bày chính, du khách còn có thể chiêm ngưỡng các khí tài chiến đấu thật như
+              máy bay, xe tăng, pháo – tái hiện sinh động những dấu ấn lịch sử oai hùng.
+            </p>
+          </section>
   </main>
 
-  <div class="page-end"></div>
-  
-  <script src="./assets/js/destination.js"></script>
+  <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+    <div class="container">
+      <div class="footer-bottom">
+        <a href="#" class="logo">SaiGonGo</a>
+        <p class="copyright" data-i18n="footer_copyright">
+          &copy; 2022 All Rights Reserved
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // --- 1. CẤU HÌNH TỌA ĐỘ ĐÍCH (BẢO TÀNG CHIẾN TÍCH CHIẾN TRANH) ---
+    // Sử dụng tọa độ từ file lthinhdoclap.html
+    const TARGET_LAT = 10.777182;
+    const TARGET_LON = 106.688514;
+    const MAX_DISTANCE_METERS = 100; // Khoảng cách cho phép
+
+    const gpsStatus = document.getElementById("gpsStatus");
+    const photoInput = document.getElementById("photo");
+    const lockMessage = document.getElementById("lockMessage");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const resultBox = document.getElementById("result");
+    const nextDestinationBtn = document.getElementById("nextDestinationBtn");
+    const preview = document.getElementById("preview");
+    const locationNameInput = document.getElementById("locationName");
+
+    // --- 2. HÀM TÍNH KHOẢNG CÁCH (Lấy từ trang lộ trình) ---
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3; // Bán kính Trái Đất (m)
+      const toRad = deg => deg * Math.PI / 180;
+      const φ1 = toRad(lat1);
+      const φ2 = toRad(lat2);
+      const Δφ = toRad(lat2 - lat1);
+      const Δλ = toRad(lon2 - lon1);
+      const a = Math.sin(Δφ / 2) ** 2 +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+// --- 3. HÀM CHECK VỊ TRÍ & LOGIC DEV MODE (ĐÃ SỬA LỖI CHO USER) ---
+    const devModeToggle = document.getElementById("devModeToggle");
+    // Lấy thẻ hiển thị trạng thái GPS
+    const gpsStatusBox = document.getElementById("gpsStatus"); 
+
+    function checkLocation() {
+      // 🛑 ƯU TIÊN 1: Kiểm tra xem có đang bật chế độ Dev không?
+      if (devModeToggle && devModeToggle.checked) {
+        gpsStatus.innerHTML = i18n.t('museum_dev_mode_desc');
+        gpsStatus.style.backgroundColor = "#fff8e1"; // Màu vàng nhạt
+        gpsStatus.style.color = "#b38600";
+        gpsStatus.style.border = "2px solid #ffe58f";
+
+        photoInput.disabled = false;
+        lockMessage.style.display = "none";
+        return; // Dừng hàm tại đây
+      }
+
+      // 🛑 LOGIC NGƯỜI DÙNG THƯỜNG (Hoặc Admin chưa bật gạt)
+      if ("geolocation" in navigator) {
+        // Hiển thị trạng thái đang dò tìm (chỉ khi chưa có kết quả)
+        if (gpsStatus.textContent.includes("Chế độ")) {
+          gpsStatus.innerHTML = i18n.t('status_locating');
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // Nếu trong lúc đang lấy vị trí mà Admin bất ngờ bật gạt -> Hủy cập nhật GPS
+            if (devModeToggle && devModeToggle.checked) return;
+
+            const userLat = position.coords.latitude;
+            const userLon = position.coords.longitude;
+
+            // Tính khoảng cách
+            const distance = getDistance(userLat, userLon, TARGET_LAT, TARGET_LON);
+
+            if (distance <= MAX_DISTANCE_METERS) {
+              // ĐÃ ĐẾN NƠI
+              gpsStatus.innerHTML = i18n.t('museum_camera_unlocked', { distance: distance.toFixed(0) });
+              gpsStatus.style.backgroundColor = "#e8ffe8";
+              gpsStatus.style.color = "green";
+              gpsStatus.style.border = "2px solid green";
+
+              photoInput.disabled = false;
+              lockMessage.style.display = "none";
+            } else {
+              // CÒN XA
+              gpsStatus.innerHTML = i18n.t('museum_too_far', { distance: (distance / 1000).toFixed(2) });
+              gpsStatus.style.backgroundColor = "#fff5f5";
+              gpsStatus.style.color = "#d62828";
+              gpsStatus.style.border = "2px solid #d62828";
+
+              photoInput.disabled = true;
+              uploadBtn.disabled = true;
+              lockMessage.style.display = "block";
+            }
+          },
+          (error) => {
+            if (devModeToggle.checked && devModeToggle.checked) return;
+            gpsStatus.textContent = i18n.t('status_gps_error');
+            gpsStatus.style.backgroundColor = "#eee";
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      } else {
+        gpsStatus.textContent = i18n.t('start_browser_error');
+      }
+    }
+
+    // Chỉ gán sự kiện click nếu nút toggle tồn tại
+    if (devModeToggle) {
+        devModeToggle.addEventListener("change", checkLocation);
+    }
+     
+    // Chạy hàm kiểm tra ngay khi tải trang
+    checkLocation();
+    
+    // Cập nhật vị trí mỗi 5 giây
+    setInterval(checkLocation, 5000);
+    
+    // Cập nhật giá trị input readonly khi đổi ngôn ngữ
+    window.addEventListener('languageChanged', () => {
+        locationNameInput.value = i18n.t('dest_museum');
+    });
+    // Init lần đầu
+    window.addEventListener('load', () => {
+        if(typeof i18n !== 'undefined') {
+            locationNameInput.value = i18n.t('dest_museum');
+        }
+    });
+
+    // --- 4. LOGIC XỬ LÝ ẢNH (GIỮ NGUYÊN) ---
+    photoInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+        uploadBtn.disabled = false;
+        resultBox.textContent = "";
+      } else {
+        uploadBtn.disabled = true;
+        preview.style.display = "none";
+      }
+    });
+
+    uploadBtn.addEventListener("click", async () => {
+      const file = photoInput.files[0];
+      const locationName = document.getElementById("locationName").value.trim();
+
+      if (!file) {
+        alert("Vui lòng chọn ảnh trước khi xác thực!");
+        return;
+      }
+
+      resultBox.textContent = i18n.t('status_sending');
+      uploadBtn.disabled = true;
+
+      const formData = new FormData();
+      formData.append("image", file);
+      // Gửi tên mặc định (Tiếng Việt) về server để xử lý, tránh lỗi AI không nhận diện được tên tiếng Anh
+      // Hoặc server phải xử lý đa ngôn ngữ. Ở đây tôi hardcode gửi về tiếng Việt nếu server chỉ hiểu tiếng Việt
+      formData.append("location", "Bảo tàng chiến tích chiến tranh"); 
+
+      try {
+        const res = await fetch("/verify-image", { method: "POST", body: formData });
+        const data = await res.json();
+
+        resultBox.textContent = data.message;
+        uploadBtn.disabled = false;
+
+        if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
+          // --- CODE CỘNG ĐIỂM (+5) ---
+          try {
+            const scoreRes = await fetch('/api/update-score', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ points: 5, routeId: 'route1' })
+            });
+            const scoreData = await scoreRes.json();
+
+            if (scoreData.success) {
+              // Cập nhật UI
+              document.getElementById('user-points').textContent = scoreData.new_points;
+
+              // Hiệu ứng +5 bay lên
+              const anim = document.getElementById('point-anim');
+              anim.textContent = i18n.t('score_plus_verify');
+              anim.className = "point-animation anim-plus";
+            }
+          } catch (err) { console.error(err); }
+          // --- [CODE MỚI] ẨN CÁC NÚT ĐỂ CHỐNG SPAM ---
+          uploadBtn.style.display = "none";       // Ẩn nút xác thực
+          photoInput.style.display = "none";      // Ẩn ô chọn file
+          preview.style.display = "none";         // Ẩn ảnh xem trước
+
+          // Thay dòng thông báo kết quả bằng thông báo hoàn thành
+          resultBox.innerHTML = i18n.t('museum_verify_success');
+          // ---------------------------------------------
+
+          nextDestinationBtn.style.display = "block";
+          document.getElementById("museum-info").style.display = "block";
+
+          // (Code lưu ảnh cũ của bạn giữ nguyên ở đây nếu cần...)
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = function (event) {
+            // ... Code nén ảnh và lưu localStorage ...
+            // Bạn có thể copy lại đoạn logic resize canvas từ file cũ vào đây
+          };
+
+        } else {
+          // --- TRƯỜNG HỢP SAI ---
+          resultBox.textContent = i18n.t('museum_verify_wrong'); // Hiện thông báo sai
+          resultBox.style.color = "red";
+
+          uploadBtn.disabled = false; // Mở lại nút để cho phép thử lại
+
+          nextDestinationBtn.style.display = "none";
+          document.getElementById("museum-info").style.display = "none";
+        }
+
+      } catch (err) {
+        console.error(err);
+        resultBox.textContent = i18n.t('status_connection_error');
+        uploadBtn.disabled = false;
+      }
+    });
+    // Load điểm khi vào trang
+    async function loadUserScore() {
+      try {
+        const res = await fetch('/api/user');
+        const data = await res.json();
+        if (data.logged_in) document.getElementById('user-points').textContent = data.points;
+      } catch (e) { }
+    }
+    window.addEventListener('load', loadUserScore);
+  </script>
+
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  {% if is_admin %}
+  <button onclick="adminSkipAll('quiz_baotang.html')" class="admin-badge">
+    <ion-icon name="rocket-outline"></ion-icon>
+    ADMIN SKIP
+  </button>
+
+  <script>
+    // Sửa hàm nhận tham số nextUrl
+    function adminSkipAll(nextUrl) {
+      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
+        // Chuyển hướng ngay lập tức
+        window.location.href = nextUrl;
+      }
+    }
+  </script>
+  {% endif %}
+  <script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
+<link rel="stylesheet" href="./assets/js/i18n.css">
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
   <meta charset="UTF-8" />
@@ -18,6 +18,11 @@
   <link rel="stylesheet" href="./assets/css/style.css" />
 
   <!-- 
+    - i18n css (Language Selector)
+  -->
+  <link rel="stylesheet" href="./assets/css/i18n.css" />
+
+  <!-- 
     - google font link
   -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,9 +36,35 @@
   <!-- 
     - #HEADER
   -->
-  <header class="navbar">
-    <div class="logo">
-      <a href="index.html" style="text-decoration: none;"> SaiGonGo </a>
+
+  <header class="header" data-header>
+    <div class="container">
+      <a href="#">
+        <h1 class="logo">SaiGonGo</h1>
+      </a>
+
+      <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
+        <ion-icon name="menu-outline" class="open"></ion-icon>
+        <ion-icon name="close-outline" class="close"></ion-icon>
+      </button>
+
+      <nav class="navbar">
+        <ul class="navbar-list">
+          <li>
+            <a href="index.html" class="navbar-link" data-i18n="nav_home">Home</a>
+          </li>
+          
+          <li>
+            <a href="taolotrinh.html" class="navbar-link" data-i18n="nav_create_route">Create route</a>
+          </li>
+
+          <li>
+            <a href="login.html" class="navbar-link" data-i18n="nav_login">Login</a>
+          </li>
+
+        </ul>
+
+      </nav>
     </div>
 
     <ul class="nav-links" id="navLinks">
@@ -42,7 +73,7 @@
         </li>
     </ul>
   </header>
-
+  
   <main>
     <article>
       <!-- 
@@ -61,21 +92,14 @@
           <img src="./assets/images/shape-3.png" width="57" height="72" alt="Vector Shape" class="shape shape-3" />
 
           <div class="hero-content">
-            <p class="section-subtitle">Our journey to</p>
+            <p class="section-subtitle" data-i18n="hero_subtitle">Our journey to</p>
 
-            <h2 class="hero-title">Explore HCMC in a different way</h2>
+            <h2 class="hero-title" data-i18n="hero_title">Explore HCMC in a different way</h2>
 
-            <p class="hero-text">
+            <p class="hero-text" data-i18n="hero_text">
               I travel not to go anywhere, but to go. I travel for travel's
               sake the great affair is to move.
             </p>
-
-            <div class="btn-group">
-              <a href="#" class="btn btn-primary">Contact Us</a>
-
-              <a href="#" class="btn btn-outline">Learn More</a>
-            </div>
-          </div>
 
           <figure class="hero-banner">
             <img src="./assets/images/hero-banner.png" width="686" height="812" loading="lazy" alt="hero banner"
@@ -90,9 +114,9 @@
 
       <section class="section destination">
         <div class="container">
-          <p class="section-subtitle">Destinations</p>
+          <p class="section-subtitle" data-i18n="dest_subtitle">Destinations</p>
 
-          <h2 class="h2 section-title">Choose Your Place</h2>
+          <h2 class="h2 section-title" data-i18n="dest_title">Choose Your Place</h2>
 
           <ul class="destination-list">
             <li class="w-50">
@@ -103,9 +127,9 @@
                 </figure>
 
                 <div class="card-content">
-                  <p class="card-subtitle">6 destinations</p>
+                  <p class="card-subtitle" data-i18n="dest_6_destinations">6 destinations</p>
 
-                  <h3 class="h3 card-title">Route 1</h3>
+                  <h3 class="h3 card-title" data-i18n="dest_route_1">Route 1</h3>
                 </div>
               </a>
             </li>
@@ -113,14 +137,14 @@
             <li class="w-50">
               <a href="#" class="destination-card">
                 <figure class="card-banner">
-                  <img src="./assets/images/PhuongBT.jpg" width="1140" height="1100" loading="lazy"
+                  <img src="./assets/images/ChoBenThanh.jpg" width="1140" height="1100" loading="lazy"
                     alt="Phường Bến Thành" class="img-cover" />
                 </figure>
 
                 <div class="card-content">
-                  <p class="card-subtitle">6 destinations</p>
+                  <p class="card-subtitle" data-i18n="dest_6_destinations">6 destinations</p>
 
-                  <h3 class="h3 card-title">Route 2</h3>
+                  <h3 class="h3 card-title" data-i18n="dest_route_2">Route 2</h3>
                 </div>
               </a>
             </li>
@@ -133,9 +157,9 @@
                 </figure>
 
                 <div class="card-content">
-                  <p class="card-subtitle">Phường</p>
+                  <p class="card-subtitle" data-i18n="dest_ward">Phường</p>
 
-                  <h3 class="h3 card-title">Chợ Lớn</h3>
+                  <h3 class="h3 card-title" data-i18n="dest_cho_lon">Chợ Lớn</h3>
                 </div>
               </a>
             </li>
@@ -148,9 +172,9 @@
                 </figure>
 
                 <div class="card-content">
-                  <p class="card-subtitle">Phường</p>
+                  <p class="card-subtitle" data-i18n="dest_ward">Phường</p>
 
-                  <h3 class="h3 card-title">Xuân Hoà</h3>
+                  <h3 class="h3 card-title" data-i18n="dest_xuan_hoa">Xuân Hoà</h3>
                 </div>
               </a>
             </li>
@@ -163,9 +187,9 @@
                 </figure>
 
                 <div class="card-content">
-                  <p class="card-subtitle">Phường</p>
+                  <p class="card-subtitle" data-i18n="dest_ward">Phường</p>
 
-                  <h3 class="h3 card-title">Xóm Chiếu</h3>
+                  <h3 class="h3 card-title" data-i18n="dest_xom_chieu">Xóm Chiếu</h3>
                 </div>
               </a>
             </li>
@@ -179,9 +203,9 @@
 
       <section class="section popular">
         <div class="container">
-          <p class="section-subtitle">Featured Tours</p>
+          <p class="section-subtitle" data-i18n="popular_subtitle">Featured Tours</p>
 
-          <h2 class="h2 section-title">Most Popular Tours</h2>
+          <h2 class="h2 section-title" data-i18n="popular_title">Most Popular Tours</h2>
 
           <ul class="popular-list">
             <li>
@@ -195,13 +219,13 @@
                   <span class="card-badge">
                     <ion-icon name="time-outline"></ion-icon>
 
-                    <time datetime="P12D">12 Days</time>
+                    <time datetime="P12D">12 <span data-i18n="popular_days">Days</span></time>
                   </span>
                 </figure>
 
                 <div class="card-content">
                   <div class="card-wrapper">
-                    <div class="card-price">From $50.00</div>
+                    <div class="card-price"><span data-i18n="popular_from">From</span> $50.00</div>
 
                     <div class="card-rating">
                       <ion-icon name="star"></ion-icon>
@@ -215,7 +239,7 @@
                   </div>
 
                   <h3 class="card-title">
-                    <a href="#">A good traveler has no fixed plans and is not intent on
+                    <a href="#" data-i18n="popular_card_text">A good traveler has no fixed plans and is not intent on
                       arriving.</a>
                   </h3>
 
@@ -237,13 +261,13 @@
                   <span class="card-badge">
                     <ion-icon name="time-outline"></ion-icon>
 
-                    <time datetime="P12D">12 Days</time>
+                    <time datetime="P12D">12 <span data-i18n="popular_days">Days</span></time>
                   </span>
                 </figure>
 
                 <div class="card-content">
                   <div class="card-wrapper">
-                    <div class="card-price">From $50.00</div>
+                    <div class="card-price"><span data-i18n="popular_from">From</span> $50.00</div>
 
                     <div class="card-rating">
                       <ion-icon name="star"></ion-icon>
@@ -257,7 +281,7 @@
                   </div>
 
                   <h3 class="card-title">
-                    <a href="#">A good traveler has no fixed plans and is not intent on
+                    <a href="#" data-i18n="popular_card_text">A good traveler has no fixed plans and is not intent on
                       arriving.</a>
                   </h3>
 
@@ -279,13 +303,13 @@
                   <span class="card-badge">
                     <ion-icon name="time-outline"></ion-icon>
 
-                    <time datetime="P12D">12 Days</time>
+                    <time datetime="P12D">12 <span data-i18n="popular_days">Days</span></time>
                   </span>
                 </figure>
 
                 <div class="card-content">
                   <div class="card-wrapper">
-                    <div class="card-price">From $50.00</div>
+                    <div class="card-price"><span data-i18n="popular_from">From</span> $50.00</div>
 
                     <div class="card-rating">
                       <ion-icon name="star"></ion-icon>
@@ -299,7 +323,7 @@
                   </div>
 
                   <h3 class="card-title">
-                    <a href="#">A good traveler has no fixed plans and is not intent on
+                    <a href="#" data-i18n="popular_card_text">A good traveler has no fixed plans and is not intent on
                       arriving.</a>
                   </h3>
 
@@ -320,13 +344,13 @@
       <section class="section about">
         <div class="container">
           <div class="about-content">
-            <p class="section-subtitle">About Us</p>
+            <p class="section-subtitle" data-i18n="about_subtitle">About Us</p>
 
-            <h2 class="h2 section-title">
+            <h2 class="h2 section-title" data-i18n="about_title">
               Explore all tour of the world with us.
             </h2>
 
-            <p class="about-text">
+            <p class="about-text" data-i18n="about_text">
               Lorem Ipsum available, but the majority have suffered alteration
               in some form, by injected humour, or randomised words which
               don't look even slightly believable.
@@ -339,9 +363,9 @@
                 </div>
 
                 <div class="about-item-content">
-                  <h3 class="h3 about-item-title">Tour guide</h3>
+                  <h3 class="h3 about-item-title" data-i18n="about_tour_guide">Tour guide</h3>
 
-                  <p class="about-item-text">
+                  <p class="about-item-text" data-i18n="about_tour_guide_text">
                     Lorem Ipsum available, but the majority have suffered
                     alteration in some.
                   </p>
@@ -354,9 +378,9 @@
                 </div>
 
                 <div class="about-item-content">
-                  <h3 class="h3 about-item-title">Friendly price</h3>
+                  <h3 class="h3 about-item-title" data-i18n="about_friendly_price">Friendly price</h3>
 
-                  <p class="about-item-text">
+                  <p class="about-item-text" data-i18n="about_friendly_price_text">
                     Lorem Ipsum available, but the majority have suffered
                     alteration in some.
                   </p>
@@ -369,9 +393,9 @@
                 </div>
 
                 <div class="about-item-content">
-                  <h3 class="h3 about-item-title">Reliable tour</h3>
+                  <h3 class="h3 about-item-title" data-i18n="about_reliable_tour">Reliable tour</h3>
 
-                  <p class="about-item-text">
+                  <p class="about-item-text" data-i18n="about_reliable_tour_text">
                     Lorem Ipsum available, but the majority have suffered
                     alteration in some.
                   </p>
@@ -379,7 +403,7 @@
               </li>
             </ul>
 
-            <a href="#" class="btn btn-primary">Booking Now</a>
+            <a href="#" class="btn btn-primary" data-i18n="btn_booking">Booking Now</a>
           </div>
 
           <figure class="about-banner">
@@ -394,9 +418,9 @@
 
       <section class="section blog">
         <div class="container">
-          <p class="section-subtitle">From The Blog Post</p>
+          <p class="section-subtitle" data-i18n="blog_subtitle">From The Blog Post</p>
 
-          <h2 class="h2 section-title">Latest News & Articles</h2>
+          <h2 class="h2 section-title" data-i18n="blog_title">Latest News & Articles</h2>
 
           <ul class="blog-list">
             <li>
@@ -424,7 +448,7 @@
                       <div>
                         <a href="#" class="author-name">Jony bristow</a>
 
-                        <p class="author-title">Admin</p>
+                        <p class="author-title" data-i18n="blog_admin">Admin</p>
                       </div>
                     </div>
 
@@ -432,14 +456,14 @@
                   </div>
 
                   <h3 class="card-title">
-                    <a href="#">
+                    <a href="#" data-i18n="popular_card_text">
                       A good traveler has no fixed plans and is not intent on
                       arriving.
                     </a>
                   </h3>
 
                   <a href="#" class="btn-link">
-                    <span>Read More</span>
+                    <span data-i18n="blog_read_more">Read More</span>
 
                     <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
                   </a>
@@ -472,7 +496,7 @@
                       <div>
                         <a href="#" class="author-name">Jony bristow</a>
 
-                        <p class="author-title">Admin</p>
+                        <p class="author-title" data-i18n="blog_admin">Admin</p>
                       </div>
                     </div>
 
@@ -480,14 +504,14 @@
                   </div>
 
                   <h3 class="card-title">
-                    <a href="#">
+                    <a href="#" data-i18n="popular_card_text">
                       A good traveler has no fixed plans and is not intent on
                       arriving.
                     </a>
                   </h3>
 
                   <a href="#" class="btn-link">
-                    <span>Read More</span>
+                    <span data-i18n="blog_read_more">Read More</span>
 
                     <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
                   </a>
@@ -520,7 +544,7 @@
                       <div>
                         <a href="#" class="author-name">Jony bristow</a>
 
-                        <p class="author-title">Admin</p>
+                        <p class="author-title" data-i18n="blog_admin">Admin</p>
                       </div>
                     </div>
 
@@ -528,14 +552,14 @@
                   </div>
 
                   <h3 class="card-title">
-                    <a href="#">
+                    <a href="#" data-i18n="popular_card_text">
                       A good traveler has no fixed plans and is not intent on
                       arriving.
                     </a>
                   </h3>
 
                   <a href="#" class="btn-link">
-                    <span>Read More</span>
+                    <span data-i18n="blog_read_more">Read More</span>
 
                     <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
                   </a>
@@ -557,93 +581,96 @@
       <div class="footer-top">
         <ul class="footer-list">
           <li>
-            <p class="footer-list-title">Top destination</p>
+            <p class="footer-list-title" data-i18n="footer_top_dest">Top destination</p>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Indonesia, Jakarta</a>
+            <a href="#" class="footer-link" data-i18n="footer_dest_jakarta">Indonesia, Jakarta</a>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Maldives, Malé</a>
+            <a href="#" class="footer-link" data-i18n="footer_dest_maldives">Maldives, Malé</a>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Australia, Canberra</a>
+            <a href="#" class="footer-link" data-i18n="footer_dest_australia">Australia, Canberra</a>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Thailand, Bangkok</a>
+            <a href="#" class="footer-link" data-i18n="footer_dest_thailand">Thailand, Bangkok</a>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Morocco, Rabat</a>
-          </li>
-        </ul>
-
-        <ul class="footer-list">
-          <li>
-            <p class="footer-list-title">Categories</p>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Travel</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Lifestyle</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Fashion</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Education</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Food & Drink</a>
+            <a href="#" class="footer-link" data-i18n="footer_dest_morocco">Morocco, Rabat</a>
           </li>
         </ul>
 
         <ul class="footer-list">
           <li>
-            <p class="footer-list-title">Quick links</p>
+            <p class="footer-list-title" data-i18n="footer_categories">Categories</p>
           </li>
 
           <li>
-            <a href="#" class="footer-link">About</a>
+            <a href="#" class="footer-link" data-i18n="footer_cat_travel">Travel</a>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Contact</a>
+            <a href="#" class="footer-link" data-i18n="footer_cat_lifestyle">Lifestyle</a>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Tours</a>
+            <a href="#" class="footer-link" data-i18n="footer_cat_fashion">Fashion</a>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Booking</a>
+            <a href="#" class="footer-link" data-i18n="footer_cat_education">Education</a>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Terms & Conditions</a>
+            <a href="#" class="footer-link" data-i18n="footer_cat_food">Food & Drink</a>
+          </li>
+        </ul>
+
+        <ul class="footer-list">
+          <li>
+            <p class="footer-list-title" data-i18n="footer_quick_links">Quick links</p>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link" data-i18n="footer_about">About</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link" data-i18n="footer_contact">Contact</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link" data-i18n="footer_tours">Tours</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link" data-i18n="footer_booking">Booking</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link" data-i18n="footer_terms">Terms & Conditions</a>
           </li>
         </ul>
 
         <div class="footer-list">
-          <p class="footer-list-title">Get a newsletter</p>
+          <p class="footer-list-title" data-i18n="footer_newsletter">Get a newsletter</p>
 
-          <p class="newsletter-text">
+          <p class="newsletter-text" data-i18n="footer_newsletter_text">
             For the latest deals and tips, travel no further than your inbox
           </p>
 
           <form action="" class="newsletter-form">
-            <input type="email" name="email" required placeholder="Email address" class="newsletter-input" />
+            <input type="email" name="email" required 
+                   data-i18n-placeholder="footer_email_placeholder"
+                   placeholder="Email address" 
+                   class="newsletter-input" />
 
-            <button type="submit" class="btn btn-primary">Subscribe</button>
+            <button type="submit" class="btn btn-primary" data-i18n="footer_subscribe">Subscribe</button>
           </form>
         </div>
       </div>
@@ -653,8 +680,11 @@
 
         <p class="copyright">
           &copy; 2022 <a href="#" class="copyright-link">codewithsadee</a>.
-          All Rights Reserved
+          <span data-i18n="footer_copyright">All Rights Reserved</span>
         </p>
+
+        <!-- Language Selector -->
+        <div id="language-selector-container"></div>
 
         <ul class="social-list">
           <li>
@@ -726,12 +756,15 @@
             userSection.style.display = "flex";
             userSection.style.alignItems = "center";
 
-            // SỬA ĐOẠN NÀY: Biến tên user thành thẻ a href="profile.html"
+            // Sử dụng i18n để lấy text phù hợp với ngôn ngữ
+            const greetingPrefix = typeof i18n !== 'undefined' ? i18n.t('greeting_prefix') : 'Chào,';
+            const logoutText = typeof i18n !== 'undefined' ? i18n.t('nav_logout') : 'Logout';
+
             userSection.innerHTML = `
               <a href="profile.html" style="color: white; margin-right: 15px; font-weight: bold; text-decoration: underline;">
-                  Chào, ${data.username}
+                  ${greetingPrefix} ${data.username}
               </a>
-              <button class="btn btn-outline" id="logoutBtn" style="padding: 5px 15px;">Logout</button>
+              <button class="btn btn-outline" id="logoutBtn" style="padding: 5px 15px;">${logoutText}</button>
           `;
 
             // Thay thế nút "Login" bằng phần "userSection"
@@ -763,6 +796,12 @@
   </script>
 
   <script src="./assets/js/script.js"></script>
+
+  <!-- 
+    - i18n scripts (QUAN TRỌNG: translations.js PHẢI load TRƯỚC i18n.js)
+  -->
+  <script src="./assets/js/translations.js"></script>
+  <script src="./assets/js/i18n.js"></script>
 
   <!--- ionicon link-->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

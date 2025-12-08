@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tạo Lộ Trình Riêng - SaiGonGo</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* --- GIỮ NGUYÊN CSS CHUNG CỦA DỰ ÁN --- */
+    body {
+      font-family: "Times New Roman", serif;
+      background-color: #f8f8f8;
+      text-align: center;
+      padding-top: 50px; 
+    }
+
+    .main-container {
+      max-width: 1000px; /* Rộng hơn chút để chứa lưới ảnh */
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .btn-action {
+      background-color: #d62828;       
+      color: #fff;                     
+      padding: 18px 50px;              
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.4rem;               
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      transition: all 0.25s ease;
+      margin-top: 25px;
+      box-shadow: 0 4px 14px rgba(214, 40, 40, 0.4); 
+    }
+
+    .btn-action:hover {
+      background-color: #e63946;       
+      transform: translateY(-3px);     
+      box-shadow: 0 6px 18px rgba(230, 57, 70, 0.5);
+    }
+
+    .btn-action:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+
+    /* --- CSS CHO GRID ĐỊA ĐIỂM (MỚI) --- */
+    .location-grid {
+        display: grid;
+        /* Tự động chia cột, mỗi cột tối thiểu 220px */
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+        gap: 20px;
+        margin-top: 30px;
+        text-align: left;
+    }
+
+    /* Thẻ bao quanh mỗi địa điểm */
+    .location-card {
+        position: relative;
+        cursor: pointer;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: 3px solid transparent; /* Viền trong suốt mặc định */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        background: #fff;
+    }
+
+    /* Ẩn checkbox mặc định đi */
+    .location-card input[type="checkbox"] {
+        display: none; 
+    }
+
+    /* Hình ảnh địa điểm */
+    .location-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    /* Tên địa điểm bên dưới ảnh */
+    .location-name {
+        padding: 15px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #333;
+        text-align: center;
+        background-color: #fff;
+    }
+
+    /* --- HIỆU ỨNG KHI ĐƯỢC CHỌN (CHECKED) --- */
+    
+    /* Khi checkbox được check, đổi màu viền của Card cha */
+    .location-card:has(input:checked) {
+        border-color: #007bff; /* Viền xanh dương */
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    }
+
+    /* Khi check, thêm dấu tích xanh */
+    .location-card:has(input:checked)::after {
+        content: "✅";
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        border-radius: 50%;
+        padding: 5px;
+        font-size: 1.2rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+
+    /* Loading Spinner */
+    #loadingOverlay {
+        display: none;
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: #007bff;
+        font-weight: 600;
+    }
+
+  </style>
+</head>
+
+<body id="top">
+    <header class="header" data-header>
+        <div class="container">
+            <a href="index.html">
+              <h1 class="logo">SaiGonGo</h1>
+            </a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <h2 style="font-size: 2.2rem; color: #0056b3; font-weight: 800; text-transform: uppercase;">
+            ✨ Thiết Kế Hành Trình
+        </h2>
+        <p style="font-size: 1.2rem; color: #555; margin-top: 10px;">
+            Chọn ít nhất <b>2 địa điểm</b> bạn muốn đi, AI sẽ sắp xếp đường đi ngắn nhất cho bạn.
+        </p>
+
+        <div class="location-grid">
+            
+            <label class="location-card">
+                <input type="checkbox" name="destinations" value="dinh_doc_lap">
+                <img src="./assets/images/DinhDocLap.jpg" alt="Dinh Độc Lập">
+                <div class="location-name">Dinh Độc Lập</div>
+            </label>
+
+            <label class="location-card">
+                <input type="checkbox" name="destinations" value="nha_tho_duc_ba">
+                <img src="./assets/images/NhaThoDucBa.jpg" alt="Nhà thờ Đức Bà">
+                <div class="location-name">Nhà thờ Đức Bà</div>
+            </label>
+
+            <label class="location-card">
+                <input type="checkbox" name="destinations" value="ho_con_rua">
+                <img src="./assets/images/HoConRua.jpg" alt="Hồ Con Rùa">
+                <div class="location-name">Hồ Con Rùa</div>
+            </label>
+
+            <label class="location-card">
+                <input type="checkbox" name="destinations" value="buu_dien_thanh_pho">
+                <img src="./assets/images/BuuDienTP.png" alt="Bưu điện TP">
+                <div class="location-name">Bưu điện Thành Phố</div>
+            </label>
+
+            <label class="location-card">
+                <input type="checkbox" name="destinations" value="bao_tang_chien_tich">
+                <img src="./assets/images/BTCTCT.png" alt="Bảo tàng Chiến tích">
+                <div class="location-name">Bảo tàng Chiến tích chiến tranh</div>
+            </label>
+
+            <label class="location-card">
+                <input type="checkbox" name="destinations" value="cho_ben_thanh">
+                <img src="./assets/images/ChoBenThanh.jpg" alt="Chợ Bến Thành">
+                <div class="location-name">Chợ Bến Thành</div>
+            </label>
+
+            </div>
+
+        <br>
+        <button id="createBtn" class="btn-action" onclick="createTour()">
+            🚀 Tạo Lộ Trình Ngay
+        </button>
+
+        <div id="loadingOverlay">
+            ⏳ Đang tính toán khoảng cách và sắp xếp lộ trình...
+        </div>
+
+    </main>
+    
+    <footer class="footer" style="background-image: url('./assets/images/footer-bg.png'); min-height: 100px;">
+    </footer>
+
+    <script>
+        async function createTour() {
+            // 1. Lấy danh sách các ô đã tick
+            const checkboxes = document.querySelectorAll('input[name="destinations"]:checked');
+            const selectedKeys = Array.from(checkboxes).map(cb => cb.value);
+            const preference = document.getElementById('userPref').value;
+            
+            const btn = document.getElementById('createBtn');
+            const loading = document.getElementById('loadingOverlay');
+
+            // 2. Validate
+            if (selectedKeys.length < 2) {
+                alert("⚠️ Vui lòng chọn ít nhất 2 địa điểm để tạo thành một lộ trình!");
+                return;
+            }
+
+            // 3. Hiệu ứng Loading
+            btn.disabled = true;
+            btn.style.opacity = "0.7";
+            loading.style.display = "block";
+
+            // 4. Gửi lên Server (API bạn đã thêm ở main.py)
+            try {
+                const res = await fetch('/api/create-custom-tour', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        locations: selectedKeys,
+                        preference: preference
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    // Thành công -> Chuyển hướng đến trang đầu tiên của lộ trình
+                    loading.textContent = "✅ Đã xong! Đang chuyển hướng...";
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 1000);
+                } else {
+                    alert("❌ Lỗi: " + data.message);
+                    btn.disabled = false;
+                    btn.style.opacity = "1";
+                    loading.style.display = "none";
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("❌ Lỗi kết nối đến Server.");
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                loading.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
