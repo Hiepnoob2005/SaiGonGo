@@ -1,0 +1,1 @@
+pip install Flask flask-bcrypt flask-cors flask-login flask-mail python-dotenv Pillow requests google-genai
