@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+   <title>Lo Trinh</title>
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link rel="stylesheet" href="./assets/css/lottrinh.css" />
+</head>
+
+<aside id="sidebar">
+   <div id="sidebar-content">
+      <div class="sidebar-item">
+         <i class="fa-regular fa-gem"></i><span id="user-points" class="sidebar-text">User Score: Loading...</span>
+      </div>
+
+      <div class="sidebar-item">
+         <i class="fa-solid fa-map-location"></i><span id="mapLink" target="_blank" class="sidebar-text">Open in Google
+            Maps </span>
+      </div>
+
+      <div class="sidebar-item">
+         <i class="fa-solid fa-house"></i><span class="sidebar-text"><a href="index.html">Home Page</a></span>
+      </div>
+
+      <div class="sidebar-item">
+         <i class="fa-solid fa-arrow-left"></i><span class="sidebar-text"><a href="quiz_nhathoducba.html">Go
+               Back</a></span>
+      </div>
+
+      <div class="sidebar-item">
+         <i class="fa-solid fa-arrow-right"></i><span class="sidebar-text"><a href="lthoconrua.html"> Skip This Location
+            </a></span>
+      </div>
+   </div>
+</aside>
+
+<body>
+   <input type="text" id="locationName" value="Bưu điện Thành Phố" readonly style="display: none;"" />
+   
+   <header class="navbar">
+      <div class="logo">
+         <a href="index.html" style="text-decoration: none;"> SaiGonGo </a>
+      </div>
+   </header>
+
+   <main class="main-container"> <!-- grid 1fr 1fr -->
+      <div class="notification-box">
+         <div id="distanceProgress">📍 Đang xác định vị trí...</div>
+
+         <div id="loadingStatus"> </div>
+      </div>
+
+      <div id="directionsBox">
+         <i class="fa-solid fa-map-location-dot"></i>
+         <br>
+         <h2> Lo Trinh Se Hien Ra Tai Day </h2>
+         <br>
+         <p> sau khi ban click Get Directions </p>
+      </div>
+
+      <div class="button-container">
+         <div class="toggle-container">
+            <span id="locationModeLabel" style="color: rgb(255, 114, 114)">Chế độ Thử nghiệm</span>
+            <label class="toggle-switch">
+               <input type="checkbox" id="dynamicLocationToggle">
+               <span class="slider"></span>
+            </label>
+         </div>
+
+         <div style="display: flex; justify-content: center;">
+            <button id="getDirectionsBtn" class="action-btn">Get Directions</button>
+
+            <button id="altRouteBtn" class="action-btn" disabled>Nếu đường bị chặn. Tìm lối khác</button>
+         </div>
+
+      </div>
+   </main>
+
+   <div id="photoChallenge" class="pop-up" style="display: none;">
+      <div class="pop-up-box">
+         <h2>Have you reached the destination?</h2>
+         <p>If so, click 'continue' otherwise click 'cancel'</p>
+
+         <div class="pop-up-actions">
+            <button class="pop-up-btn"
+               onclick="document.getElementById('photoChallenge').style.display = 'none'">cancel</button>
+            <a class="pop-up-btn" href="buudientp.html" style="text-decoration: none;">continue</a>
+         </div>
+      </div>
+   </div>
+
+   <script src="./assets/js/lotrinh.js"></script>
+</body>

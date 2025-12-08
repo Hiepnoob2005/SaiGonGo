@@ -93,7 +93,7 @@ def sync_user_to_game_db(email, username):
             "email": email,
             "points": 0,
             "routes": {
-                "route1": { "status": "locked", "reward_claimed": False }
+            "route1": { "status": "locked", "reward_claimed": False }
             }
         }
         users.append(user_record)
@@ -599,7 +599,21 @@ DETAILS_INFO = {
     "bell_towers": "Hai tháp chuông nhọn cao vút",
     "red_brick": "Tường gạch trần màu đỏ cam đặc trưng",
     "main_gate": "Cổng vòm chính của nhà thờ",
-    "scaffolding": "Giàn giáo xây dựng (do đang trùng tu)" # Thêm cái này để AI nhận diện nếu đang sửa chữa
+    "scaffolding": "Giàn giáo xây dựng (do đang trùng tu)", # Thêm cái này để AI nhận diện nếu đang sửa chữa
+
+    # --- Hồ Con Rùa ---
+    "lotus_tower": "Tháp bê tông hình bông hoa sen xòe ra ở trung tâm",
+    "spiral_bridge": "Cầu đi bộ xoắn ốc dẫn vào trung tâm hồ",
+    "fountain_pool": "Hồ nước hoặc đài phun nước bao quanh tháp",
+    "top_symbol": "Đỉnh tháp hoa sen cao nhất",
+    "stone_bench": "Ghế đá hoặc bậc thềm ngồi xung quanh hồ",
+
+    # --- Chợ Bến Thành ---
+    "clock_tower_bt": "Tháp đồng hồ 3 mặt cửa Nam chợ Bến Thành",
+    "ceramic_relief": "Bức phù điêu gốm hình con bò, cá hoặc nải chuối trên cổng chợ",
+    "south_gate_sign": "Dòng chữ CHỢ BẾN THÀNH lớn ở cổng chính",
+    "north_gate_fruit": "Cổng chợ bán nhiều hoa tươi và trái cây (Cửa Bắc)",
+    "west_gate_shoes": "Cổng chợ bán nhiều giày dép và đồ lưu niệm (Cửa Tây)"
 }
 
 @app.route("/api/verify-detail", methods=["POST"])

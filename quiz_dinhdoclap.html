@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Truy tìm hiện vật - Dinh Độc Lập</title>
+  <title data-i18n="quiz_palace_title">Truy tìm hiện vật - Dinh Độc Lập</title>
   <style>
     :root {
       --primary: #ff7043;
@@ -129,24 +129,24 @@
 <body>
 
 <div class="container">
-  <a href="dinhdoclap.html" style="text-decoration: none; color: var(--primary); font-weight: bold;">← Quay lại</a>
+  <a href="dinhdoclap.html" style="text-decoration: none; color: var(--primary); font-weight: bold;" data-i18n="btn_back">← Quay lại</a>
   
   <header>
-    <h1>🏰 Spot the Detail: Dinh Độc Lập</h1>
-    <p class="subtitle">Tìm và chụp ít nhất <b>3 hiện vật</b> để hoàn thành nhiệm vụ!</p>
+    <h1 data-i18n="quiz_palace_title">🏰 Spot the Detail: Dinh Độc Lập</h1>
+    <p class="subtitle" data-i18n="quiz_palace_subtitle">Tìm và chụp ít nhất <b>3 hiện vật</b> để hoàn thành nhiệm vụ!</p>
     
     <div class="progress-container">
       <div class="progress-bar" id="progressBar"></div>
-      <div class="progress-text" id="progressText">0/3 Hoàn thành</div>
+      <div class="progress-text" id="progressText" data-i18n="quiz_progress" data-i18n-params='{"count": 0}'>0/3 Hoàn thành</div>
     </div>
   </header>
 
   <div class="grid" id="gridContainer"></div>
 
   <div id="nextStep">
-    <h3>🎉 Chúc mừng! Bạn đã hoàn thành thử thách.</h3>
-    <p>Dinh Độc Lập chứa đựng nhiều bí mật lịch sử thú vị.</p>
-    <button class="btn btn-primary" onclick="window.location.href='ltnhathoducba.html'">Tiếp tục: Nhà thờ Đức Bà →</button>
+    <h3 data-i18n="quiz_complete_title">🎉 Chúc mừng! Bạn đã hoàn thành thử thách.</h3>
+    <p data-i18n="quiz_complete_text">Bạn đã nhận được điểm thưởng cho sự quan sát tinh tế.</p>
+    <button class="btn btn-primary" onclick="window.location.href='ltnhathoducba.html'" data-i18n="quiz_continue_cathedral">Tiếp tục: Nhà thờ Đức Bà →</button>
   </div>
 </div>
 
@@ -159,30 +159,31 @@
     <img id="preview" class="modal-img-preview">
     
     <div id="actionButtons">
-      <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()">📸 Chụp ảnh ngay</button>
-      <button class="btn btn-secondary" onclick="closeModal()">Đóng</button>
-      <button class="btn btn-danger" onclick="reportMissing()">⚠️ Tôi không tìm thấy (Báo cáo)</button>
+      <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()" data-i18n="btn_take_photo">📸 Chụp ảnh ngay</button>
+      <button class="btn btn-secondary" onclick="closeModal()" data-i18n="btn_close">Đóng</button>
+      <button class="btn btn-danger" onclick="reportMissing()" data-i18n="btn_report_missing">⚠️ Tôi không tìm thấy (Báo cáo)</button>
     </div>
 
     <div id="verifySection" style="display:none;">
       <div class="loader" id="loader"></div>
-      <p id="statusMsg">Đang phân tích...</p>
-      <button class="btn btn-primary" id="confirmBtn" style="display:none;" onclick="closeModal()">Tuyệt vời!</button>
-      <button class="btn btn-secondary" id="retryBtn" style="display:none;" onclick="resetModal()">Thử lại</button>
+      <p id="statusMsg" data-i18n="quiz_analyzing">Đang phân tích...</p>
+      <button class="btn btn-primary" id="confirmBtn" style="display:none;" onclick="closeModal()" data-i18n="btn_great">Tuyệt vời!</button>
+      <button class="btn btn-secondary" id="retryBtn" style="display:none;" onclick="resetModal()" data-i18n="btn_retry">Thử lại</button>
     </div>
   </div>
 </div>
 
 <script>
-  // DANH SÁCH HIỆN VẬT CHO DINH ĐỘC LẬP
+  // DANH SÁCH HIỆN VẬT CHO DINH ĐỘC LẬP (Chỉ giữ ID và Icon)
+  // Các key text tương ứng sẽ là: artifact_tank_390, artifact_tank_390_hint...
   const details = [
-    { id: 'tank_390', name: 'Xe tăng 390/843', icon: '🚜', hint: 'Nằm ở bãi cỏ bên trái sân trước.' },
-    { id: 'fountain_dinh', name: 'Đài phun nước', icon: '⛲', hint: 'Ngay chính giữa sân trước Dinh.' },
-    { id: 'stone_curtain', name: 'Rèm hoa đá', icon: '🧱', hint: 'Các đốt trúc bê tông ở mặt tiền lầu 2.' },
-    { id: 'cabinet_room', name: 'Phòng họp nội các', icon: '🛋️', hint: 'Phòng có bàn bầu dục và ghế xanh.' },
-    { id: 'banquet_hall', name: 'Phòng khánh tiết', icon: '🍷', hint: 'Phòng lớn nhất dùng để tiếp khách.' },
-    { id: 'mercedes_car', name: 'Xe Mercedes cổ', icon: '🚗', hint: 'Trưng bày dưới tầng hầm.' },
-    { id: 'helicopter_roof', name: 'Trực thăng', icon: '🚁', hint: 'Trên nóc (nhìn từ xa hoặc mô hình).' }
+    { id: 'tank_390', icon: '🚜' },
+    { id: 'fountain_dinh', icon: '⛲' },
+    { id: 'stone_curtain', icon: '🧱' },
+    { id: 'cabinet_room', icon: '🛋️' },
+    { id: 'banquet_hall', icon: '🍷' },
+    { id: 'mercedes_car', icon: '🚗' },
+    { id: 'helicopter_roof', icon: '🚁' }
   ];
 
   let completedCount = 0;
@@ -198,10 +199,14 @@
   function initGrid() {
     grid.innerHTML = '';
     details.forEach(item => {
+      // Dùng i18n để lấy tên và hint
+      const name = i18n.t('artifact_' + item.id);
+      const hint = i18n.t('artifact_' + item.id + '_hint');
+
       const card = document.createElement('div');
       card.className = `card ${completedDetails.has(item.id) ? 'completed' : ''}`;
-      card.onclick = () => openModal(item);
-      card.innerHTML = `<span class="icon">${item.icon}</span><div class="card-title">${item.name}</div><div class="card-hint">${item.hint}</div>`;
+      card.onclick = () => openModal(item, name, hint);
+      card.innerHTML = `<span class="icon">${item.icon}</span><div class="card-title">${name}</div><div class="card-hint">${hint}</div>`;
       grid.appendChild(card);
     });
     updateProgress();
@@ -210,15 +215,15 @@
   function updateProgress() {
     const pct = (completedCount / targetCount) * 100;
     progressBar.style.width = `${Math.min(pct, 100)}%`;
-    progressText.innerText = `${completedCount}/${targetCount} Hoàn thành`;
+    progressText.innerText = i18n.t('quiz_progress', {count: completedCount});
     if (completedCount >= targetCount) document.getElementById('nextStep').style.display = 'block';
   }
 
-  function openModal(item) {
+  function openModal(item, name, hint) {
     if (completedDetails.has(item.id)) return;
     currentDetailId = item.id;
-    document.getElementById('modalTitle').innerText = item.name;
-    document.getElementById('modalHint').innerText = item.hint;
+    document.getElementById('modalTitle').innerText = name;
+    document.getElementById('modalHint').innerText = hint;
     resetModal();
     modal.style.display = 'flex';
   }
@@ -233,7 +238,7 @@
   }
 
   function reportMissing() {
-    if(confirm("Bạn chắc chắn hiện vật này không còn ở đây?")) {
+    if(confirm(i18n.t('quiz_report_confirm'))) {
       document.getElementById('cameraInput').setAttribute('data-mode', 'missing');
       document.getElementById('cameraInput').click();
     }
@@ -257,7 +262,7 @@
     document.getElementById('actionButtons').style.display = 'none';
     document.getElementById('verifySection').style.display = 'block';
     document.getElementById('loader').style.display = 'block';
-    document.getElementById('statusMsg').innerText = "AI đang xử lý...";
+    document.getElementById('statusMsg').innerText = isReportMissing ? i18n.t('quiz_checking_scene') : i18n.t('quiz_analyzing');
     
     const formData = new FormData();
     formData.append('image', file);
@@ -265,21 +270,32 @@
     formData.append('report_missing', isReportMissing);
 
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/verify-detail', { method: 'POST', body: formData });
+      const res = await fetch('/api/verify-detail', { method: 'POST', body: formData });
       const data = await res.json();
       document.getElementById('loader').style.display = 'none';
       
-      if (data.success && (data.data?.valid || data.status === 'skipped')) {
-        document.getElementById('statusMsg').innerHTML = data.status === 'skipped' ? 
-            `⚠️ Đã xác nhận thiếu.` : `✅ Chính xác!<br><br><small>${data.data.fact}</small>`;
-        markCompleted();
+      if (data.success) {
+        if (data.data && data.data.valid) {
+            const correctMsg = i18n.t('quiz_correct');
+            const funFactLabel = i18n.t('quiz_fun_fact');
+            document.getElementById('statusMsg').innerHTML = `${correctMsg}<br><br><b>${funFactLabel}</b><br>${data.data.fact}`;
+            markCompleted();
+        } else if (data.status === 'skipped') {
+            const skippedMsg = i18n.t('quiz_skipped');
+            document.getElementById('statusMsg').innerHTML = `${skippedMsg}<br>${data.message}`;
+            markCompleted();
+        } else {
+            const wrongMsg = i18n.t('quiz_wrong');
+            const reason = data.data ? data.data.reason : data.message;
+            document.getElementById('statusMsg').innerHTML = `${wrongMsg}<br>${reason}`;
+            document.getElementById('retryBtn').style.display = 'inline-block';
+        }
       } else {
-        const reason = data.data ? data.data.reason : data.message;
-        document.getElementById('statusMsg').innerHTML = `❌ Chưa đúng.<br>${reason}`;
+        document.getElementById('statusMsg').innerText = `❌ ${data.message}`;
         document.getElementById('retryBtn').style.display = 'inline-block';
       }
     } catch (err) {
-      document.getElementById('statusMsg').innerText = "❌ Lỗi kết nối server.";
+      document.getElementById('statusMsg').innerText = i18n.t('quiz_connection_error');
       document.getElementById('retryBtn').style.display = 'inline-block';
     }
   }
@@ -292,7 +308,14 @@
     initGrid();
   }
 
-  initGrid();
+  // Reload grid on language change
+  window.addEventListener('languageChanged', () => {
+      initGrid();
+  });
+
+  window.addEventListener('load', () => {
+       if(typeof i18n !== 'undefined') initGrid();
+  });
 </script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
@@ -313,6 +336,9 @@
     }
   </script>
   {% endif %}
+
+<script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
 
 </body>
 </html>

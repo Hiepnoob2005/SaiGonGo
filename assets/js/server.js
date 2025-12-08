@@ -84,7 +84,7 @@ app.post("/api/complete-route", (req, res) => {
   const { routeId } = req.body; // Ví dụ: route1
   const users = getDatabase();
   const index = users.findIndex(u => u.email === req.session.userEmail);
-
+  
   if (index !== -1) {
     // Đánh dấu đã hoàn thành vào file txt
     if (!users[index].routes) users[index].routes = {};
