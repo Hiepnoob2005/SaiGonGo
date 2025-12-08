@@ -869,7 +869,7 @@ body {
 
   .header,
   .header.active {
-    height: unset;
+    height: 100px;
   }
   /**
    * HERO
@@ -985,6 +985,16 @@ body {
 
   .navbar-list {
     gap: 50px;
+    display: flex;
+    margin-right: 15px; 
+    justify-content: right;
+    align-items: bottom;
+  }
+
+  .navbar-links {
+    color: white; 
+    margin-right: 15px; 
+    font-weight: bold;
   }
 
   /**
@@ -1190,7 +1200,7 @@ body {
    padding: 0 25px;
    height: 10vh;
    width: 100%;
-   display: flex;
+   display: inline;
    justify-content: space-between;
    position: relative;
 }
@@ -1278,10 +1288,6 @@ body {
 }
 
 @media (max-width: 768px) {
-   .navbar {
-      padding: 0 20px;
-   }
-
    .hamburger {
       display: block;
    }
@@ -1359,4 +1365,5 @@ body {
 
 .admin-badge ion-icon {
     font-size: 1.4rem;
+}
 }

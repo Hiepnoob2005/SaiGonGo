@@ -22,7 +22,6 @@ document.addEventListener('keydown', (e) => {
 const TARGET_LAT = 10.777182;
 const TARGET_LON = 106.688514;
 const MAX_DISTANCE_METERS = 100; // Khoảng cách cho phép
-let checkLocationStatus = true;
 
 const gpsStatus = document.getElementById("gpsStatus");
 const lockMessage = document.getElementById("lockMessage");
@@ -34,8 +33,6 @@ const preview = document.getElementById("preview");
 const dropArea = document.getElementById("image-view");
 const photoInput = document.getElementById("photo");
 const imageView = document.getElementById("image-view");
-
-let checkStatus = true;
 
 
 // --- 2. HÀM TÍNH KHOẢNG CÁCH (Lấy từ trang lộ trình) ---
@@ -58,10 +55,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
 const devModeToggle = document.getElementById("devModeToggle");
 
 function checkLocation() {
-   if (checkLocationStatus == false) return;
-
    // 🛑 ƯU TIÊN 1: Kiểm tra xem có đang bật chế độ Dev không?
-   console.log("aaaaaaaaaaa");
    if (devModeToggle.checked) {
       gpsStatus.innerHTML = `🛠️ <b>Chế độ Nhà phát triển:</b><br>Đã bỏ qua kiểm tra GPS. Camera đã mở!`;
       gpsStatus.style.backgroundColor = "#fff8e1"; // Màu vàng nhạt
@@ -229,10 +223,7 @@ uploadBtn.addEventListener("click", async () => {
       if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
          photoInput.disabled = true;
          nextDestinationBtn.disabled = false;
-         checkLocationStatus = false;
          uploadBtn.disabled = true;
-
-         checkStatus = false;
          // --- CODE CỘNG ĐIỂM (+5) ---
          try {
             const scoreRes = await fetch('/api/update-score', {
@@ -245,7 +236,10 @@ uploadBtn.addEventListener("click", async () => {
             if (scoreData.success) {
                // Cập nhật UI
                document.getElementById('user-points').textContent = scoreData.new_points;
+
+               // Hiệu ứng +5 bay lên
                const anim = document.getElementById('point-anim');
+               anim.textContent = "+5 Điểm (Xác thực)";
                anim.className = "point-animation anim-plus";
             }
          } catch (err) { console.error(err); }

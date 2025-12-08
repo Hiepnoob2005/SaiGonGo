@@ -412,120 +412,118 @@
                 // LUÔN LUÔN mở map dù trừ điểm thành công hay thất bại (để không chặn người dùng)
                 window.open(url, "_blank");
             }
-        } catch (e) { console.error(e); }
-    }
-    window.addEventListener('load', loadUserScore);
-    
-  async function openGoogleMap() {
-    const start = "Nhà thờ Đức Bà, 1 Công xã Paris, Quận 1, TP.HCM";
-    const destination = "Bưu điện TP, 2 Công xã Paris, Quận 1, TP.HCM";
-    const url = `http://googleusercontent.com/maps.google.com/5{encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+     } 
+            
+        async function openGoogleMap() {
+            const start = "Nhà thờ Đức Bà, 1 Công xã Paris, Quận 1, TP.HCM";
+            const destination = "Bưu điện TP, 2 Công xã Paris, Quận 1, TP.HCM";
+            const url = `http://googleusercontent.com/maps.google.com/5{encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
 
-        try {
-            const res = await fetch('/api/update-score', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    points: -2, 
-                    routeId: 'route1'
-                })
-            });
-            const data = await res.json();
+                try {
+                    const res = await fetch('/api/update-score', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            points: -2, 
+                            routeId: 'route1'
+                        })
+                    });
+                    const data = await res.json();
 
-            if (data.success) {
-                document.getElementById('user-points').textContent = data.new_points;
-                const anim = document.getElementById('point-anim');
-                anim.textContent = i18n.t('score_minus_map');
-                anim.className = "point-animation anim-minus";
-                setTimeout(() => { anim.className = "point-animation"; }, 2000);
-            } else {
-                console.log(data.message);
+                    if (data.success) {
+                        document.getElementById('user-points').textContent = data.new_points;
+                        const anim = document.getElementById('point-anim');
+                        anim.textContent = i18n.t('score_minus_map');
+                        anim.className = "point-animation anim-minus";
+                        setTimeout(() => { anim.className = "point-animation"; }, 2000);
+                    } else {
+                        console.log(data.message);
+                    }
+                } catch (e) {
+                    console.error("Lỗi cập nhật điểm:", e);
+                } finally {
+                    window.open(url, "_blank");
+                }
+        }
+    </script>
+    <script>
+        // 🎯 Tọa độ của điểm đến (ví dụ: Bưu điện Thành Phố)
+        const DEST_LAT = 10.779902;
+        const DEST_LON = 106.699156;
+
+        const distanceBox = document.getElementById("distanceProgress");
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371e3;
+        const toRad = deg => deg * Math.PI / 180;
+        const φ1 = toRad(lat1);
+        const φ2 = toRad(lat2);
+        const Δφ = toRad(lat2 - lat1);
+        const Δλ = toRad(lon2 - lon1);
+        const a = Math.sin(Δφ / 2) ** 2 +
+                    Math.cos(φ1) * Math.cos(φ2) *
+                    Math.sin(Δλ / 2) ** 2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+        }
+
+        function updateDistance() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLat = position.coords.latitude;
+                const userLon = position.coords.longitude;
+                const distance = getDistance(userLat, userLon, DEST_LAT, DEST_LON);
+                const km = (distance / 1000).toFixed(2);
+
+                if (distance < 50) {
+                distanceBox.textContent = i18n.t('lt_arrived');
+                distanceBox.style.backgroundColor = "#e8ffe8";
+                distanceBox.style.color = "#0a8a0a";
+                distanceBox.style.border = "2px solid #9be59b";
+                } else {
+                distanceBox.textContent = i18n.t('lt_distance', {distance: km});
+                distanceBox.style.backgroundColor = "#e8f2ff";
+                distanceBox.style.color = "#0056b3";
+                distanceBox.style.border = "2px solid #bcd8ff";
+                }
+            },
+            (error) => {
+                distanceBox.textContent = i18n.t('lt_gps_error');
+                distanceBox.style.backgroundColor = "#fff4e5";
+                distanceBox.style.color = "#cc6600";
+                distanceBox.style.border = "2px solid #f3c38d";
             }
-        } catch (e) {
-            console.error("Lỗi cập nhật điểm:", e);
-        } finally {
-            window.open(url, "_blank");
-        }
-  }
-</script>
-<script>
-// 🎯 Tọa độ của điểm đến (ví dụ: Bưu điện Thành Phố)
-const DEST_LAT = 10.779902;
-const DEST_LON = 106.699156;
-
-const distanceBox = document.getElementById("distanceProgress");
-
-function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371e3;
-  const toRad = deg => deg * Math.PI / 180;
-  const φ1 = toRad(lat1);
-  const φ2 = toRad(lat2);
-  const Δφ = toRad(lat2 - lat1);
-  const Δλ = toRad(lon2 - lon1);
-  const a = Math.sin(Δφ / 2) ** 2 +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function updateDistance() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userLat = position.coords.latitude;
-        const userLon = position.coords.longitude;
-        const distance = getDistance(userLat, userLon, DEST_LAT, DEST_LON);
-        const km = (distance / 1000).toFixed(2);
-
-        if (distance < 50) {
-          distanceBox.textContent = i18n.t('lt_arrived');
-          distanceBox.style.backgroundColor = "#e8ffe8";
-          distanceBox.style.color = "#0a8a0a";
-          distanceBox.style.border = "2px solid #9be59b";
+            );
         } else {
-          distanceBox.textContent = i18n.t('lt_distance', {distance: km});
-          distanceBox.style.backgroundColor = "#e8f2ff";
-          distanceBox.style.color = "#0056b3";
-          distanceBox.style.border = "2px solid #bcd8ff";
+            distanceBox.textContent = i18n.t('lt_browser_error');
         }
-      },
-      (error) => {
-        distanceBox.textContent = i18n.t('lt_gps_error');
-        distanceBox.style.backgroundColor = "#fff4e5";
-        distanceBox.style.color = "#cc6600";
-        distanceBox.style.border = "2px solid #f3c38d";
-      }
-    );
-  } else {
-    distanceBox.textContent = i18n.t('lt_browser_error');
-  }
-}
+        }
 
-updateDistance();
-setInterval(updateDistance, 120000);
-</script>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  {% if is_admin %}
-  <button onclick="adminSkipAll('buudientp.html')" class="admin-badge">
-    <ion-icon name="rocket-outline"></ion-icon>
-    ADMIN SKIP
-  </button>
+        updateDistance();
+        setInterval(updateDistance, 120000);
+        </script>
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+        {% if is_admin %}
+        <button onclick="adminSkipAll('buudientp.html')" class="admin-badge">
+            <ion-icon name="rocket-outline"></ion-icon>
+            ADMIN SKIP
+        </button>
 
-  <script>
-    // Sửa hàm nhận tham số nextUrl
-    function adminSkipAll(nextUrl) {
-      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
-        // Chuyển hướng ngay lập tức
-        window.location.href = nextUrl;
-      }
-    }
-  </script>
-  {% endif %}
+        <script>
+            // Sửa hàm nhận tham số nextUrl
+            function adminSkipAll(nextUrl) {
+            if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
+                // Chuyển hướng ngay lập tức
+                window.location.href = nextUrl;
+            }
+            }
+        </script>
+        {% endif %}
 
-<script src="./assets/js/translations.js"></script>
-<script src="./assets/js/i18n.js"></script>
+        <script src="./assets/js/translations.js"></script>
+        <script src="./assets/js/i18n.js"></script>
 
-</body>
+    </body>
 </html>
