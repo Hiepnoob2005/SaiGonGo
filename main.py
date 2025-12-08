@@ -796,30 +796,18 @@ def create_custom_tour():
     if len(selected_keys) < 2:
         return jsonify({"success": False, "message": "Chọn ít nhất 2 địa điểm."}), 400
 
-    # 1. Thuật toán Sắp xếp (Nearest Neighbor)
-    start_key = selected_keys[0] 
-    optimized_order = [start_key]
-    unvisited = [k for k in selected_keys if k != start_key]
+    # --- SỬA ĐỔI Ở ĐÂY: BỎ THUẬT TOÁN NEAREST NEIGHBOR ---
     
-    current_key = start_key
+    # Trước đây: Code while unvisited... (XÓA ĐI HOẶC COMMENT LẠI)
     
-    while unvisited:
-        nearest_key = None
-        min_dist = float('inf')
-        
-        curr_info = LOCATIONS[current_key]
-        
-        for candidate in unvisited:
-            cand_info = LOCATIONS[candidate]
-            dist = calculate_distance(curr_info['lat'], curr_info['lon'], cand_info['lat'], cand_info['lon'])
-            
-            if dist < min_dist:
-                min_dist = dist
-                nearest_key = candidate
-        
-        optimized_order.append(nearest_key)
-        unvisited.remove(nearest_key)
-        current_key = nearest_key
+    # Bây giờ: Giữ nguyên thứ tự người dùng gửi lên
+    optimized_order = selected_keys 
+    
+    # Kiểm tra xem các key có hợp lệ không (Optional)
+    # valid_order = [k for k in optimized_order if k in LOCATIONS]
+    # optimized_order = valid_order
+
+    # -----------------------------------------------------
 
     # 2. Lưu lộ trình vào Database
     users = load_db()
@@ -832,9 +820,10 @@ def create_custom_tour():
             
     return jsonify({
         "success": True, 
-        "message": "Đã tạo lộ trình!",
+        "message": "Đã tạo lộ trình theo ý bạn!",
         "redirect_url": "batdau_cus.html"
     })
+
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     R = 6371.0

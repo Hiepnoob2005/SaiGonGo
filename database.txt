@@ -43,8 +43,8 @@
       }
     },
     "current_tour_plan": [
-      "bao_tang_chien_tich",
-      "cho_ben_thanh"
+      "cho_ben_thanh",
+      "bao_tang_chien_tich"
     ],
     "current_step_index": 0
   }

@@ -211,35 +211,50 @@
     <footer class="footer" style="background-image: url('./assets/images/footer-bg.png'); min-height: 100px;">
     </footer>
 
-    <script>
-        async function createTour() {
-            // 1. Lấy danh sách các ô đã tick
-            const checkboxes = document.querySelectorAll('input[name="destinations"]:checked');
-            const selectedKeys = Array.from(checkboxes).map(cb => cb.value);
-            const prefElement = document.getElementById('userPref');
-            const preference = prefElement ? prefElement.value : "";    
+   <script>
+        // 1. Mảng lưu thứ tự chọn
+        let selectedOrder = [];
+
+        // 2. Gán sự kiện cho tất cả checkbox khi trang tải xong
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('input[name="destinations"]');
             
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    if (e.target.checked) {
+                        // Nếu tick vào -> Thêm vào cuối mảng
+                        selectedOrder.push(value);
+                    } else {
+                        // Nếu bỏ tick -> Xóa khỏi mảng
+                        selectedOrder = selectedOrder.filter(item => item !== value);
+                    }
+                });
+            });
+        });
+
+        async function createTour() {
+            const preference = document.getElementById('userPref') ? document.getElementById('userPref').value : "";
             const btn = document.getElementById('createBtn');
             const loading = document.getElementById('loadingOverlay');
 
-            // 2. Validate
-            if (selectedKeys.length < 2) {
-                alert("⚠️ Vui lòng chọn ít nhất 2 địa điểm để tạo thành một lộ trình!");
+            // 3. Validate dựa trên mảng selectedOrder
+            if (selectedOrder.length < 2) {
+                alert("⚠️ Vui lòng chọn ít nhất 2 địa điểm theo thứ tự bạn muốn đi!");
                 return;
             }
 
-            // 3. Hiệu ứng Loading
+            // Hiệu ứng Loading
             btn.disabled = true;
             btn.style.opacity = "0.7";
             loading.style.display = "block";
 
-            // 4. Gửi lên Server (API bạn đã thêm ở main.py)
             try {
                 const res = await fetch('/api/create-custom-tour', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        locations: selectedKeys,
+                        locations: selectedOrder, // 👈 Gửi mảng đã sắp xếp theo thứ tự click
                         preference: preference
                     })
                 });
@@ -247,7 +262,6 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    // Thành công -> Chuyển hướng đến trang đầu tiên của lộ trình
                     loading.textContent = "✅ Đã xong! Đang chuyển hướng...";
                     setTimeout(() => {
                         window.location.href = "batdau_cus.html";
@@ -261,7 +275,7 @@
 
             } catch (err) {
                 console.error(err);
-                alert("❌ Lỗi kết nối đến Server.");
+                alert("❌ Lỗi kết nối Server.");
                 btn.disabled = false;
                 btn.style.opacity = "1";
                 loading.style.display = "none";
