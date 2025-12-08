@@ -313,7 +313,7 @@ body {
 .header {
   background-color: var(--primary-color);
   padding-block: 15px;
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 1000;
   transition: all 0.3s ease;
@@ -350,7 +350,15 @@ body {
   display: flex;
   gap: 40px;
   align-items: center;
+  color: #fff!important;
 }
+
+.navbar-list a{
+  color: rgb(255, 255, 255);
+  display: block;
+  text-decoration: none;
+}
+
 
 .navbar-links {
   color: var(--white);
@@ -800,7 +808,7 @@ a.navbar-links[href="login.html"]:hover {
   background-size: cover;
   background-position: center;
   color: var(--light-gray);
-  padding-block: 60px;
+  padding-block: 80px;
 }
 
 .footer a:not(.logo) {

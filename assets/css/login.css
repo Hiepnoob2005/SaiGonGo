@@ -582,28 +582,96 @@ h2 {
 }
 
 /* Mobile Responsive */
+/* =========================================
+   RESPONSIVE MOBILE & TABLET
+   ========================================= */
+
+/* 1. Màn hình Tablet và Mobile (Dưới 992px) */
+@media (max-width: 992px) {
+   body {
+      padding: 0; /* Bỏ padding body để full màn hình */
+      background: linear-gradient(135deg, #7effff 0%, #006b6b 100%);
+      align-items: flex-start; /* Để form không bị căn giữa cứng nhắc khi bàn phím ảo hiện lên */
+      min-height: 100vh;
+   }
+
+   .login-container {
+      /* Chuyển từ chia 2 cột sang 1 cột dọc */
+      grid-template-columns: 1fr; 
+      
+      /* Tăng chiều rộng lên để dễ thao tác */
+      max-width: 500px; 
+      width: 95%; 
+      
+      margin: 40px auto; /* Căn giữa và cách top một chút */
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+   }
+
+   /* Ẩn phần ảnh bên trái (img-container) để tiết kiệm diện tích */
+   .img-container {
+      display: none;
+   }
+   
+   /* Nếu bạn muốn giữ ảnh làm banner phía trên, hãy dùng đoạn code dưới đây thay vì display: none */
+   /*
+   .img-container {
+      height: 150px;
+      width: 100%;
+      background-position: center top;
+   }
+   */
+}
+
+/* 2. Màn hình điện thoại nhỏ (Dưới 480px) */
 @media (max-width: 480px) {
+   .login-container {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      border-radius: 0;
+      box-shadow: none; /* Bỏ bóng để giao diện phẳng hơn trên mobile */
+   }
+
    .login-card {
-      padding: 24px;
-      margin: 10px;
-      border-radius: 20px;
+      padding: 30px 20px; /* Giảm padding trong thẻ login */
+      min-height: 100vh; /* Full màn hình */
+      border-radius: 0;
    }
 
+   /* Chỉnh font chữ tiêu đề nhỏ lại chút cho vừa mắt */
    .login-header h2 {
-      font-size: 1.75rem;
+      font-size: 1.8rem;
    }
 
-   .password-wrapper input {
-      padding-right: 44px;
+   .login-header p {
+      font-size: 0.9rem;
    }
 
+   /* Input nhập liệu to hơn chút để dễ bấm */
+   .input-wrapper input {
+      font-size: 16px; /* Ngăn iOS zoom khi focus vào input */
+      padding: 14px;
+   }
+
+   /* Các nút Social (Google, Github) xếp dọc */
    .social-login {
       flex-direction: column;
+      gap: 10px;
    }
 
+   .social-btn {
+      width: 100%;
+      justify-content: center;
+   }
+
+   /* Phần Quên mật khẩu & Ghi nhớ xếp dọc */
    .form-options {
       flex-direction: column;
       align-items: flex-start;
-      gap: 16px;
+      gap: 15px;
+   }
+   
+   .forgot-password {
+      margin-left: 28px; /* Thụt vào cho thẳng hàng với text checkbox */
    }
 }
