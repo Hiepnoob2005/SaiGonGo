@@ -393,9 +393,49 @@ const translations = {
         complete_suggest_title: "Gợi ý địa điểm gần đây",
         complete_reset_confirm: "Bạn có chắc muốn xóa toàn bộ ảnh và đi lại từ đầu không?",
         complete_reset_success: "Đã xóa dữ liệu thành công!",
-
+        
         // Kho báu
         chest_closed: "Rương kho báu đang đóng",
+
+        // === quiz_hoconrua ===
+        quiz_title_hoconrua: "Truy tìm hiện vật - Hồ Con Rùa",
+        tour_complete_title: "🏆 CHÚC MỪNG HOÀN THÀNH TOUR!",
+        tour_complete_text: "Bạn đã chinh phục tất cả các địa điểm nổi tiếng.",
+        btn_finish_tour: "Về trang chủ 🏠",
+        tour_complete_alert: "Chúc mừng bạn đã hoàn thành tour Sài Gòn! Số điểm của bạn đã được lưu.",
+
+        artifact_lotus_tower: "Tháp Hoa Sen",
+        artifact_lotus_tower_hint: "Cột bê tông xòe ra như bông hoa ở chính giữa.",
+        
+        artifact_spiral_bridge: "Cầu xoắn ốc",
+        artifact_spiral_bridge_hint: "Các lối đi cong dẫn vào trung tâm hồ.",
+        
+        artifact_fountain_pool: "Hồ nước trung tâm",
+        artifact_fountain_pool_hint: "Khu vực chứa nước bao quanh tháp.",
+        
+        artifact_stone_bench: "Ghế đá vòng cung",
+        artifact_stone_bench_hint: "Khu vực ngồi hóng mát xung quanh hồ.",
+        
+        artifact_top_symbol: "Đỉnh tháp",
+        artifact_top_symbol_hint: "Phần cao nhất của bông hoa bê tông.",
+
+        // === quiz_chobenthanh ===
+        quiz_title_chobenthanh: "Truy tìm hiện vật - Chợ Bến Thành",
+        
+        artifact_clock_tower_bt: "Tháp Đồng Hồ",
+        artifact_clock_tower_bt_hint: "Biểu tượng 3 mặt đồng hồ nổi tiếng ở cửa Nam.",
+        
+        artifact_ceramic_relief: "Phù điêu gốm",
+        artifact_ceramic_relief_hint: "Tìm các bức tranh gốm (bò, cá, nải chuối) gắn phía trên các cửa.",
+        
+        artifact_south_gate_sign: "Biển hiệu Cửa Nam",
+        artifact_south_gate_sign_hint: "Dòng chữ lớn 'CHỢ BẾN THÀNH' ngay dưới tháp đồng hồ.",
+        
+        artifact_north_gate_fruit: "Cửa Bắc (Hoa quả)",
+        artifact_north_gate_fruit_hint: "Cổng đường Lê Thánh Tôn, nơi bán nhiều trái cây, hoa tươi.",
+        
+        artifact_west_gate_shoes: "Cửa Tây (Giày dép)",
+        artifact_west_gate_shoes_hint: "Cổng đường Phan Chu Trinh, bán giày dép và đồ lưu niệm."
     },
     
     // ===== ENGLISH =====
@@ -788,6 +828,46 @@ const translations = {
 
         // Kho báu
         chest_closed: "Treasure chest closed",
+
+        // === quiz_hoconrua.html - Turtle Lake Quiz Page ===
+        quiz_title_hoconrua: "Spot the Detail - Turtle Lake",
+        tour_complete_title: "🏆 CONGRATULATIONS ON COMPLETING THE TOUR!",
+        tour_complete_text: "You have conquered all the famous landmarks.",
+        btn_finish_tour: "Back to Home 🏠",
+        tour_complete_alert: "Congratulations on completing the Saigon tour! Your score has been saved.",
+
+        artifact_lotus_tower: "Lotus Tower",
+        artifact_lotus_tower_hint: "The concrete column spreading out like a flower in the center.",
+        
+        artifact_spiral_bridge: "Spiral Bridge",
+        artifact_spiral_bridge_hint: "Curved walkways leading to the center of the lake.",
+        
+        artifact_fountain_pool: "Central Pool",
+        artifact_fountain_pool_hint: "The water area surrounding the tower.",
+        
+        artifact_stone_bench: "Curved Stone Bench",
+        artifact_stone_bench_hint: "Seating area around the lake.",
+        
+        artifact_top_symbol: "Tower Top",
+        artifact_top_symbol_hint: "The highest part of the concrete flower.",
+
+        // === quiz_chobenthanh ===
+        quiz_title_chobenthanh: "Spot the Detail - Ben Thanh Market",
+        
+        artifact_clock_tower_bt: "Clock Tower",
+        artifact_clock_tower_bt_hint: "The iconic 3-faced clock tower at the South Gate.",
+        
+        artifact_ceramic_relief: "Ceramic Relief",
+        artifact_ceramic_relief_hint: "Find ceramic artworks (cows, fish, bananas) above the gates.",
+        
+        artifact_south_gate_sign: "South Gate Sign",
+        artifact_south_gate_sign_hint: "The large text 'CHỢ BẾN THÀNH' below the clock tower.",
+        
+        artifact_north_gate_fruit: "North Gate (Fruits)",
+        artifact_north_gate_fruit_hint: "Le Thanh Ton street gate, famous for fresh fruits and flowers.",
+        
+        artifact_west_gate_shoes: "West Gate (Shoes)",
+        artifact_west_gate_shoes_hint: "Phan Chu Trinh street gate, selling shoes and souvenirs."
     }
 };
 

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="quiz_title_hoconrua">Truy tìm hiện vật - Hồ Con Rùa</title>
+  <style>
+    /* --- GIỮ NGUYÊN CSS ĐỂ ĐỒNG BỘ GIAO DIỆN --- */
+    :root {
+      --primary: #ff7043;
+      --secondary: #4a90e2;
+      --success: #66bb6a;
+      --bg: #fffaf0;
+      --card-bg: #ffffff;
+      --text: #333;
+    }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+      background: linear-gradient(135deg, #fffaf0, #ffe0b2);
+      margin: 0;
+      padding: 20px;
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 { color: var(--primary); margin-bottom: 5px; }
+    p.subtitle { color: #666; font-size: 0.95rem; }
+
+    /* Progress Bar */
+    .progress-container {
+      background: #eee;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+      position: relative;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    .progress-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 0;
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+      line-height: 20px;
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: #fff;
+      border: 2px solid #eee;
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover { transform: translateY(-3px); border-color: var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    
+    .card.completed { border-color: var(--success); background: #f0fdf4; }
+    .card.completed::after {
+      content: "✓";
+      position: absolute;
+      top: 5px; right: 5px;
+      background: var(--success);
+      color: white;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+    .card-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+    .card-hint { font-size: 0.75rem; color: #777; }
+
+    /* Modal / Camera Overlay */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .modal-img-preview {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 15px 0;
+      background: #eee;
+      display: none;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 5px;
+      width: 100%;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #ccc; color: #333; }
+    .btn-danger { background: #ef5350; color: white; font-size: 0.8rem; margin-top: 10px; background: transparent; border: 1px solid #ef5350; color: #ef5350;}
+
+    /* Kết quả */
+    #nextStep {
+      display: none;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .loader {
+      border: 4px solid #f3f3f3; border-top: 4px solid var(--primary);
+      border-radius: 50%; width: 30px; height: 30px;
+      animation: spin 1s linear infinite; margin: 10px auto; display: none;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    /* --- ADMIN BUTTON STYLE --- */
+    .admin-badge {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      z-index: 10000;
+      font-weight: bold;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid white;
+      cursor: pointer;
+      transition: transform 0.2s;
+      text-decoration: none;
+    }
+
+    .admin-badge:hover {
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    .admin-badge ion-icon {
+      font-size: 1.4rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" style="text-decoration: none; color: var(--primary); font-weight: bold;" data-i18n="btn_home">← Trang chủ</a>
+  
+  <header>
+    <h1 data-i18n="quiz_title_hoconrua">🐢 Spot the Detail: Hồ Con Rùa</h1>
+    <p class="subtitle" data-i18n="quiz_subtitle">Tìm và chụp ít nhất <b>3 hiện vật</b> bên dưới để hoàn thành nhiệm vụ!</p>
+    
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-text" id="progressText" data-i18n="quiz_progress" data-i18n-params='{"count": 0}'>0/3 Hoàn thành</div>
+    </div>
+  </header>
+
+  <div class="grid" id="gridContainer">
+    </div>
+
+  <div id="nextStep">
+    <h3 data-i18n="tour_complete_title">🏆 CHÚC MỪNG HOÀN THÀNH TOUR!</h3>
+    <p data-i18n="tour_complete_text">Bạn đã chinh phục tất cả các địa điểm nổi tiếng.</p>
+    <button class="btn btn-primary" onclick="finishTour()" data-i18n="btn_finish_tour">Về trang chủ 🏠</button>
+  </div>
+</div>
+
+<div class="modal" id="cameraModal">
+  <div class="modal-content">
+    <h3 id="modalTitle">Tên hiện vật</h3>
+    <p id="modalHint" style="font-size: 0.9rem; color: #666;">Gợi ý vị trí...</p>
+    
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
+    
+    <img id="preview" class="modal-img-preview">
+    
+    <div id="actionButtons">
+      <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()" data-i18n="btn_take_photo">📸 Chụp ảnh ngay</button>
+      <button class="btn btn-secondary" onclick="closeModal()" data-i18n="btn_close">Đóng</button>
+      <button class="btn btn-danger" onclick="reportMissing()" data-i18n="btn_report_missing">⚠️ Tôi không tìm thấy (Báo cáo)</button>
+    </div>
+
+    <div id="verifySection" style="display:none;">
+      <div class="loader" id="loader"></div>
+      <p id="statusMsg" data-i18n="quiz_analyzing">Đang phân tích...</p>
+      <button class="btn btn-primary" id="confirmBtn" style="display:none;" onclick="closeModal()" data-i18n="btn_great">Tuyệt vời!</button>
+      <button class="btn btn-secondary" id="retryBtn" style="display:none;" onclick="resetModal()" data-i18n="btn_retry">Thử lại</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Dữ liệu hiện vật cho Hồ Con Rùa (ID khớp với main.py)
+  const details = [
+    { id: 'lotus_tower', icon: '🗼' },
+    { id: 'spiral_bridge', icon: '➰' },
+    { id: 'fountain_pool', icon: '💧' },
+    { id: 'stone_bench', icon: '🪑' },
+    { id: 'top_symbol', icon: '🔝' }
+  ];
+
+  let completedCount = 0;
+  const targetCount = 3;
+  let currentDetailId = null;
+  const completedDetails = new Set();
+
+  const grid = document.getElementById('gridContainer');
+  const progressBar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText');
+  const modal = document.getElementById('cameraModal');
+
+  // Khởi tạo Grid
+  function initGrid() {
+    grid.innerHTML = '';
+    details.forEach(item => {
+      // Dùng i18n để lấy tên và hint theo ID
+      const name = i18n.t('artifact_' + item.id);
+      const hint = i18n.t('artifact_' + item.id + '_hint');
+      
+      const card = document.createElement('div');
+      card.className = `card ${completedDetails.has(item.id) ? 'completed' : ''}`;
+      card.onclick = () => openModal(item, name, hint);
+      card.innerHTML = `
+        <span class="icon">${item.icon}</span>
+        <div class="card-title">${name}</div>
+        <div class="card-hint">${hint}</div>
+      `;
+      grid.appendChild(card);
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const pct = (completedCount / targetCount) * 100;
+    progressBar.style.width = `${Math.min(pct, 100)}%`;
+    progressText.innerText = i18n.t('quiz_progress', {count: completedCount});
+    
+    if (completedCount >= targetCount) {
+      document.getElementById('nextStep').style.display = 'block';
+    }
+  }
+
+  // Modal Logic
+  function openModal(item, name, hint) {
+    if (completedDetails.has(item.id)) return;
+    currentDetailId = item.id;
+    document.getElementById('modalTitle').innerText = name;
+    document.getElementById('modalHint').innerText = hint;
+    
+    resetModal();
+    modal.style.display = 'flex';
+  }
+
+  function closeModal() {
+    modal.style.display = 'none';
+  }
+
+  function resetModal() {
+    document.getElementById('preview').style.display = 'none';
+    document.getElementById('preview').src = '';
+    document.getElementById('actionButtons').style.display = 'block';
+    document.getElementById('verifySection').style.display = 'none';
+    document.getElementById('cameraInput').value = '';
+  }
+
+  function finishTour() {
+      // Logic khi hoàn thành toàn bộ tour
+      alert(i18n.t('tour_complete_alert'));
+      window.location.href = 'index.html';
+  }
+
+  function reportMissing() {
+    const confirmMsg = i18n.t('quiz_report_confirm');
+    const confirmMissing = confirm(confirmMsg);
+    if (confirmMissing) {
+      document.getElementById('cameraInput').setAttribute('data-mode', 'missing');
+      document.getElementById('cameraInput').click();
+    }
+  }
+  
+  document.getElementById('cameraInput').addEventListener('change', function() {
+      const isMissingMode = this.getAttribute('data-mode') === 'missing';
+      this.removeAttribute('data-mode');
+      
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById('preview').src = e.target.result;
+            document.getElementById('preview').style.display = 'block';
+            uploadAndVerify(this.files[0], isMissingMode);
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+  });
+
+  async function uploadAndVerify(file, isReportMissing) {
+    document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('verifySection').style.display = 'block';
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('statusMsg').innerText = isReportMissing ? i18n.t('quiz_checking_scene') : i18n.t('quiz_analyzing');
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('detail_id', currentDetailId);
+    formData.append('report_missing', isReportMissing);
+
+    try {
+      const res = await fetch('/api/verify-detail', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      
+      document.getElementById('loader').style.display = 'none';
+      
+      if (data.success) {
+        if (data.data && data.data.valid) {
+            const correctMsg = i18n.t('quiz_correct');
+            const funFactLabel = i18n.t('quiz_fun_fact');
+            document.getElementById('statusMsg').innerHTML = `${correctMsg}<br><br><b>${funFactLabel}</b><br>${data.data.fact}`;
+            markCompleted();
+        } else if (data.status === 'skipped') {
+            const skippedMsg = i18n.t('quiz_skipped');
+            document.getElementById('statusMsg').innerHTML = `${skippedMsg}<br>${data.message}`;
+            markCompleted();
+        } else {
+            const wrongMsg = i18n.t('quiz_wrong');
+            const reason = data.data ? data.data.reason : data.message;
+            document.getElementById('statusMsg').innerHTML = `${wrongMsg}<br>${reason}`;
+            document.getElementById('retryBtn').style.display = 'inline-block';
+        }
+      } else {
+        document.getElementById('statusMsg').innerText = `❌ ${data.message}`;
+        document.getElementById('retryBtn').style.display = 'inline-block';
+      }
+    } catch (err) {
+      console.error(err);
+      document.getElementById('statusMsg').innerText = i18n.t('quiz_connection_error');
+      document.getElementById('retryBtn').style.display = 'inline-block';
+    }
+  }
+
+  function markCompleted() {
+    if (completedDetails.has(currentDetailId)) {
+        return;
+    }
+    completedDetails.add(currentDetailId);
+    completedCount++;
+    document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('confirmBtn').style.display = 'inline-block';
+    
+    initGrid();
+  }
+
+  window.addEventListener('languageChanged', () => {
+      initGrid();
+  });
+
+  window.addEventListener('load', () => {
+       if(typeof i18n !== 'undefined') initGrid();
+  });
+</script>
+
+<script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+{% if is_admin %}
+  <button onclick="adminSkipAll('index.html')" class="admin-badge">
+    <ion-icon name="rocket-outline"></ion-icon>
+    ADMIN FINISH
+  </button>
+
+  <script>
+    function adminSkipAll(nextUrl) {
+      if(confirm('🚀 ADMIN: Hoàn thành tour và về trang chủ ngay?')) {
+        window.location.href = nextUrl;
+      }
+    }
+  </script>
+{% endif %}
+
+</body>
+</html>
