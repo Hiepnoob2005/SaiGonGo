@@ -966,18 +966,15 @@ def get_next_destination():
             if current_index < 0: current_index = 0
 
         # KIỂM TRA: Còn điểm tiếp theo không?
-        if current_index >= len(plan):
+        if current_index + 1 < len(plan):
             next_key = plan[current_index + 1]
             next_info = LOCATIONS[next_key]
             
-            # Cập nhật tiến độ
+            # Cập nhật tiến độ: Tăng lên 1 bước
             user_record['current_step_index'] = current_index + 1
             save_db(users)
             
-            # 👇 QUAN TRỌNG: Phải có ?from={finished_location_key}
-            # finished_location_key là địa điểm người chơi VỪA HOÀN THÀNH (ví dụ: bao_tang)
-            # next_info['route_file'] là trang lộ trình tiếp theo (ví dụ: ltdinhdoclap.html)
-            
+            # Tạo link đến trang lộ trình tiếp theo
             next_url = f"{next_info['route_file']}?from={finished_location_key}"
             
             return jsonify({
@@ -987,8 +984,12 @@ def get_next_destination():
                 "next_name": next_info['name']
             })
         else:
-            # ĐÃ HẾT -> VỀ TRANG TỔNG KẾT
-            return jsonify({ "success": True, "finished": True, "next_url": "ketthuclt1.html" })
+            # Nếu (current_index + 1) bằng hoặc lớn hơn len(plan) => Đã đi hết
+            return jsonify({ 
+                "success": True, 
+                "finished": True, 
+                "next_url": "ketthuclt1.html" 
+            })
             
     except Exception as e:
         print(f"Lỗi tour: {e}")
