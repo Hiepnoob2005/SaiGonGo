@@ -247,12 +247,30 @@
             const prefElement = document.getElementById('userPref');
             const preference = prefElement ? prefElement.value : "";    
             
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    if (e.target.checked) {
+                        // Nếu tick vào -> Thêm vào cuối mảng
+                        selectedOrder.push(value);
+                    } else {
+                        // Nếu bỏ tick -> Xóa khỏi mảng
+                        selectedOrder = selectedOrder.filter(item => item !== value);
+                    }
+                });
+            });
+        };
+
+        async function createTour() {
+            const preference = document.getElementById('userPref') ? document.getElementById('userPref').value : "";
             const btn = document.getElementById('createBtn');
             const loading = document.getElementById('loadingOverlay');
 
-            // 3. Kiểm tra dựa trên mảng selectedOrder
-            if (selectedOrder.length < 2) {
-                alert("⚠️ Vui lòng chọn ít nhất 2 địa điểm theo thứ tự bạn muốn đi!");
+            // 2. Validate
+            if (selectedKeys.length < 2) {
+                // Sửa nhẹ chỗ này để dùng i18n alert, nếu không có i18n thì dùng text cũ
+                const msg = typeof i18n !== 'undefined' ? i18n.t('alert_select_two') : "⚠️ Vui lòng chọn ít nhất 2 địa điểm để tạo thành một lộ trình!";
+                alert(msg);
                 return;
             }
 
@@ -273,7 +291,10 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    loading.textContent = "✅ Đã xong! Đang chuyển hướng...";
+                    // Thành công -> Chuyển hướng đến trang đầu tiên của lộ trình
+                    // Sửa text loading bằng i18n
+                    const successMsg = typeof i18n !== 'undefined' ? i18n.t('success_redirect') : "✅ Đã xong! Đang chuyển hướng...";
+                    loading.textContent = successMsg;
                     setTimeout(() => {
                         window.location.href = "batdau_cus.html";
                     }, 1000);

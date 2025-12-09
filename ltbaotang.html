@@ -382,38 +382,48 @@
 
     <script>
         document.getElementById("skipBtn").addEventListener("click", async () => {
-            // Tên key của trang hiện tại
-            const CURRENT_KEY = "bao_tang_chung_tich_chien_tranh";
-            // ⚠️ Mỗi trang đổi tên này cho đúng!
+        // Tên key của trang hiện tại
+        const CURRENT_KEY = "bao_tang_chung_tich";
 
-            try {
-                const res = await fetch("/api/get-next-destination", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ current_location: CURRENT_KEY }),
-                });
+        // --- 1. KIỂM TRA CHẾ ĐỘ ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const isRoute1 = urlParams.get('mode') === 'route1';
 
-                const data = await res.json();
+        // --- 2. NẾU LÀ ROUTE 1 (TĨNH) ---
+        if (isRoute1) {
+            // Lộ trình 1: Nhà Thờ -> Bưu Điện
+            // Chuyển thẳng đến trang lộ trình tiếp theo + kèm tham số mode
+            window.location.href = 'ltbaotang.html?mode=route1';
+            return;
+        }
 
-                if (!data.success) {
-                    alert("Không thể chuyển tiếp: " + data.message);
-                    return;
-                }
+        // --- 3. NẾU LÀ TỰ CHỌN (ĐỘNG - API) ---
+        try {
+            const res = await fetch("/api/get-next-destination", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ current_location: CURRENT_KEY }),
+            });
 
-                // Nếu đã hết lộ trình
-                if (data.finished) {
-                    window.location.href = data.next_url;
-                    return;
-                }
+            const data = await res.json();
 
-                // Ngược lại → đến trang lộ trình tiếp theo
+            if (!data.success) {
+                alert("Không thể chuyển tiếp: " + data.message);
+                return;
+            }
+
+            if (data.finished) {
                 window.location.href = data.next_url;
+                return;
             }
-            catch (err) {
-                console.error(err);
-                alert("Lỗi kết nối server.");
-            }
-        });
+
+            window.location.href = data.next_url;
+        }
+        catch (err) {
+            console.error(err);
+            alert("Lỗi kết nối server.");
+        }
+    });
     </script>
 
     </script>
