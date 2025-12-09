@@ -329,7 +329,17 @@
     // 5. Chuyển trang
     function goToNextPage() {
         if (NEXT_URL) {
-            window.location.href = NEXT_URL;
+            // Lấy toàn bộ tham số hiện tại (ví dụ: ?mode=route1)
+            const currentParams = window.location.search;
+            
+            // Nối vào link tiếp theo
+            // Kiểm tra xem NEXT_URL đã có dấu ? chưa để nối cho đúng
+            const separator = NEXT_URL.includes('?') ? '&' : '?';
+            
+            // Nếu currentParams rỗng thì không cần nối
+            const finalUrl = currentParams ? `${NEXT_URL}${separator}${currentParams.substring(1)}` : NEXT_URL;
+            
+            window.location.href = finalUrl;
         }
     }
 

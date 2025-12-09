@@ -99,10 +99,25 @@
 
           <div id="result"></div>
 
-          <button id="nextDestinationBtn" onclick="window.location.href='quiz_baotang.html'" data-i18n="btn_continue">
+          <button id="nextDestinationBtn" onclick="goToQuiz()" data-i18n="btn_continue">
             Tiếp tục →
           </button>
 
+<script>
+  function goToQuiz() {
+    // Kiểm tra xem trang hiện tại có đang ở chế độ Route 1 không
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+
+    if (mode === 'route1') {
+      // Nếu có, truyền tiếp sang trang Quiz
+      window.location.href = 'quiz_baotang.html?mode=route1';
+    } else {
+      // Nếu không, đi bình thường
+      window.location.href = 'quiz_baotang.html';
+    }
+  }
+</script> 
           <section id="museum-info" style="
   display: none;
   margin: 60px auto;
@@ -353,6 +368,18 @@
           // ---------------------------------------------
 
           nextDestinationBtn.style.display = "block";
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get('mode') === 'route1') {
+              // Nếu là Route 1, thêm tham số vào link đến Quiz
+              nextDestinationBtn.onclick = function() {
+                  window.location.href = 'quiz_baotang.html?mode=route1';
+              };
+          } else {
+              // Nếu không, giữ nguyên (hoặc set lại về mặc định)
+              nextDestinationBtn.onclick = function() {
+                  window.location.href = 'quiz_baotang.html';
+              };
+          }
           document.getElementById("museum-info").style.display = "block";
 
           // (Code lưu ảnh cũ của bạn giữ nguyên ở đây nếu cần...)
@@ -400,12 +427,22 @@
     ADMIN SKIP
   </button>
 
-  <script>
-    // Sửa hàm nhận tham số nextUrl
+<script>
     function adminSkipAll(nextUrl) {
-      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
-        // Chuyển hướng ngay lập tức
-        window.location.href = nextUrl;
+      if(confirm('🚀 ADMIN: Bỏ qua xác thực và vào thẳng Quiz?')) {
+        // 2. Kiểm tra xem có đang đi Lộ trình 1 không
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+
+        if (mode === 'route1') {
+            // Nếu có mode, nối thêm vào link tiếp theo
+            // Kiểm tra xem nextUrl đã có dấu ? chưa
+            const separator = nextUrl.includes('?') ? '&' : '?';
+            window.location.href = `quiz_baotang.html?mode=route1`;
+        } else {
+            // Nếu không, đi bình thường
+            window.location.href = nextUrl;
+        }
       }
     }
   </script>
@@ -417,23 +454,22 @@
 
 <script>
   // --- LOGIC GIỮ NGUYÊN LỘ TRÌNH KHI BẤM QUAY LẠI ---
-  window.addEventListener('load', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const fromKey = urlParams.get('from'); // Lấy điểm xuất phát được truyền tới
-      
-      const backBtn = document.querySelector('a.btn-outline'); // Nút mũi tên "Quay lại"
-      
-      if (backBtn && fromKey) {
-          // Lấy href hiện tại (ví dụ: ltdinhdoclap.html)
-          const currentHref = backBtn.getAttribute('href');
-          
-          // Nếu href chưa có dấu ? thì thêm ?, nếu có rồi thì thêm &
-          const separator = currentHref.includes('?') ? '&' : '?';
-          
-          // Gắn thêm from vào để trang Lộ trình biết đường vẽ lại map cũ
-          backBtn.href = `${currentHref}${separator}from=${fromKey}`;
-      }
-  });
+window.addEventListener('load', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const isRoute1 = urlParams.get('mode') === 'route1';
+        
+        // 1. Nút Tiếp tục (Sang Quiz)
+        const nextBtn = document.getElementById('nextDestinationBtn');
+        if(nextBtn && isRoute1) {
+             nextBtn.setAttribute('onclick', "window.location.href='quiz_baotang.html?mode=route1'");
+        }
+
+        // 2. Nút Quay lại (Về Lộ trình)
+        const backBtn = document.querySelector('a.btn-outline');
+        if (backBtn && isRoute1) {
+            backBtn.href = "ltbaotang.html?mode=route1";
+        }
+    });
 </script>
 
 </body>

@@ -4,145 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="lt_post_title">Lộ trình đến Bưu điện Thành Phố</title>
+    <title data-i18n="lt_post_title">Lộ trình đến Bưu điện Thành phố</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
-    <style>
-        /* CSS Tùy chỉnh */
-        body {
-            font-family: "Times New Roman", Times, serif;
-            background-color: #f8f8f8;
-            text-align: center;
-            padding-top: 50px;
-        }
-
-        .main-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .instruction-box {
-            margin: 30px auto;
-            padding: 30px 35px;
-            border: 3px solid #e63946;
-            background: linear-gradient(180deg, #fff6f6, #ffeaea);
-            border-radius: 16px;
-            text-align: left;
-            white-space: pre-wrap;
-            font-size: 1.5rem;
-            line-height: 1.6;
-            font-weight: 600;
-            color: #222;
-            box-shadow: 0 6px 18px rgba(230, 57, 70, 0.2);
-            min-height: 130px;
-            max-width: 800px;
-            transition: all 0.3s ease;
-        }
-
-        .instruction-box.show {
-            transform: scale(1.02);
-            box-shadow: 0 8px 24px rgba(230, 57, 70, 0.35);
-        }
-
-        /* Các nút */
-        .btn-action {
-            background-color: #d62828;
-            color: #fff;
-            padding: 18px 50px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            transition: all 0.25s ease;
-            margin-top: 25px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 14px rgba(214, 40, 40, 0.4);
-        }
-
-        .btn-action:hover {
-            background-color: #e63946;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 18px rgba(230, 57, 70, 0.5);
-        }
-
-        .btn-map {
-            background-color: #007bff;
-            padding: 12px 25px;
-            font-size: 1rem;
-        }
-
-        .btn-map:hover {
-            background-color: #0056b3;
-        }
-
-        .challenge-section {
-            margin-top: 30px;
-            padding: 20px;
-            border-top: 1px solid #ddd;
-        }
-
-        /* CSS cho toggle */
-        .toggle-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            color: #555;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 45px;
-            height: 25px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 25px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background-color: #2196F3;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(18px);
-        }
-    </style>
+    <link rel="stylesheet" href="./assets/css/lotrinh_SAME_style.css" />
 </head>
 
 <body id="top">
@@ -176,6 +40,8 @@
           transition: all 0.3s ease;" data-i18n="lt_locating">
             📍 Đang xác định vị trí...
         </div>
+        <input type="text" id="locationName" value="Bưu điện Thành phố" readonly
+            style="margin-bottom: 20px; display: none;" />
         <a href="quiz_nhathoducba.html" class="btn btn-outline" style="margin: 10px 0 20px 0;" data-i18n="btn_back">←
             Trở về</a>
         <input type="text" id="locationName" value="Bưu điện Thành phố" readonly
@@ -195,369 +61,448 @@
 
         <button id="getDirectionsBtn" class="btn-action" data-i18n="btn_request_route">✅ Yêu cầu Lộ trình GPS</button>
 
-        <button id="altRouteBtn" class="btn-action" style="background-color: #ff9800; display: none; margin-top: 10px;"
-            data-i18n="btn_alt_route">
-            ⚠️ Nếu đường bị chặn. Tìm lối khác
-        </button>
+        <button id="altRouteBtn" class="btn-action
+<body id=" top">
+            <div id="score-display" class="score-badge">
+                💎 <span id="user-points">Loading...</span>
+            </div>
+            <div id="point-anim" class="point-animation"></div>
+            <header class="header" data-header>
+                <div class="container">
+                    <a href="index.html">
+                        <h1 class="logo">SaiGonGo</h1>
+                    </a>
+                </div>
+            </header>
 
-        <div id="loadingStatus" style="margin-top: 15px; color: #ff6600; font-weight: 600;"></div>
+            <main class="main-container">
+                <h2 data-i18n="lt_post_title">Điểm đến Tiếp theo: Bưu điện Thành Phố</h2>
+                <div id="distanceProgress" style="
+          font-size: 1.6rem;
+          font-weight: 800;
+          color: #0056b3;
+          background-color: #e8f2ff;
+          border: 2px solid #bcd8ff;
+          border-radius: 15px;
+          padding: 20px 30px;
+          text-align: center;
+          margin: 25px auto;
+          width: 80%;
+          max-width: 500px;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+          transition: all 0.3s ease;" data-i18n="lt_locating">
+                    📍 Đang xác định vị trí...
+                </div>
+                <a href="quiz_nhathoducba.html" class="btn btn-outline" style="margin: 10px 0 20px 0;"
+                    data-i18n="btn_back">←
+                    Trở về</a>
+                <input type="text" id="locationName" value="Bưu điện Thành phố" readonly
+                    style="margin-bottom: 20px; display: none;" />
 
-        <div id="directionsBox" class="instruction-box" data-i18n="lt_route_placeholder">
-            Lộ trình sẽ xuất hiện ở đây sau khi bạn nhấn nút Yêu cầu Lộ trình.
-        </div>
+                {% if is_admin %}
 
-        <a id="mapLink" class="btn-action btn-map" target="_blank" style="display: none; text-decoration: none;">
-            <button onclick="openGoogleMap()" data-i18n="btn_open_map">🗺️ Mở Map Trợ giúp</button>
-        </a>
+                <div class="toggle-container">
+                    <span data-i18n="lt_use_real_location">Sử dụng vị trí thực tế</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="dynamicLocationToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span id="locationModeLabel" data-i18n="lt_test_mode_post">Chế độ Thử nghiệm (Bưu điện)</span>
+                </div>
+                {% endif %}
 
-        <div style="margin-top: 25px;">
-            <button id="skipBtn" class="btn-action" style="background-color:#f92929">
-                Bỏ qua địa điểm này
-            </button>
-        </div>
+                <button id="getDirectionsBtn" class="btn-action" data-i18n="btn_request_route">✅ Yêu cầu Lộ trình
+                    GPS</button>
 
-        <section class="challenge-section" id="photoChallenge" style="display: none;">
-            <a href="buudientp.html" class="btn-action" style="text-decoration: none; background-color: green;"
-                data-i18n="quiz_continue_post">
-                Hoàn thành thử thách →
-            </a>
-        </section>
-    </main>
+                <button id="altRouteBtn" class="btn-action"
+                    style="background-color: #ff9800; display: none; margin-top: 10px;" data-i18n="btn_alt_route">
+                    ⚠️ Nếu đường bị chặn. Tìm lối khác
+                </button>
 
-    <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
-    </footer>
+                <div id="loadingStatus" style="margin-top: 15px; color: #ff6600; font-weight: 600;"></div>
 
-    <script>
-        // --- 1. LẤY THÔNG TIN TỪ URL ---
-        const urlParams = new URLSearchParams(window.location.search);
-        // fromKey chính là địa điểm trước đó (Ví dụ: 'bao_tang_chien_tich')
-        const fromKey = urlParams.get('from');
+                <div id="directionsBox" class="instruction-box" data-i18n="lt_route_placeholder">
+                    Lộ trình sẽ xuất hiện ở đây sau khi bạn nhấn nút Yêu cầu Lộ trình.
+                </div>
 
-        // --- 2. CẤU HÌNH ĐỊA ĐIỂM ---
-        // Nếu có fromKey thì dùng nó làm điểm bắt đầu, nếu không thì dùng mặc định
-        const START_KEY = fromKey ? fromKey : "nha_tho_duc_ba";
-        const END_KEY = "buu_dien_thanh_pho"; // ⚠️ Đổi cái này tương ứng với từng file (Vd: nha_tho_duc_ba,...)
+                <button id="btnOpenMap" class="btn-action btn-map" onclick="openGoogleMap()"
+                    style="display: none; background-color: #2196F3;">
+                    🗺️ Mở Map Trợ giúp
+                </button>
+                <div style="margin-top: 25px;">
+                    <button id="skipBtn" class="btn-action" style="background-color:#f92929">
+                        Bỏ qua địa điểm này
+                    </button>
+                </div>
 
-        // --- 3. [QUAN TRỌNG] CẬP NHẬT LINK NÚT "HOÀN THÀNH" & "QUAY LẠI" ---
-        window.addEventListener('load', () => {
-            // A. Cập nhật nút Hoàn thành thử thách (Nút xanh lá)
-            // Để nó truyền tiếp ?from=... sang trang địa điểm
-            const challengeSection = document.getElementById('photoChallenge');
-            const nextBtn = challengeSection.querySelector('a');
+                <section class="challenge-section" id="photoChallenge" style="display: none;">
+                    <a href="buudientp.html" class="btn-action" style="text-decoration: none; background-color: green;"
+                        data-i18n="quiz_continue_post">
+                        Hoàn thành thử thách →
+                    </a>
+                </section>
+            </main>
 
-            if (nextBtn && fromKey) {
-                // Lấy href gốc (ví dụ: dinhdoclap.html) và thêm ?from=...
-                const originalHref = nextBtn.getAttribute('href');
-                nextBtn.href = `${originalHref}?from=${fromKey}`;
-            }
+            <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+            </footer>
 
-            // B. Cập nhật nút Quay lại (Nút mũi tên góc trái)
-            // Để nó quay về đúng trang Quiz của điểm trước đó
-            const backBtn = document.querySelector('a.btn-outline');
-            if (backBtn && fromKey) {
-                // Giả sử tên file quiz là quiz_{key}.html
-                backBtn.href = `quiz_${fromKey}.html`;
-            }
-        });
+            <script>
+                // 1. Khai báo urlParams TRƯỚC TIÊN
+                const urlParams = new URLSearchParams(window.location.search);
+                let dynamicMapUrl = "";
+                // 2. Lấy các thông tin cần thiết
+                const fromKey = urlParams.get('from');
+                const isRoute1 = urlParams.get('mode') === 'route1';
 
-        const getDirectionsBtn = document.getElementById("getDirectionsBtn");
-        const altRouteBtn = document.getElementById("altRouteBtn");
-        const directionsBox = document.getElementById("directionsBox");
-        const loadingStatus = document.getElementById("loadingStatus");
-        const mapLink = document.getElementById("mapLink");
-        const photoChallenge = document.getElementById("photoChallenge");
-        const locationToggle = document.getElementById("dynamicLocationToggle");
-        const locationModeLabel = document.getElementById("locationModeLabel");
+                // 3. XÁC ĐỊNH ĐIỂM BẮT ĐẦU (START_KEY)
+                let START_KEY;
 
-        let useDynamicLocation = false;
+                if (isRoute1) {
+                    // 👉 TRƯỜNG HỢP 1: LỘ TRÌNH 1 (CỐ ĐỊNH)
+                    // Trong lộ trình 1, trước Dinh Độc Lập LUÔN LUÔN là Bảo Tàng.
+                    // Nên ta gán cứng luôn, không cần quan tâm 'from'.
+                    START_KEY = "dinh_doc_lap";
+                } else {
+                    // 👉 TRƯỜNG HỢP 2: TỰ TẠO LỘ TRÌNH (ĐỘNG)
+                    // Phải lấy từ biến 'from' trên URL.
+                    if (fromKey) {
+                        START_KEY = fromKey;
+                    } else {
+                        // Nếu không có 'from' (do lỗi truyền tham số), ta mới dùng tạm mặc định
+                        console.warn("Thiếu tham số 'from', dùng mặc định.");
+                        START_KEY = "dinh_doc_lap";
+                    }
+                }
+                const END_KEY = "buu_dien_thanh_pho";
 
-        // Init Toggle
-        locationToggle.checked = !useDynamicLocation;
-
-        function updateLocationLabel() {
-            if (locationToggle.checked) {
-                locationModeLabel.textContent = i18n.t('lt_test_mode_post');
-            } else {
-                locationModeLabel.textContent = i18n.t('lt_use_real_location');
-            }
-        }
-
-        locationToggle.addEventListener('change', () => {
-            useDynamicLocation = !locationToggle.checked;
-            updateLocationLabel();
-        });
+                window.addEventListener('load', () => {
+                    const challengeBtn = document.querySelector('#photoChallenge a');
+                    if (challengeBtn && isRoute1) {
+                        // Truyền tiếp mode=route1
+                        challengeBtn.href = `buudientp.html?mode=route1`;
+                    } else if (challengeBtn && urlParams.get('from')) {
+                        // Logic động cũ
+                        challengeBtn.href = `buudientp.html?from=${urlParams.get('from')}`;
+                    }
+                });
 
 
-        // --- HÀM 1: XỬ LÝ NÚT BẤM & LẤY VỊ TRÍ ---
-        function getAndSendLocation(isAlternative = false) {
-            // 1. Cập nhật giao diện (Loading)
-            if (isAlternative) {
-                loadingStatus.textContent = i18n.t('status_processing');
-                altRouteBtn.disabled = true;
-            } else {
-                loadingStatus.textContent = i18n.t('status_processing');
-                getDirectionsBtn.disabled = true;
-            }
+                const getDirectionsBtn = document.getElementById("getDirectionsBtn");
+                const altRouteBtn = document.getElementById("altRouteBtn");
+                const directionsBox = document.getElementById("directionsBox");
+                const loadingStatus = document.getElementById("loadingStatus");
+                const photoChallenge = document.getElementById("photoChallenge");
+                const locationToggle = document.getElementById("dynamicLocationToggle");
+                const locationModeLabel = document.getElementById("locationModeLabel");
 
-            // 2. Kiểm tra chế độ (Tĩnh hay Động)
-            if (!useDynamicLocation) {
-                // Chế độ tĩnh: Gửi null để server tự lấy tọa độ mẫu
-                fetchDirectionsFromServer(null, null, isAlternative);
-                return;
-            }
+                let useDynamicLocation = false;
 
-            // 3. Chế độ Động (GPS thực tế)
-            if ("geolocation" in navigator) {
-                if (!isAlternative) loadingStatus.textContent = i18n.t('lt_getting_gps');
+                // Init Toggle
+                locationToggle.checked = !useDynamicLocation;
 
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        fetchDirectionsFromServer(lat, lon, isAlternative);
-                    },
-                    (error) => {
-                        console.error(error);
-                        loadingStatus.textContent = i18n.t('status_gps_error');
+                function updateLocationLabel() {
+                    if (locationToggle.checked) {
+                        locationModeLabel.textContent = i18n.t('lt_test_mode_post');
+                    } else {
+                        locationModeLabel.textContent = i18n.t('lt_use_real_location');
+                    }
+                }
+
+                locationToggle.addEventListener('change', () => {
+                    useDynamicLocation = !locationToggle.checked;
+                    updateLocationLabel();
+                });
+
+
+                // --- HÀM 1: XỬ LÝ NÚT BẤM & LẤY VỊ TRÍ ---
+                function getAndSendLocation(isAlternative = false) {
+                    // 1. Cập nhật giao diện (Loading)
+                    if (isAlternative) {
+                        loadingStatus.textContent = i18n.t('status_processing');
+                        altRouteBtn.disabled = true;
+                    } else {
+                        loadingStatus.textContent = i18n.t('status_processing');
+                        getDirectionsBtn.disabled = true;
+                    }
+
+                    // 2. Kiểm tra chế độ (Tĩnh hay Động)
+                    if (!useDynamicLocation) {
+                        // Chế độ tĩnh: Gửi null để server tự lấy tọa độ mẫu
+                        fetchDirectionsFromServer(null, null, isAlternative);
+                        return;
+                    }
+
+                    // 3. Chế độ Động (GPS thực tế)
+                    if ("geolocation" in navigator) {
+                        if (!isAlternative) loadingStatus.textContent = i18n.t('lt_getting_gps');
+
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const lat = position.coords.latitude;
+                                const lon = position.coords.longitude;
+                                fetchDirectionsFromServer(lat, lon, isAlternative);
+                            },
+                            (error) => {
+                                console.error(error);
+                                loadingStatus.textContent = i18n.t('status_gps_error');
+                                getDirectionsBtn.disabled = false;
+                                altRouteBtn.disabled = false;
+                            },
+                            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                        );
+                    } else {
+                        directionsBox.textContent = i18n.t('start_browser_error');
                         getDirectionsBtn.disabled = false;
                         altRouteBtn.disabled = false;
-                    },
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-                );
-            } else {
-                directionsBox.textContent = i18n.t('start_browser_error');
-                getDirectionsBtn.disabled = false;
-                altRouteBtn.disabled = false;
-            }
-        }
-
-        // --- HÀM 2: GỬI API LÊN SERVER ---
-        async function fetchDirectionsFromServer(lat, lon, isAlternative) {
-            if (!isAlternative) loadingStatus.textContent = i18n.t('lt_creating_route');
-
-            try {
-                const res = await fetch("/get-dynamic-directions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        current_lat: lat,
-                        current_lon: lon,
-                        start: START_KEY,
-                        end: END_KEY,
-                        alternative: isAlternative,
-                    }),
-                });
-
-                const data = await res.json();
-                // Tên địa điểm đích cho thông báo
-                // Có thể cần thêm key dest_post_office vào translations
-                const destName = i18n.t('dest_post_office');
-
-                if (data.success) {
-                    directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>');
-                    directionsBox.classList.add("show");
-
-                    if (isAlternative) {
-                        loadingStatus.textContent = i18n.t('lt_alt_route_found');
-                    } else {
-                        loadingStatus.textContent = i18n.t('lt_route_ready', { destination: destName, distance: data.total_distance_km });
-                        altRouteBtn.style.display = "inline-block";
                     }
-
-                    mapLink.href = data.map_url;
-                    mapLink.style.display = 'inline-block';
-                    photoChallenge.style.display = 'block';
-
-                } else {
-                    directionsBox.innerHTML = data.route_text;
-                    loadingStatus.textContent = i18n.t('lt_route_error') + data.message;
-                    mapLink.style.display = 'inline-block';
-                    mapLink.href = `http://googleusercontent.com/maps.google.com/4{encodeURIComponent(destName)}`;
                 }
 
-            } catch (error) {
-                console.error("Lỗi Fetch:", error);
-                directionsBox.textContent = i18n.t('status_connection_error');
-                loadingStatus.textContent = i18n.t('status_error');
-            } finally {
-                getDirectionsBtn.disabled = false;
-                altRouteBtn.disabled = false;
-            }
-        }
+                // --- HÀM 2: GỬI API LÊN SERVER ---
+                async function fetchDirectionsFromServer(lat, lon, isAlternative) {
+                    if (!isAlternative) loadingStatus.textContent = i18n.t('lt_creating_route');
 
-        getDirectionsBtn.addEventListener("click", () => getAndSendLocation(false));
-        altRouteBtn.addEventListener("click", () => getAndSendLocation(true));
+                    try {
+                        const res = await fetch("/get-dynamic-directions", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                current_lat: lat,
+                                current_lon: lon,
+                                start: START_KEY,
+                                end: END_KEY,
+                                alternative: isAlternative,
+                            }),
+                        });
 
-    </script>
+                        const data = await res.json();
+                        // Tên địa điểm đích cho thông báo
+                        // Có thể cần thêm key dest_post_office vào translations
+                        const destName = i18n.t('dest_post_office');
 
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script>
-        // --- 1. HÀM LOAD ĐIỂM KHI VÀO TRANG ---
-        async function loadUserScore() {
-            try {
-                const res = await fetch('/api/user');
-                const data = await res.json();
-                if (data.logged_in) {
-                    document.getElementById('user-points').textContent = data.points;
-                } else {
-                    document.getElementById('score-display').style.display = 'none';
-                }
-            } catch (e) { console.error(e); }
-        }
-        window.addEventListener('load', loadUserScore);
+                        if (data.success) {
+                            directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>');
+                            directionsBox.classList.add("show");
+                            dynamicMapUrl = data.map_url;
+                            document.getElementById("btnOpenMap").style.display = 'inline-block';
 
-        async function openGoogleMap() {
-            const start = "Nhà thờ Đức Bà, 1 Công xã Paris, Quận 1, TP.HCM";
-            const destination = "Bưu điện TP, 2 Công xã Paris, Quận 1, TP.HCM";
-            const url = `http://googleusercontent.com/maps.google.com/5{encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+                            if (isAlternative) {
+                                loadingStatus.textContent = i18n.t('lt_alt_route_found');
+                            } else {
+                                loadingStatus.textContent = i18n.t('lt_route_ready', { destination: destName, distance: data.total_distance_km });
+                                altRouteBtn.style.display = "inline-block";
+                            }
 
-            try {
-                const res = await fetch('/api/update-score', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        points: -2,
-                        routeId: 'route1'
-                    })
-                });
-                const data = await res.json();
+                            photoChallenge.style.display = 'block';
 
-                if (data.success) {
-                    document.getElementById('user-points').textContent = data.new_points;
-                    const anim = document.getElementById('point-anim');
-                    anim.textContent = i18n.t('score_minus_map');
-                    anim.className = "point-animation anim-minus";
-                    setTimeout(() => { anim.className = "point-animation"; }, 2000);
-                } else {
-                    console.log(data.message);
-                }
-            } catch (e) {
-                console.error("Lỗi cập nhật điểm:", e);
-            } finally {
-                window.open(url, "_blank");
-            }
-        }
-    </script>
-    <script>
-        // 🎯 Tọa độ của điểm đến (ví dụ: Bưu điện Thành Phố)
-        const DEST_LAT = 10.779902;
-        const DEST_LON = 106.699156;
-
-        const distanceBox = document.getElementById("distanceProgress");
-
-        function getDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371e3;
-            const toRad = deg => deg * Math.PI / 180;
-            const φ1 = toRad(lat1);
-            const φ2 = toRad(lat2);
-            const Δφ = toRad(lat2 - lat1);
-            const Δλ = toRad(lon2 - lon1);
-            const a = Math.sin(Δφ / 2) ** 2 +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) ** 2;
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-        }
-
-        function updateDistance() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const userLat = position.coords.latitude;
-                        const userLon = position.coords.longitude;
-                        const distance = getDistance(userLat, userLon, DEST_LAT, DEST_LON);
-                        const km = (distance / 1000).toFixed(2);
-
-                        if (distance < 50) {
-                            distanceBox.textContent = i18n.t('lt_arrived');
-                            distanceBox.style.backgroundColor = "#e8ffe8";
-                            distanceBox.style.color = "#0a8a0a";
-                            distanceBox.style.border = "2px solid #9be59b";
                         } else {
-                            distanceBox.textContent = i18n.t('lt_distance', { distance: km });
-                            distanceBox.style.backgroundColor = "#e8f2ff";
-                            distanceBox.style.color = "#0056b3";
-                            distanceBox.style.border = "2px solid #bcd8ff";
+                            directionsBox.innerHTML = data.route_text;
+                            loadingStatus.textContent = i18n.t('lt_route_error') + data.message;
+    
                         }
-                    },
-                    (error) => {
-                        distanceBox.textContent = i18n.t('lt_gps_error');
-                        distanceBox.style.backgroundColor = "#fff4e5";
-                        distanceBox.style.color = "#cc6600";
-                        distanceBox.style.border = "2px solid #f3c38d";
+
+                    } catch (error) {
+                        console.error("Lỗi Fetch:", error);
+                        directionsBox.textContent = i18n.t('status_connection_error');
+                        loadingStatus.textContent = i18n.t('status_error');
+                    } finally {
+                        getDirectionsBtn.disabled = false;
+                        altRouteBtn.disabled = false;
                     }
-                );
-            } else {
-                distanceBox.textContent = i18n.t('lt_browser_error');
-            }
-        }
+                }
 
-        updateDistance();
-        setInterval(updateDistance, 120000);
-    </script>
+                getDirectionsBtn.addEventListener("click", () => getAndSendLocation(false));
+                altRouteBtn.addEventListener("click", () => getAndSendLocation(true));
 
-    <script src="./assets/js/translations.js"></script>
-    <script src="./assets/js/i18n.js"></script>
+            </script>
 
-    <script>
-        document.getElementById("skipBtn").addEventListener("click", async () => {
-            // Tên key của trang hiện tại
-            const CURRENT_KEY = "buu_dien_thanh_pho";
-            // ⚠️ Mỗi trang đổi tên này cho đúng!
+            <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+            <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+            <script>
+                // --- 1. HÀM LOAD ĐIỂM KHI VÀO TRANG ---
+                async function loadUserScore() {
+                    try {
+                        const res = await fetch('/api/user');
+                        const data = await res.json();
+                        if (data.logged_in) {
+                            document.getElementById('user-points').textContent = data.points;
+                        } else {
+                            document.getElementById('score-display').style.display = 'none';
+                        }
+                    } catch (e) { console.error(e); }
+                }
+                window.addEventListener('load', loadUserScore);
 
-            try {
-                const res = await fetch("/api/get-next-destination", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ current_location: CURRENT_KEY }),
+                async function openGoogleMap() {
+                    // Kiểm tra xem đã có link chưa
+                    if (!dynamicMapUrl) {
+                        alert("Vui lòng bấm 'Yêu cầu Lộ trình' để lấy đường đi trước!");
+                        return;
+                    }
+
+                    // Gọi API trừ điểm (-2 điểm)
+                    try {
+                        // Lấy ID lộ trình từ URL (để biết đang chơi route nào)
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const isRoute1 = urlParams.get('mode') === 'route1';
+                        const routeId = isRoute1 ? 'route1' : 'custom'; // Hoặc logic ID của bạn
+
+                        const res = await fetch('/api/update-score', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                points: -2,
+                                routeId: routeId
+                            })
+                        });
+                        const data = await res.json();
+
+                        if (data.success) {
+                            // Cập nhật điểm trên màn hình
+                            document.getElementById('user-points').textContent = data.new_points;
+
+                            // Hiệu ứng trừ điểm
+                            const anim = document.getElementById('point-anim');
+                            anim.textContent = "-2 Điểm (Xem Map)";
+                            anim.className = "point-animation anim-minus";
+                            setTimeout(() => { anim.className = "point-animation"; }, 2000);
+                        }
+                    } catch (e) {
+                        console.error("Lỗi cập nhật điểm:", e);
+                    } finally {
+                        // 🔥 QUAN TRỌNG: Mở link động lấy từ Server
+                        window.open(dynamicMapUrl, "_blank");
+                    }
+                }
+            </script>
+            <script>
+                // 🎯 Tọa độ của điểm đến (ví dụ: Bưu điện Thành Phố)
+                const DEST_LAT = 10.779902;
+                const DEST_LON = 106.699156;
+
+                const distanceBox = document.getElementById("distanceProgress");
+
+                function getDistance(lat1, lon1, lat2, lon2) {
+                    const R = 6371e3;
+                    const toRad = deg => deg * Math.PI / 180;
+                    const φ1 = toRad(lat1);
+                    const φ2 = toRad(lat2);
+                    const Δφ = toRad(lat2 - lat1);
+                    const Δλ = toRad(lon2 - lon1);
+                    const a = Math.sin(Δφ / 2) ** 2 +
+                        Math.cos(φ1) * Math.cos(φ2) *
+                        Math.sin(Δλ / 2) ** 2;
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    return R * c;
+                }
+
+                function updateDistance() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const userLat = position.coords.latitude;
+                                const userLon = position.coords.longitude;
+                                const distance = getDistance(userLat, userLon, DEST_LAT, DEST_LON);
+                                const km = (distance / 1000).toFixed(2);
+
+                                if (distance < 50) {
+                                    distanceBox.textContent = i18n.t('lt_arrived');
+                                    distanceBox.style.backgroundColor = "#e8ffe8";
+                                    distanceBox.style.color = "#0a8a0a";
+                                    distanceBox.style.border = "2px solid #9be59b";
+                                } else {
+                                    distanceBox.textContent = i18n.t('lt_distance', { distance: km });
+                                    distanceBox.style.backgroundColor = "#e8f2ff";
+                                    distanceBox.style.color = "#0056b3";
+                                    distanceBox.style.border = "2px solid #bcd8ff";
+                                }
+                            },
+                            (error) => {
+                                distanceBox.textContent = i18n.t('lt_gps_error');
+                                distanceBox.style.backgroundColor = "#fff4e5";
+                                distanceBox.style.color = "#cc6600";
+                                distanceBox.style.border = "2px solid #f3c38d";
+                            }
+                        );
+                    } else {
+                        distanceBox.textContent = i18n.t('lt_browser_error');
+                    }
+                }
+
+                updateDistance();
+                setInterval(updateDistance, 120000);
+            </script>
+
+            <script src="./assets/js/translations.js"></script>
+            <script src="./assets/js/i18n.js"></script>
+
+            <script>
+                document.getElementById("skipBtn").addEventListener("click", async () => {
+                    // Tên key của trang hiện tại
+                    const CURRENT_KEY = "buu_dien_thanh_pho";
+                    // ⚠️ Mỗi trang đổi tên này cho đúng!
+
+                    try {
+                        const res = await fetch("/api/get-next-destination", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ current_location: CURRENT_KEY }),
+                        });
+
+                        const data = await res.json();
+
+                        if (!data.success) {
+                            alert("Không thể chuyển tiếp: " + data.message);
+                            return;
+                        }
+
+                        // Nếu đã hết lộ trình
+                        if (data.finished) {
+                            window.location.href = data.next_url;
+                            return;
+                        }
+
+                        // Ngược lại → đến trang lộ trình tiếp theo
+                        window.location.href = data.next_url;
+                    }
+                    catch (err) {
+                        console.error(err);
+                        alert("Lỗi kết nối server.");
+                    }
                 });
+            </script>
 
-                const data = await res.json();
+            </script>
+            <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+            <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+            {% if is_admin %}
+            <button onclick="adminSkipAll('buudientp.html')" class="admin-badge">
+                <ion-icon name="rocket-outline"></ion-icon>
+                ADMIN SKIP
+            </button>
 
-                if (!data.success) {
-                    alert("Không thể chuyển tiếp: " + data.message);
-                    return;
+            <script>
+                // Sửa hàm nhận tham số nextUrl
+                function adminSkipAll(nextUrl) {
+                    if (confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
+                        // Chuyển hướng ngay lập tức
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const mode = urlParams.get('mode');
+
+                        if (mode === 'route1') {
+                            // Nếu có mode, nối thêm vào link tiếp theo
+                            // Kiểm tra xem nextUrl đã có dấu ? chưa
+                            const separator = nextUrl.includes('?') ? '&' : '?';
+                            window.location.href = `buudientp.html?mode=route1`;
+                        } else {
+                            // Nếu không, đi bình thường
+                            window.location.href = nextUrl;
+                        }
+                    }
                 }
-
-                // Nếu đã hết lộ trình
-                if (data.finished) {
-                    window.location.href = data.next_url;
-                    return;
-                }
-
-                // Ngược lại → đến trang lộ trình tiếp theo
-                window.location.href = data.next_url;
-            }
-            catch (err) {
-                console.error(err);
-                alert("Lỗi kết nối server.");
-            }
-        });
-    </script>
-
-    </script>
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    {% if is_admin %}
-    <button onclick="adminSkipAll('buudientp.html')" class="admin-badge">
-        <ion-icon name="rocket-outline"></ion-icon>
-        ADMIN SKIP
-    </button>
-
-    <script>
-        // Sửa hàm nhận tham số nextUrl
-        function adminSkipAll(nextUrl) {
-            if (confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
-                // Chuyển hướng ngay lập tức
-                window.location.href = nextUrl;
-            }
-        }
-    </script>
-    {% endif %}
-
-    <script src="./assets/js/translations.js"></script>
-    <script src="./assets/js/i18n.js"></script>
+            </script>
+            {% endif %}
+            <script src="./assets/js/translations.js"></script>
+            <script src="./assets/js/i18n.js"></script>
 
 </body>
 

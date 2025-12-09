@@ -221,8 +221,8 @@
     <div id="distance-info" class="distance-info" data-i18n="start_checking_location">Đang xác định vị trí...</div>
   </div>
 
-  <div class="bottom-btn">
-    <button class="start-btn" onclick="window.location.href='baotang.html'" data-i18n="btn_continue">
+<div class="bottom-btn">
+    <button class="start-btn" onclick="goToNextPage()" data-i18n="btn_continue">
       Tiếp tục
     </button>
   </div>
@@ -337,7 +337,23 @@
       }
     }
   </script>
-  <script src="./assets/js/translations.js"></script>
+<script>
+function goToNextPage() {
+        // 1. Kiểm tra xem trên thanh địa chỉ hiện tại có ?mode=route1 không
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+
+        // 2. Nếu có, gắn nó vào link tiếp theo
+        if (mode === 'route1') {
+            window.location.href = 'baotang.html?mode=route1';
+        } else {
+            // 3. Nếu không, đi đến trang bình thường
+            window.location.href = 'baotang.html';
+        }
+    }
+</script>
+
+<script src="./assets/js/translations.js"></script>
 <script src="./assets/js/i18n.js"></script>
 <link rel="stylesheet" href="./assets/js/i18n.css">
 
