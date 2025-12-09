@@ -431,7 +431,9 @@
     });
 
     window.addEventListener('load', () => {
-      locationNameInput.value = "Chợ Bến Thành";
+      window.addEventListener('languageChanged', () => {
+        locationNameInput.value = i18n.t('dest_museum');
+    });
     });
 
     photoInput.addEventListener("change", (e) => {

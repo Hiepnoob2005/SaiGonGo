@@ -360,6 +360,14 @@
             >
                 🚀 Bắt đầu
             </a>
+          <script>
+async function onStartRoute1() {
+  const res = await fetch('/api/start-tour-1', { method: 'POST' });
+  const data = await res.json();
+  if (data.success) window.location.href = data.start_url;
+  else alert(data.message);
+}
+</script>
         </div>
     </main>
 

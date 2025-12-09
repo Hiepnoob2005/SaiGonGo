@@ -212,42 +212,58 @@
     </footer>
 
     <script>
+        // 1. Mảng lưu thứ tự chọn (Để giữ đúng vị trí A chọn trước B)
+        let selectedOrder = [];
+
+        // 2. Gán sự kiện ngay khi tải trang
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('input[name="destinations"]');
+            
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    if (e.target.checked) {
+                        // Nếu tick vào -> Thêm vào cuối danh sách
+                        selectedOrder.push(value);
+                    } else {
+                        // Nếu bỏ tick -> Xóa khỏi danh sách
+                        selectedOrder = selectedOrder.filter(item => item !== value);
+                    }
+                });
+            });
+        });
+
         async function createTour() {
-            // 1. Lấy danh sách các ô đã tick
-            const checkboxes = document.querySelectorAll('input[name="destinations"]:checked');
-            const selectedKeys = Array.from(checkboxes).map(cb => cb.value);
+            // Lấy sở thích (nếu có input này, nếu không thì để rỗng)
             const prefElement = document.getElementById('userPref');
             const preference = prefElement ? prefElement.value : "";    
             
             const btn = document.getElementById('createBtn');
             const loading = document.getElementById('loadingOverlay');
 
-            // 2. Validate
-            if (selectedKeys.length < 2) {
-                alert("⚠️ Vui lòng chọn ít nhất 2 địa điểm để tạo thành một lộ trình!");
+            // 3. Kiểm tra dựa trên mảng selectedOrder
+            if (selectedOrder.length < 2) {
+                alert("⚠️ Vui lòng chọn ít nhất 2 địa điểm theo thứ tự bạn muốn đi!");
                 return;
             }
 
-            // 3. Hiệu ứng Loading
+            // Hiệu ứng Loading
             btn.disabled = true;
             btn.style.opacity = "0.7";
             loading.style.display = "block";
 
-            // 4. Gửi lên Server (API bạn đã thêm ở main.py)
             try {
                 const res = await fetch('/api/create-custom-tour', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        locations: selectedKeys,
-                        preference: preference
-                    })
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                plan: selectedOrder
+                }),
                 });
 
                 const data = await res.json();
 
                 if (data.success) {
-                    // Thành công -> Chuyển hướng đến trang đầu tiên của lộ trình
                     loading.textContent = "✅ Đã xong! Đang chuyển hướng...";
                     setTimeout(() => {
                         window.location.href = "batdau_cus.html";

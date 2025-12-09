@@ -271,7 +271,7 @@
 
           <div id="result"></div>
 
-          <button id="nextDestinationBtn" onclick="window.location.href='ketthuclt1.html'" data-i18n="btn_continue">
+          <button id="nextDestinationBtn" onclick="window.location.href='quiz_hoconrua.html'" data-i18n="btn_continue">
             Tiếp tục đến với các câu hỏi →
           </button>
 
@@ -434,11 +434,8 @@
     setInterval(checkLocation, 5000);
     
     // Auto translate input value
-    window.addEventListener('load', () => {
-        if(typeof i18n !== 'undefined') locationNameInput.value = i18n.t('dest_turtle_lake');
-    });
     window.addEventListener('languageChanged', () => {
-        locationNameInput.value = i18n.t('dest_turtle_lake');
+      if(typeof i18n !== 'undefined') locationNameInput.value = i18n.t('dest_turtle_lake');
     });
 
     photoInput.addEventListener("change", (e) => {
@@ -571,7 +568,7 @@
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
   {% if is_admin %}
-  <button onclick="adminSkipAll('ketthuclt1.html')" class="admin-badge">
+  <button onclick="adminSkipAll('quiz_hoconrua.html')" class="admin-badge">
     <ion-icon name="rocket-outline"></ion-icon>
     ADMIN SKIP
   </button>
@@ -588,6 +585,27 @@
   {% endif %}
   <script src="./assets/js/translations.js"></script>
 <script src="./assets/js/i18n.js"></script>
+
+<script>
+  // --- LOGIC GIỮ NGUYÊN LỘ TRÌNH KHI BẤM QUAY LẠI ---
+  window.addEventListener('load', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const fromKey = urlParams.get('from'); // Lấy điểm xuất phát được truyền tới
+      
+      const backBtn = document.querySelector('a.btn-outline'); // Nút mũi tên "Quay lại"
+      
+      if (backBtn && fromKey) {
+          // Lấy href hiện tại (ví dụ: ltdinhdoclap.html)
+          const currentHref = backBtn.getAttribute('href');
+          
+          // Nếu href chưa có dấu ? thì thêm ?, nếu có rồi thì thêm &
+          const separator = currentHref.includes('?') ? '&' : '?';
+          
+          // Gắn thêm from vào để trang Lộ trình biết đường vẽ lại map cũ
+          backBtn.href = `${currentHref}${separator}from=${fromKey}`;
+      }
+  });
+</script>
 
 </body>
 

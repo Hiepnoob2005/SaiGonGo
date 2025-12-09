@@ -229,7 +229,7 @@
         Bước 1: Hãy di chuyển đến <b>Bảo tàng chiến tích chiến tranh</b> (< 100m) để mở khóa camera. 
       </p>
 
-          <a href="batdau1.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;" data-i18n="btn_back">← Quay lại</a>
+          <a href="ltbaotang.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;" data-i18n="btn_back">← Quay lại</a>
 
           <div style="margin-bottom: 20px;">
             <input type="text" id="locationName" value="Bảo tàng chiến tích chiến tranh" readonly style="
@@ -457,11 +457,6 @@
         locationNameInput.value = i18n.t('dest_museum');
     });
     // Init lần đầu
-    window.addEventListener('load', () => {
-        if(typeof i18n !== 'undefined') {
-            locationNameInput.value = i18n.t('dest_museum');
-        }
-    });
 
     // --- 4. LOGIC XỬ LÝ ẢNH (GIỮ NGUYÊN) ---
     photoInput.addEventListener("change", (e) => {
@@ -494,7 +489,6 @@
       // Gửi tên mặc định (Tiếng Việt) về server để xử lý, tránh lỗi AI không nhận diện được tên tiếng Anh
       // Hoặc server phải xử lý đa ngôn ngữ. Ở đây tôi hardcode gửi về tiếng Việt nếu server chỉ hiểu tiếng Việt
       formData.append("location", locationName);
-      formData.append("language", localStorage.getItem('selectedLang') || 'vi');
 
       try {
         const res = await fetch("/verify-image", { method: "POST", body: formData });
@@ -590,9 +584,32 @@
     }
   </script>
   {% endif %}
+  
   <script src="./assets/js/translations.js"></script>
 <script src="./assets/js/i18n.js"></script>
 <link rel="stylesheet" href="./assets/js/i18n.css">
+
+<script>
+  // --- LOGIC GIỮ NGUYÊN LỘ TRÌNH KHI BẤM QUAY LẠI ---
+  window.addEventListener('load', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const fromKey = urlParams.get('from'); // Lấy điểm xuất phát được truyền tới
+      
+      const backBtn = document.querySelector('a.btn-outline'); // Nút mũi tên "Quay lại"
+      
+      if (backBtn && fromKey) {
+          // Lấy href hiện tại (ví dụ: ltdinhdoclap.html)
+          const currentHref = backBtn.getAttribute('href');
+          
+          // Nếu href chưa có dấu ? thì thêm ?, nếu có rồi thì thêm &
+          const separator = currentHref.includes('?') ? '&' : '?';
+          
+          // Gắn thêm from vào để trang Lộ trình biết đường vẽ lại map cũ
+          backBtn.href = `${currentHref}${separator}from=${fromKey}`;
+      }
+  });
+</script>
+
 </body>
 
 </html>

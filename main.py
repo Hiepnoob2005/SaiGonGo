@@ -10,6 +10,10 @@ from io import BytesIO
 from dotenv import load_dotenv
 from PIL import Image 
 import requests
+import json
+import os
+from tempfile import NamedTemporaryFile
+from shutil import move
 # Đã sửa lỗi: Dùng import mới nhất và chính xác cho Gemini
 from google import genai
 import random
@@ -27,39 +31,87 @@ LOCATIONS = {
         "name": "Bảo tàng Chiến tích Chiến tranh",
         "address": "28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh", # 👈 Thêm dòng này
         "lat": 10.779552, "lon": 106.692218,
-        "main_file": "baotang.html"
+        "main_file": "baotang.html",       # Trang xác thực
+        "route_file": "ltbaotang.html",     # Trang lộ trình (đến đây)
+        "quiz_file": "quiz_baotang.html"    # Trang câu hỏi
     },
     "dinh_doc_lap": {
         "name": "Dinh Độc Lập",
         "address": "135 Nam Kỳ Khởi Nghĩa, Quận 1, TP. Hồ Chí Minh",
         "lat": 10.778226, "lon": 106.696445,
-        "main_file": "dinhdoclap.html"
+        "main_file": "dinhdoclap.html",
+        "route_file": "ltdinhdoclap.html",
+        "quiz_file": "quiz_dinhdoclap.html"
     },
     "nha_tho_duc_ba": {
         "name": "Nhà thờ Đức Bà Sài Gòn",
         "address": "01 Công xã Paris, Bến Nghé, Quận 1, TP. Hồ Chí Minh",
         "lat": 10.779783, "lon": 106.699018,
-        "main_file": "nhathoducba.html"
+        "main_file": "nhathoducba.html",
+        "route_file": "ltnhathoducba.html",
+        "quiz_file": "quiz_nhathoducba.html"
     },
     "buu_dien_thanh_pho": {
         "name": "Bưu điện Thành Phố",
         "address": "02 Công xã Paris, Bến Nghé, Quận 1, TP. Hồ Chí Minh",
         "lat": 10.779839, "lon": 106.700023,
-        "main_file": "buudientp.html"
+        "main_file": "buudientp.html",
+        "route_file": "ltbuudientp.html",
+        "quiz_file": "quiz_buudientp.html"
     },
     "ho_con_rua": {
         "name": "Hồ Con Rùa",
         "address": "Vòng xoay Công trường Quốc tế, Quận 3, TP. Hồ Chí Minh",
         "lat": 10.782615, "lon": 106.695953,
-        "main_file": "hoconrua.html"
+        "main_file": "hoconrua.html",
+        "route_file": "lthoconrua.html",
+        "quiz_file": "quiz_hoconrua.html"
     },
     "cho_ben_thanh": {
         "name": "Chợ Bến Thành",
         "address": "Đ. Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh",
         "lat": 10.772444, "lon": 106.698055,
-        "main_file": "chobenthanh.html"
+        "main_file": "chobenthanh.html",
+        "route_file": "ltchobenthanh.html",
+        "quiz_file": "quiz_chobenthanh.html"
     }
 }
+
+ROUTE_1_ORDER = [
+    "bao_tang_chien_tich",
+    "dinh_doc_lap",
+    "nha_tho_duc_ba",
+    "buu_dien_thanh_pho",
+    "ho_con_rua"
+]
+
+USER_DB_FILE = "users_db.json"
+
+def load_db():
+    if not os.path.exists(USER_DB_FILE):
+        return []
+    with open(USER_DB_FILE, "r", encoding="utf-8") as f:
+        try:
+            return json.load(f)
+        except Exception:
+            return []
+
+def save_db(users):
+    """
+    Ghi DB một cách an toàn: viết ra file tạm rồi đổi tên (atomic-ish).
+    KHÔNG dùng mode 'a' (append).
+    """
+    tmp = NamedTemporaryFile("w", delete=False, encoding="utf-8", dir=".")
+    try:
+        json.dump(users, tmp, ensure_ascii=False, indent=2)
+        tmp.close()
+        move(tmp.name, USER_DB_FILE)
+    except Exception:
+        try:
+            os.remove(tmp.name)
+        except Exception:
+            pass
+        raise
 
 # --- Khai báo API key và Khởi tạo GenAI ---
 load_dotenv()
@@ -549,18 +601,10 @@ def verify_image():
         
         file = request.files["image"]
         location_name = request.form["location"]
-        user_lang = request.form.get("language", "vi")
         image_bytes = file.read()
         img = Image.open(BytesIO(image_bytes))
         
-        if user_lang == 'en':
-            prompt = (
-            f"You are an AI assistant verifying locations. "
-            f"Compare this image with '{location_name}'. "
-            f"Answer briefly ONLY with one of these two phrases: 'Correct location' or 'Incorrect location'."
-        )
-        else:
-            prompt = (
+        prompt = (
             f"Bạn là trợ lý giúp xác định chính xác địa điểm trong ảnh. "
             f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'."
             f"Trả lời ngắn gọn **CHỈ** bằng 1 trong 2 cụm từ sau: 'Đúng địa điểm' hoặc 'Không đúng địa điểm'."
@@ -787,54 +831,39 @@ def update_score():
 
 @app.route("/api/create-custom-tour", methods=["POST"])
 def create_custom_tour():
+    # 1. Kiểm tra đăng nhập trước tiên
     if not current_user.is_authenticated:
-        return jsonify({"success": False, "message": "Vui lòng đăng nhập!"}), 401
+        return jsonify({"success": False, "message": "Chưa đăng nhập"}), 401
 
     data = request.json
-    selected_keys = data.get("locations", [])
-    
-    if len(selected_keys) < 2:
-        return jsonify({"success": False, "message": "Chọn ít nhất 2 địa điểm."}), 400
+    plan = data.get("plan")
 
-    # 1. Thuật toán Sắp xếp (Nearest Neighbor)
-    start_key = selected_keys[0] 
-    optimized_order = [start_key]
-    unvisited = [k for k in selected_keys if k != start_key]
-    
-    current_key = start_key
-    
-    while unvisited:
-        nearest_key = None
-        min_dist = float('inf')
-        
-        curr_info = LOCATIONS[current_key]
-        
-        for candidate in unvisited:
-            cand_info = LOCATIONS[candidate]
-            dist = calculate_distance(curr_info['lat'], curr_info['lon'], cand_info['lat'], cand_info['lon'])
-            
-            if dist < min_dist:
-                min_dist = dist
-                nearest_key = candidate
-        
-        optimized_order.append(nearest_key)
-        unvisited.remove(nearest_key)
-        current_key = nearest_key
+    if not plan or len(plan) < 2:
+        return jsonify({"success": False, "message": "Lộ trình không hợp lệ!"}), 400
 
-    # 2. Lưu lộ trình vào Database
     users = load_db()
-    for user in users:
-        if user['email'] == current_user.email:
-            user['current_tour_plan'] = optimized_order
-            user['current_step_index'] = 0
-            save_db(users)
-            break
-            
-    return jsonify({
-        "success": True, 
-        "message": "Đã tạo lộ trình!",
-        "redirect_url": "batdau_cus.html"
-    })
+    
+    # 2. SỬA LỖI: Tìm user bằng current_user.email (An toàn và chính xác)
+    user_record = next((u for u in users if u['email'] == current_user.email), None)
+
+    # 3. Nếu chưa có trong DB game thì tự động tạo (Sync)
+    if not user_record:
+        user_record = sync_user_to_game_db(current_user.email, current_user.username)
+        # Tải lại DB sau khi sync
+        users = load_db()
+        user_record = next((u for u in users if u['email'] == current_user.email), None)
+
+    # 4. GHI LỘ TRÌNH MỚI
+    user_record["current_tour_plan"] = plan
+    user_record["current_step_index"] = 0
+    
+    # Xóa các trường cũ không cần thiết nếu có
+    if 'current_tour_type' in user_record: del user_record['current_tour_type']
+    
+    save_db(users)
+
+    return jsonify({"success": True})
+
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     R = 6371.0
@@ -875,6 +904,131 @@ def get_current_target():
         "lat": info['lat'],
         "lon": info['lon'],
         "next_url": info.get('main_file', 'index.html')
+    })
+
+@app.route("/api/start-tour-1", methods=["POST"])
+def start_tour_1():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Chưa đăng nhập"}), 401
+
+    users = load_db()
+    user_record = next((u for u in users if u.get('email') == current_user.email), None)
+    if not user_record:
+        return jsonify({"success": False, "message": "Không tìm thấy user"}), 400
+
+    # Gán lộ trình 1 (overwrite hoàn toàn)
+    user_record['current_tour_plan'] = ROUTE_1_ORDER.copy()
+    user_record['current_step_index'] = 0
+
+    # XÓA mọi trường cũ có thể gây xung đột
+    for k in ['selected_route', 'custom_plan', 'completed_points', 'last_location', 'temp_route_data']:
+        if k in user_record:
+            user_record.pop(k, None)
+
+    save_db(users)
+
+    first_key = ROUTE_1_ORDER[0]
+    return jsonify({
+        "success": True,
+        "message": "Đã bắt đầu Lộ trình 1",
+        "start_url": LOCATIONS[first_key]['route_file']
+    }), 200
+
+
+@app.route("/api/get-next-destination", methods=["POST"])
+def get_next_destination():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Chưa đăng nhập"}), 401
+        
+    data = request.json
+    # current_location: Địa điểm vừa hoàn thành (Ví dụ: 'bao_tang_chien_tich')
+    finished_location_key = data.get("current_location") 
+    
+    users = load_db()
+    user_record = next((u for u in users if u['email'] == current_user.email), None)
+    
+    if not user_record:
+        return jsonify({"success": False, "message": "Không tìm thấy người dùng"}), 400
+
+# Nếu chưa có lộ trình → tự tạo
+    if 'current_tour_plan' not in user_record or not user_record['current_tour_plan']:
+        return jsonify({"success": False, "message": "Chưa có lộ trình."}), 400
+
+        
+    plan = user_record['current_tour_plan']
+    current_index = user_record.get('current_step_index', 0)
+    
+    try:
+        if finished_location_key in plan:
+            current_index = plan.index(finished_location_key)
+        else:
+    # Nếu tên không tồn tại trong tour, coi nó là bước đầu tiên
+            if current_index < 0: current_index = 0
+
+        # KIỂM TRA: Còn điểm tiếp theo không?
+        if current_index >= len(plan):
+            next_key = plan[current_index + 1]
+            next_info = LOCATIONS[next_key]
+            
+            # Cập nhật tiến độ
+            user_record['current_step_index'] = current_index + 1
+            save_db(users)
+            
+            # 👇 QUAN TRỌNG: Phải có ?from={finished_location_key}
+            # finished_location_key là địa điểm người chơi VỪA HOÀN THÀNH (ví dụ: bao_tang)
+            # next_info['route_file'] là trang lộ trình tiếp theo (ví dụ: ltdinhdoclap.html)
+            
+            next_url = f"{next_info['route_file']}?from={finished_location_key}"
+            
+            return jsonify({
+                "success": True,
+                "finished": False,
+                "next_url": next_url, 
+                "next_name": next_info['name']
+            })
+        else:
+            # ĐÃ HẾT -> VỀ TRANG TỔNG KẾT
+            return jsonify({ "success": True, "finished": True, "next_url": "ketthuclt1.html" })
+            
+    except Exception as e:
+        print(f"Lỗi tour: {e}")
+        return jsonify({"success": False, "message": "Lỗi xử lý lộ trình."}), 500
+
+@app.route("/api/start-fixed-route", methods=["POST"])
+def start_fixed_route():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Vui lòng đăng nhập để bắt đầu!"}), 401
+
+    data = request.json
+    route_id = data.get('route_id', 'route1') # Mặc định là route1
+
+    # Xác định danh sách dựa trên ID
+    selected_plan = []
+    if route_id == 'route1':
+        selected_plan = ROUTE_1_ORDER
+    # else if route_id == 'route2': ... (Mở rộng sau này)
+    
+    if not selected_plan:
+        return jsonify({"success": False, "message": "Lộ trình không tồn tại"}), 404
+
+    # LƯU VÀO DATABASE (Ghi đè lộ trình cũ nếu có)
+    users = load_db()
+    for user in users:
+        if user['email'] == current_user.email:
+            user['current_tour_plan'] = selected_plan # 👈 Lưu danh sách cố định vào đây
+            user['current_step_index'] = 0            # Reset về 0
+            
+            # (Tùy chọn) Lưu biến đánh dấu loại tour để tính điểm khác nhau nếu cần
+            user['current_tour_type'] = 'fixed' 
+            
+            save_db(users)
+            break
+    
+    # Trả về link đến trang bắt đầu chung
+    return jsonify({
+        "success": True,
+        "message": "Đã kích hoạt Lộ trình 1!",
+        "redirect_url": "batdau_cus.html" # 👈 Tái sử dụng trang batdau_cus.html
     })
 
 # ----------------------------------------------

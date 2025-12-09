@@ -209,10 +209,9 @@
         </a>
 
         <div style="margin-top: 25px;">
-            <a href="ltbuudientp.html" class="btn-action"
-                style="display: inline-block; text-decoration: none; background-color: #f92929;" data-i18n="lt_skip_to_next">
-                ⏩ Bỏ qua địa điểm này
-            </a>
+            <button id="skipBtn" class="btn-action" style="background-color:#f92929">
+                Bỏ qua địa điểm này
+            </button>
         </div>
 
         <section class="challenge-section" id="photoChallenge" style="display: none;">
@@ -226,11 +225,37 @@
     </footer>
 
     <script>
-        // --- CẤU HÌNH ĐỊA ĐIỂM ---
-        const START_KEY = "dinh_doc_lap";   // điểm bắt đầu mẫu mới
-        const END_KEY = "nha_tho_duc_ba";   // điểm đến đúng
+        // --- 1. LẤY THÔNG TIN TỪ URL ---
+    const urlParams = new URLSearchParams(window.location.search);
+    // fromKey chính là địa điểm trước đó (Ví dụ: 'bao_tang_chien_tich')
+    const fromKey = urlParams.get('from'); 
 
-        // -------------------------
+    // --- 2. CẤU HÌNH ĐỊA ĐIỂM ---
+    // Nếu có fromKey thì dùng nó làm điểm bắt đầu, nếu không thì dùng mặc định
+    const START_KEY = fromKey ? fromKey : "dinh_doc_lap"; 
+    const END_KEY = "nha_tho_duc_ba"; // ⚠️ Đổi cái này tương ứng với từng file (Vd: nha_tho_duc_ba,...)
+
+    // --- 3. [QUAN TRỌNG] CẬP NHẬT LINK NÚT "HOÀN THÀNH" & "QUAY LẠI" ---
+    window.addEventListener('load', () => {
+        // A. Cập nhật nút Hoàn thành thử thách (Nút xanh lá)
+        // Để nó truyền tiếp ?from=... sang trang địa điểm
+        const challengeSection = document.getElementById('photoChallenge');
+        const nextBtn = challengeSection.querySelector('a'); 
+        
+        if (nextBtn && fromKey) {
+            // Lấy href gốc (ví dụ: dinhdoclap.html) và thêm ?from=...
+            const originalHref = nextBtn.getAttribute('href');
+            nextBtn.href = `${originalHref}?from=${fromKey}`;
+        }
+
+        // B. Cập nhật nút Quay lại (Nút mũi tên góc trái)
+        // Để nó quay về đúng trang Quiz của điểm trước đó
+        const backBtn = document.querySelector('a.btn-outline');
+        if (backBtn && fromKey) {
+            // Giả sử tên file quiz là quiz_{key}.html
+            backBtn.href = `quiz_${fromKey}.html`;
+        }
+    });
 
         const getDirectionsBtn = document.getElementById("getDirectionsBtn");
         const altRouteBtn = document.getElementById("altRouteBtn");
@@ -260,10 +285,6 @@
             updateLocationLabel();
         });
         
-        // Update label on load
-        window.addEventListener('load', () => {
-             if(typeof i18n !== 'undefined') updateLocationLabel();
-        });
 
 
         // --- HÀM 1: XỬ LÝ NÚT BẤM & LẤY VỊ TRÍ ---
@@ -491,7 +512,43 @@
         updateDistance();
         setInterval(updateDistance, 120000);
     </script>
-    
+
+<script>
+    document.getElementById("skipBtn").addEventListener("click", async () => {
+        // Tên key của trang hiện tại
+        const CURRENT_KEY = "nha_tho_duc_ba";  
+        // ⚠️ Mỗi trang đổi tên này cho đúng!
+
+        try {
+            const res = await fetch("/api/get-next-destination", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ current_location: CURRENT_KEY })
+            });
+
+            const data = await res.json();
+
+            if (!data.success) {
+                alert("Không thể chuyển tiếp: " + data.message);
+                return;
+            }
+
+            // Nếu đã hết lộ trình
+            if (data.finished) {
+                window.location.href = data.next_url;
+                return;
+            }
+
+            // Ngược lại → đến trang lộ trình tiếp theo
+            window.location.href = data.next_url;
+        }
+        catch (err) {
+            console.error(err);
+            alert("Lỗi kết nối server.");
+        }
+    });
+</script>
+
 <script src="./assets/js/translations.js"></script>
 <script src="./assets/js/i18n.js"></script>
 

@@ -187,8 +187,45 @@
   <div id="nextStep">
     <h3 data-i18n="quiz_post_complete">🎉 Nhiệm vụ hoàn tất!</h3>
     <p data-i18n="quiz_post_complete_text">Bạn đã có một đôi mắt quan sát tuyệt vời.</p>
-    <button class="btn btn-primary" onclick="window.location.href='lthoconrua.html'" data-i18n="quiz_continue_turtle">Tiếp tục: Hồ Con Rùa →</button>
+    <button class="btn btn-primary" onclick="window.location.href= 'lthoconrua.html'" data-i18n="quiz_continue_turtle">Tiếp tục hành trình →</button>
   </div>
+
+  <script>
+async function goToNextStop(currentKey) {
+    // Hiển thị loading
+    const btn = document.querySelector('#nextStep button');
+    btn.disabled = true;
+    btn.textContent = "⏳ Đang lấy lộ trình...";
+
+    try {
+        const res = await fetch('/api/get-next-destination', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ current_location: currentKey })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            if (data.finished) {
+                // Đã hoàn thành toàn bộ
+                window.location.href = data.next_url; 
+            } else {
+                // Chuyển đến trang lộ trình tiếp theo (đã kèm ?from=...)
+                window.location.href = data.next_url;
+            }
+        } else {
+            alert("Lỗi: " + data.message);
+            btn.disabled = false;
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Lỗi kết nối.");
+        btn.disabled = false;
+    }
+}
+</script>
+
 </div>
 
 <div class="modal" id="cameraModal">
@@ -343,18 +380,16 @@
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-    {% if is_admin %}
-  <button onclick="adminSkipAll('lthoconrua.html')" class="admin-badge">
+{% if is_admin %}
+  <button onclick="adminSkipTest('buu_dien_thanh_pho')" class="admin-badge">
     <ion-icon name="rocket-outline"></ion-icon>
     ADMIN SKIP
   </button>
 
   <script>
-    // Sửa hàm nhận tham số nextUrl
-    function adminSkipAll(nextUrl) {
-      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
-        // Chuyển hướng ngay lập tức
-        window.location.href = nextUrl;
+    function adminSkipTest(currentKey) {
+      if(confirm('🚀 ADMIN: Bỏ qua và gọi API lấy điểm tiếp theo?')) {
+        goToNextStop(currentKey);
       }
     }
   </script>
