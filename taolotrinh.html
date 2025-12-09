@@ -219,9 +219,8 @@
     
     <footer class="footer" style="background-image: url('./assets/images/footer-bg.png'); min-height: 100px;">
     </footer>
-
-    <script>
-        // 1. Mảng lưu thứ tự chọn (Để giữ đúng vị trí A chọn trước B)
+<script>
+        // 1. Mảng lưu thứ tự chọn
         let selectedOrder = [];
 
         // 2. Gán sự kiện ngay khi tải trang
@@ -242,34 +241,14 @@
             });
         });
 
+        // 3. Hàm xử lý nút Tạo Lộ Trình
         async function createTour() {
-            // Lấy sở thích (nếu có input này, nếu không thì để rỗng)
-            const prefElement = document.getElementById('userPref');
-            const preference = prefElement ? prefElement.value : "";    
-            
-            checkboxes.forEach(cb => {
-                cb.addEventListener('change', (e) => {
-                    const value = e.target.value;
-                    if (e.target.checked) {
-                        // Nếu tick vào -> Thêm vào cuối mảng
-                        selectedOrder.push(value);
-                    } else {
-                        // Nếu bỏ tick -> Xóa khỏi mảng
-                        selectedOrder = selectedOrder.filter(item => item !== value);
-                    }
-                });
-            });
-        };
-
-        async function createTour() {
-            const preference = document.getElementById('userPref') ? document.getElementById('userPref').value : "";
             const btn = document.getElementById('createBtn');
             const loading = document.getElementById('loadingOverlay');
 
-            // 2. Validate
-            if (selectedKeys.length < 2) {
-                // Sửa nhẹ chỗ này để dùng i18n alert, nếu không có i18n thì dùng text cũ
-                const msg = typeof i18n !== 'undefined' ? i18n.t('alert_select_two') : "⚠️ Vui lòng chọn ít nhất 2 địa điểm để tạo thành một lộ trình!";
+            // --- SỬA LỖI Ở ĐÂY: Dùng đúng biến selectedOrder ---
+            if (selectedOrder.length < 2) {
+                const msg = typeof i18n !== 'undefined' ? i18n.t('alert_select_two') : "⚠️ Vui lòng chọn ít nhất 2 địa điểm!";
                 alert(msg);
                 return;
             }
@@ -281,18 +260,16 @@
 
             try {
                 const res = await fetch('/api/create-custom-tour', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                plan: selectedOrder
-                }),
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        plan: selectedOrder // Gửi danh sách đúng thứ tự lên server
+                    }),
                 });
 
                 const data = await res.json();
 
                 if (data.success) {
-                    // Thành công -> Chuyển hướng đến trang đầu tiên của lộ trình
-                    // Sửa text loading bằng i18n
                     const successMsg = typeof i18n !== 'undefined' ? i18n.t('success_redirect') : "✅ Đã xong! Đang chuyển hướng...";
                     loading.textContent = successMsg;
                     setTimeout(() => {
@@ -307,7 +284,6 @@
 
             } catch (err) {
                 console.error(err);
-                // Sửa alert lỗi bằng i18n
                 const errMsg = typeof i18n !== 'undefined' ? i18n.t('alert_connect_error') : "❌ Lỗi kết nối đến Server.";
                 alert(errMsg);
                 btn.disabled = false;
