@@ -442,6 +442,7 @@ const translations = {
     en: {
         // === Navigation ===
         nav_home: "Home",
+        nav_create_route: "Create route",
         nav_about: "About Us",
         nav_tours: "Tours",
         nav_destinations: "Destinations",
