@@ -313,6 +313,18 @@
           resultBox.innerHTML = i18n.t('museum_verify_success');
 
           nextDestinationBtn.style.display = "block";
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get('mode') === 'route1') {
+              // Nếu là Route 1, thêm tham số vào link đến Quiz
+              nextDestinationBtn.onclick = function() {
+                  window.location.href = 'quiz_chobenthanh.html?mode=route1';
+              };
+          } else {
+              // Nếu không, giữ nguyên (hoặc set lại về mặc định)
+              nextDestinationBtn.onclick = function() {
+                  window.location.href = 'quiz_chobenthanh.html';
+              };
+          }
           document.getElementById("museum-info").style.display = "block";
         } else {
           resultBox.textContent = i18n.t('museum_verify_wrong');

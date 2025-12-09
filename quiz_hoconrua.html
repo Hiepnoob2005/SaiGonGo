@@ -212,15 +212,31 @@
   <div id="nextStep">
     <h3 data-i18n="quiz_complete_title">🎉 Chúc mừng! Bạn đã hoàn thành thử thách.</h3>
     <p data-i18n="quiz_complete_text">Bạn đã nhận được điểm thưởng cho sự quan sát tinh tế.</p>
-    <button class="btn btn-primary" onclick="window.location.href='ketthuc1.html'" data-i18n="quiz_continue_cathedral">Tiếp tục hành trình →</button>
+    <button class="btn btn-primary" onclick="window.location.href='ketthuclt1.html'" data-i18n="quiz_continue_cathedral">Tiếp tục hành trình →</button>
   </div>
 
   <script>
+const urlParams = new URLSearchParams(window.location.search);
+const isRoute1 = urlParams.get('mode') === 'route1';
 async function goToNextStop(currentKey) {
-    // Hiển thị loading
+    // 1. LẤY THAM SỐ TỪ URL ĐỂ KIỂM TRA CHẾ ĐỘ
+    const urlParams = new URLSearchParams(window.location.search);
+    const isRoute1 = urlParams.get('mode') === 'route1';
+
+    // 2. NẾU LÀ LỘ TRÌNH 1 (TĨNH) -> ĐI THẲNG ĐẾN LINK CỐ ĐỊNH
+    if (isRoute1) {
+        // Điểm tiếp theo của Bảo tàng trong Route 1 là Dinh Độc Lập
+        // Quan trọng: Phải kèm theo ?mode=route1 để trang sau biết
+        window.location.href = 'ketthuclt1.html?mode=route1'; 
+        return; // Dừng hàm, không gọi API nữa
+    }
+
+    // 3. NẾU LÀ LỘ TRÌNH TỰ CHỌN (ĐỘNG) -> GỌI API
     const btn = document.querySelector('#nextStep button');
-    btn.disabled = true;
-    btn.textContent = "⏳ Đang lấy lộ trình...";
+    if(btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ Đang lấy lộ trình...";
+    }
 
     try {
         const res = await fetch('/api/get-next-destination', {
@@ -233,22 +249,21 @@ async function goToNextStop(currentKey) {
         
         if (data.success) {
             if (data.finished) {
-                // Đã hoàn thành toàn bộ
                 window.location.href = data.next_url; 
             } else {
-                // Chuyển đến trang lộ trình tiếp theo (đã kèm ?from=...)
                 window.location.href = data.next_url;
             }
         } else {
             alert("Lỗi: " + data.message);
-            btn.disabled = false;
+            if(btn) btn.disabled = false;
         }
     } catch (e) {
         console.error(e);
         alert("Lỗi kết nối.");
-        btn.disabled = false;
+        if(btn) btn.disabled = false;
     }
 }
+
 </script>
 
 </div>
@@ -464,6 +479,7 @@ async function goToNextStop(currentKey) {
   <script>
     function adminSkipTest(currentKey) {
       if(confirm('🚀 ADMIN: Bỏ qua và gọi API lấy điểm tiếp theo?')) {
+        // Hàm này giờ đã thông minh hơn, nó sẽ tự chia nhánh Route 1 hoặc Custom
         goToNextStop(currentKey);
       }
     }

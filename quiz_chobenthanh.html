@@ -197,8 +197,19 @@
   </div>
 
   <script>
+const urlParams = new URLSearchParams(window.location.search);
+const isRoute1 = urlParams.get('mode') === 'route1';
 async function goToNextStop(currentKey) {
-    // Hiển thị loading
+    if (isRoute1) {
+        // --- LOGIC TĨNH (LỘ TRÌNH 1) ---
+        // Điểm tiếp theo của Bảo tàng LÀ Dinh Độc Lập
+        // Ta chuyển thẳng đến đó và KHÔNG QUÊN mang theo ?mode=route1
+        window.location.href = "ltchobenthanh.html?mode=route1"; 
+        return; 
+    }
+
+    // --- LOGIC ĐỘNG (CÁC LỘ TRÌNH KHÁC) ---
+    // (Giữ nguyên code gọi API cũ của bạn ở đây)
     const btn = document.querySelector('#nextStep button');
     btn.disabled = true;
     btn.textContent = "⏳ Đang lấy lộ trình...";
@@ -230,6 +241,7 @@ async function goToNextStop(currentKey) {
         btn.disabled = false;
     }
 }
+
 </script>
 
 </div>

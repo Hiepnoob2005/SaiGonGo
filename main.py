@@ -1029,7 +1029,7 @@ def start_fixed_route():
     return jsonify({
         "success": True,
         "message": "Đã kích hoạt Lộ trình 1!",
-        "redirect_url": "batdau_cus.html" # 👈 Tái sử dụng trang batdau_cus.html
+        "redirect_url": "batdau_cus.html?mode=route1"
     })
 
 # ----------------------------------------------
