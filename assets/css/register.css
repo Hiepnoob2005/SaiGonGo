@@ -584,21 +584,72 @@ h2 {
 }
 
 /* Mobile Responsive */
+/* =========================================
+   RESPONSIVE MOBILE & TABLET (Register Page)
+   ========================================= */
+
+/* 1. Màn hình Tablet và Mobile (Dưới 992px) */
+@media (max-width: 992px) {
+   body {
+      padding: 0;
+      /* Đảm bảo background giống login */
+      background: linear-gradient(135deg, #7effff 0%, #006b6b 100%);
+      align-items: flex-start;
+      min-height: 100vh;
+   }
+
+   /* Class bao quanh form đăng ký (sửa tên nếu bạn đặt khác) */
+   .register-container, 
+   .login-container { 
+      grid-template-columns: 1fr; /* 1 cột */
+      max-width: 500px;
+      width: 95%;
+      margin: 40px auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+   }
+
+   /* Ẩn ảnh trang trí */
+   .img-container {
+      display: none;
+   }
+}
+
+/* 2. Màn hình điện thoại nhỏ (Dưới 480px) */
 @media (max-width: 480px) {
-   .login-card {
-      padding: 24px;
-      margin: 10px;
-      border-radius: 20px;
+   .register-container,
+   .login-container {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      border-radius: 0;
+      box-shadow: none;
+   }
+
+   /* Thẻ chứa nội dung form */
+   .register-card,
+   .login-card { 
+      padding: 30px 20px;
+      min-height: 100vh; /* Full màn hình */
+      border-radius: 0;
    }
 
    .login-header h2 {
-      font-size: 1.75rem;
+      font-size: 1.8rem;
    }
 
-   .password-wrapper input {
-      padding-right: 44px;
+   .input-wrapper input {
+      font-size: 16px; /* Chống zoom trên iOS */
+      padding: 14px;
    }
 
+   /* Nếu form đăng ký có dòng Họ - Tên nằm ngang, hãy xếp dọc lại */
+   /* Ví dụ: .row-name { display: flex; } */
+   .row, .name-group { 
+      flex-direction: column;
+      gap: 15px;
+   }
+
+   /* Xếp dọc các nút social hoặc options */
    .social-login {
       flex-direction: column;
    }
@@ -606,6 +657,6 @@ h2 {
    .form-options {
       flex-direction: column;
       align-items: flex-start;
-      gap: 16px;
+      gap: 15px;
    }
 }

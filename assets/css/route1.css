@@ -1,0 +1,127 @@
+body {
+    font-family: "Times New Roman", Times, serif;
+}
+/* Thêm CSS cho nút shop */
+.shop-button-container {
+    text-align: center;
+    margin-top: 30px; /* Khoảng cách từ rương */
+}
+
+.btn-shop {
+    display: inline-block;
+    background-color: #007bff; /* Màu xanh dương */
+    color: white;
+    padding: 15px 30px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3); /* Bóng đổ nhẹ */
+}
+
+.btn-shop:hover {
+    background-color: #0056b3; /* Màu xanh đậm hơn khi hover */
+    transform: translateY(-2px); /* Nút nhích lên nhẹ */
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+}
+
+/* CSS cho toast notification (nếu chưa có trong style.css) */
+#toast-notification {
+    visibility: hidden; /* Ẩn theo mặc định */
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 30px;
+    font-size: 17px;
+    opacity: 0;
+    transition: opacity 0.5s, bottom 0.5s;
+}
+
+#toast-notification.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 50px;
+}
+
+        /* =========================================
+   RESPONSIVE (MEDIA QUERIES)
+   ========================================= */
+
+/* Dành cho máy tính bảng và màn hình nhỏ hơn (dưới 768px) */
+@media screen and (max-width: 768px) {
+    .btn-shop {
+        padding: 12px 25px; /* Giảm padding một chút */
+        font-size: 1rem;
+    }
+}
+
+/* Dành cho điện thoại di động (dưới 480px) */
+@media screen and (max-width: 480px) {
+    .museum-section{
+        display: block!important;
+    }
+
+    .museum-image{
+        margin: 10px 0;
+    } 
+
+    .support {
+    cursor: pointer; /* Biến con trỏ chuột thành hình bàn tay */
+    outline: none;   /* Bỏ viền xanh mặc định khi bấm vào */
+    }
+
+    .support p {
+        /* Ẩn nội dung */
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        
+        /* Reset margin để không bị chiếm chỗ khi ẩn */
+        margin: 0;
+        
+        /* Hiệu ứng mượt mà */
+        transition: all 0.4s ease-in-out;
+    }
+
+    /* Khi người dùng bấm vào (focus) */
+    .support:focus p {
+        /* Hiện nội dung */
+        max-height: 200px; /* Đặt một chiều cao đủ lớn để chứa hết chữ */
+        opacity: 1;
+        margin-top: 10px; /* Khoảng cách giữa tiêu đề và nội dung */
+    }
+    
+    /* 1. Tùy chỉnh nút Shop */
+    .shop-button-container {
+        margin-top: 20px; /* Giảm khoảng cách phía trên */
+        padding: 0 15px;  /* Thêm khoảng cách 2 bên lề màn hình */
+    }
+
+    .btn-shop {
+        width: 100%;      /* Nút trải full chiều rộng để dễ bấm bằng ngón cái */
+        display: block;   /* Chuyển thành khối để nhận width 100% */
+        padding: 12px;    /* Padding vừa phải */
+        font-size: 16px;
+    }
+
+    /* 2. Tùy chỉnh Toast Notification */
+    #toast-notification {
+        min-width: unset; /* Bỏ chiều rộng tối thiểu cố định */
+        width: 90%;       /* Chiếm 90% chiều rộng màn hình */
+        font-size: 14px;  /* Chữ nhỏ hơn một chút */
+        padding: 12px;
+        bottom: 20px;     /* Hạ thấp vị trí xuất phát */
+    }
+
+    #toast-notification.show {
+        bottom: 40px;     /* Vị trí khi hiện lên thấp hơn so với PC */
+    }
+}

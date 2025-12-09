@@ -5,64 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-i18n="dest_museum">Bảo tàng Chiến tích Chiến tranh</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/i18n.css" />
+    <link rel="stylesheet" href="./assets/css/route1.css">
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
 
-        body {
-            font-family: "Times New Roman", Times, serif;
-        }
-        /* Thêm CSS cho nút shop */
-        .shop-button-container {
-            text-align: center;
-            margin-top: 30px; /* Khoảng cách từ rương */
-        }
-
-        .btn-shop {
-            display: inline-block;
-            background-color: #007bff; /* Màu xanh dương */
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3); /* Bóng đổ nhẹ */
-        }
-
-        .btn-shop:hover {
-            background-color: #0056b3; /* Màu xanh đậm hơn khi hover */
-            transform: translateY(-2px); /* Nút nhích lên nhẹ */
-            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
-        }
-
-        /* CSS cho toast notification (nếu chưa có trong style.css) */
-        #toast-notification {
-            visibility: hidden; /* Ẩn theo mặc định */
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 30px;
-            font-size: 17px;
-            opacity: 0;
-            transition: opacity 0.5s, bottom 0.5s;
-        }
-
-        #toast-notification.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 50px;
-        }
-
-
-    </style>
 </head>
 <body>
     <header class="header">
@@ -312,11 +258,12 @@
 
         <hr style="margin: 40px 0; border: 0.5px solid #ddd;">
 
-        <section class="support" 
+        <section class="support" tabindex="0"
                  style="
-                   position: fixed;
-                   bottom: 20px;
-                   left: 20px;
+                   position: sticky;
+                   bottom: 75px;
+                   left: 50%;
+                   transform: translateX(-50%);
                    background-color: #007bff;
                    color: white;
                    padding: 15px 20px;
@@ -325,8 +272,10 @@
                    font-size: 0.95rem;
                    line-height: 1.6;
                    z-index: 100;
+                   max-width: fit-content;
+                   max-height: fit-content;
                  ">
-            <h3 style="margin: 0 0 5px 0; font-size: 1.05rem; font-weight: 700;" data-i18n="route1_support">📞 Hỗ trợ</h3>
+            <h3 style="margin: 0; font-size: 1.05rem; font-weight: 700; display: flex; justify-content: center;" data-i18n="route1_support">📞 Hỗ trợ</h3>
             <p style="margin: 0;">
               Email: <a href="mailto:hello@ontripquest.com" style="color: #fff; font-weight: 600; text-decoration: underline;">hello@ontripquest.com</a><br>
               Hotline: <a href="tel:0906488443" style="color: #fff; font-weight: 600; text-decoration: underline;">0906 488 443</a>
@@ -345,7 +294,7 @@
                style="
                  background-color: #ff6600;
                  color: white;
-                 padding: 20px 70px;
+                 padding: 10px 70px;
                  border-radius: 14px;
                  text-decoration: none;
                  font-size: 1.4rem;
@@ -384,7 +333,7 @@ async function onStartRoute1() {
     let isRouteCompleted = false;
     let isRewardClaimed = false;
 
-    // 1. Khi load trang, kiểm tra trạng thái từ Server
+    // 1. Khi load trang, kiểm tra trạng thái
     window.addEventListener('load', async () => {
         try {
             const res = await fetch('/api/user');
@@ -393,27 +342,31 @@ async function onStartRoute1() {
             if (data.logged_in) {
                 const route1 = data.routes && data.routes['route1'];
                 
+                // Mặc định luôn để rương màu sắc bình thường (không làm xám)
+                chestImage.style.filter = "none"; 
+                chestImage.style.cursor = "pointer"; // Luôn cho phép trỏ chuột vào
+
                 if (route1 && route1.status === 'completed') {
                     isRouteCompleted = true;
                     isRewardClaimed = route1.reward_claimed;
 
                     if (isRewardClaimed) {
-                        // Nếu đã nhận thưởng rồi -> Hiện rương mở luôn
+                        // Đã nhận thưởng -> Hiện rương mở
                         chestImage.src = openSrc;
                         chestImage.style.cursor = 'default';
-                        // Update text using i18n logic (manual for dynamic content)
+                        
                         const scoreCurrentText = i18n.t('score_current');
                         xpScoreElement.innerHTML = `${scoreCurrentText} 💎 ${data.points} XP`;
                     } else {
-                        // Nếu đã xong nhưng chưa mở -> Rương đóng, hiệu ứng rung lắc mời gọi
-                        chestImage.style.cursor = 'pointer';
+                        // Xong nhiệm vụ nhưng chưa mở -> Rương đóng + Rung lắc
+                        chestImage.src = closedSrc;
                         chestImage.style.animation = 'shake 0.5s infinite'; 
                     }
                 } else {
-                    // Chưa xong lộ trình
-                    chestImage.style.filter = "grayscale(100%)"; // Làm xám rương
-                    chestImage.style.cursor = "not-allowed";
-                    chestImage.title = i18n.t('route1_chest_locked');
+                    // Chưa xong nhiệm vụ -> Vẫn hiện rương đóng (nhưng có màu đẹp)
+                    chestImage.src = closedSrc;
+                    // Bỏ dòng grayscale(100%) để không bị xám
+                    chestImage.style.animation = 'none';
                 }
             }
         } catch (e) { console.error(e); }
@@ -421,14 +374,15 @@ async function onStartRoute1() {
 
     // 2. Xử lý click rương
     chestImage.addEventListener('click', async () => {
+        // Nếu chưa xong lộ trình -> Chỉ hiện thông báo (hoặc không làm gì nếu bạn muốn im lặng)
         if (!isRouteCompleted) {
-            showToast(i18n.t('route1_chest_locked'));
+            alert(i18n.t('route1_chest_locked')); 
             return;
         }
 
+        // Nếu đã nhận rồi -> Không làm gì hoặc báo đã nhận
         if (isRewardClaimed) {
-            showToast(i18n.t('route1_chest_claimed'));
-            return;
+            return; 
         }
 
         // Gọi API nhận thưởng
@@ -442,30 +396,25 @@ async function onStartRoute1() {
             const data = await res.json();
             
             if (data.success) {
-                // Hiệu ứng mở rương
-                chestImage.src = openSrc;
+                // --- ĐÂY LÀ HIỆU ỨNG MỞ RƯƠNG ---
+                chestImage.src = openSrc;       // Đổi ảnh sang rương mở
                 chestImage.style.animation = 'none'; // Tắt rung
                 
-                // Cập nhật giao diện
+                // Cập nhật điểm
                 const scoreCurrentText = i18n.t('score_current');
                 xpScoreElement.innerHTML = `${scoreCurrentText} 💎 ${data.newPoints} XP`;
-                showToast(i18n.t('route1_chest_reward'));
+                
+                // Hiện thông báo nhận quà (bạn có thể xóa dòng này nếu không muốn popup thông báo)
+                alert(i18n.t('route1_chest_reward'));
                 
                 isRewardClaimed = true;
             } else {
-                showToast(data.message);
+                alert(data.message);
             }
         } catch (e) {
             console.error(e);
-            showToast(i18n.t('status_connection_error'));
         }
     });
-
-    function showToast(message) {
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => { toast.classList.remove('show'); }, 3000);
-    }
 </script>
 
 <style>

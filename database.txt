@@ -15,5 +15,16 @@
       "ho_con_rua"
     ],
     "current_step_index": 0
+  },
+  {
+    "username": "tester123",
+    "email": "bruhbruhbruh000@gmail.com",
+    "points": 0,
+    "routes": {
+      "route1": {
+        "status": "locked",
+        "reward_claimed": false
+      }
+    }
   }
 ]
