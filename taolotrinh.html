@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tạo Lộ Trình Riêng - SaiGonGo</title>
+  <title data-i18n="create_route_title">Tạo Lộ Trình Riêng - SaiGonGo</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/lotrinh_SAME_style.css" />
@@ -159,10 +159,10 @@
     </header>
 
     <main class="main-container">
-        <h2 style="font-size: 2.2rem; color: #0056b3; font-weight: 800; text-transform: uppercase;">
+        <h2 style="font-size: 2.2rem; color: #0056b3; font-weight: 800; text-transform: uppercase;" data-i18n="create_route_header">
             ✨ Thiết Kế Hành Trình
         </h2>
-        <p style="font-size: 1.2rem; color: #555; margin-top: 10px;">
+        <p style="font-size: 1.2rem; color: #555; margin-top: 10px;" data-i18n="create_route_desc">
             Chọn ít nhất <b>2 địa điểm</b> bạn muốn đi, AI sẽ sắp xếp đường đi ngắn nhất cho bạn.
         </p>
 
@@ -170,48 +170,48 @@
             
             <label class="location-card">
                 <input type="checkbox" name="destinations" value="dinh_doc_lap">
-                <img src="./assets/images/DinhDocLap.jpg" alt="Dinh Độc Lập">
-                <div class="location-name">Dinh Độc Lập</div>
+                <img src="./assets/images/DinhDocLap.jpg" alt="Dinh Độc Lập" data-i18n-alt="loc_dinh_doc_lap">
+                <div class="location-name" data-i18n="loc_dinh_doc_lap">Dinh Độc Lập</div>
             </label>
 
             <label class="location-card">
                 <input type="checkbox" name="destinations" value="nha_tho_duc_ba">
-                <img src="./assets/images/NhaThoDucBa.jpg" alt="Nhà thờ Đức Bà">
-                <div class="location-name">Nhà thờ Đức Bà</div>
+                <img src="./assets/images/NhaThoDucBa.jpg" alt="Nhà thờ Đức Bà" data-i18n-alt="loc_nha_tho">
+                <div class="location-name" data-i18n="loc_nha_tho">Nhà thờ Đức Bà</div>
             </label>
 
             <label class="location-card">
                 <input type="checkbox" name="destinations" value="ho_con_rua">
-                <img src="./assets/images/HoConRua.jpg" alt="Hồ Con Rùa">
-                <div class="location-name">Hồ Con Rùa</div>
+                <img src="./assets/images/HoConRua.jpg" alt="Hồ Con Rùa" data-i18n-alt="loc_ho_con_rua">
+                <div class="location-name" data-i18n="loc_ho_con_rua">Hồ Con Rùa</div>
             </label>
 
             <label class="location-card">
                 <input type="checkbox" name="destinations" value="buu_dien_thanh_pho">
-                <img src="./assets/images/BuuDienTP.png" alt="Bưu điện TP">
-                <div class="location-name">Bưu điện Thành Phố</div>
+                <img src="./assets/images/BuuDienTP.png" alt="Bưu điện TP" data-i18n-alt="loc_buu_dien">
+                <div class="location-name" data-i18n="loc_buu_dien">Bưu điện Thành Phố</div>
             </label>
 
             <label class="location-card">
                 <input type="checkbox" name="destinations" value="bao_tang_chien_tich">
-                <img src="./assets/images/BTCTCT.png" alt="Bảo tàng Chiến tích">
-                <div class="location-name">Bảo tàng Chiến tích chiến tranh</div>
+                <img src="./assets/images/BTCTCT.png" alt="Bảo tàng Chiến tích" data-i18n-alt="loc_bao_tang">
+                <div class="location-name" data-i18n="loc_bao_tang">Bảo tàng Chiến tích chiến tranh</div>
             </label>
 
             <label class="location-card">
                 <input type="checkbox" name="destinations" value="cho_ben_thanh">
-                <img src="./assets/images/ChoBenThanh.jpg" alt="Chợ Bến Thành">
-                <div class="location-name">Chợ Bến Thành</div>
+                <img src="./assets/images/ChoBenThanh.jpg" alt="Chợ Bến Thành" data-i18n-alt="loc_cho_ben_thanh">
+                <div class="location-name" data-i18n="loc_cho_ben_thanh">Chợ Bến Thành</div>
             </label>
 
             </div>
 
         <br>
-        <button id="createBtn" class="btn-action" onclick="createTour()">
+        <button id="createBtn" class="btn-action" onclick="createTour()" data-i18n="btn_create_route">
             🚀 Tạo Lộ Trình Ngay
         </button>
 
-        <div id="loadingOverlay">
+        <div id="loadingOverlay" data-i18n="loading_create_route">
             ⏳ Đang tính toán khoảng cách và sắp xếp lộ trình...
         </div>
 
@@ -266,9 +266,11 @@
             const btn = document.getElementById('createBtn');
             const loading = document.getElementById('loadingOverlay');
 
-            // 3. Kiểm tra dựa trên mảng selectedOrder
-            if (selectedOrder.length < 2) {
-                alert("⚠️ Vui lòng chọn ít nhất 2 địa điểm theo thứ tự bạn muốn đi!");
+            // 2. Validate
+            if (selectedKeys.length < 2) {
+                // Sửa nhẹ chỗ này để dùng i18n alert, nếu không có i18n thì dùng text cũ
+                const msg = typeof i18n !== 'undefined' ? i18n.t('alert_select_two') : "⚠️ Vui lòng chọn ít nhất 2 địa điểm để tạo thành một lộ trình!";
+                alert(msg);
                 return;
             }
 
@@ -289,7 +291,10 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    loading.textContent = "✅ Đã xong! Đang chuyển hướng...";
+                    // Thành công -> Chuyển hướng đến trang đầu tiên của lộ trình
+                    // Sửa text loading bằng i18n
+                    const successMsg = typeof i18n !== 'undefined' ? i18n.t('success_redirect') : "✅ Đã xong! Đang chuyển hướng...";
+                    loading.textContent = successMsg;
                     setTimeout(() => {
                         window.location.href = "batdau_cus.html";
                     }, 1000);
@@ -302,12 +307,17 @@
 
             } catch (err) {
                 console.error(err);
-                alert("❌ Lỗi kết nối Server.");
+                // Sửa alert lỗi bằng i18n
+                const errMsg = typeof i18n !== 'undefined' ? i18n.t('alert_connect_error') : "❌ Lỗi kết nối đến Server.";
+                alert(errMsg);
                 btn.disabled = false;
                 btn.style.opacity = "1";
                 loading.style.display = "none";
             }
         }
     </script>
+
+    <script src="./assets/js/translations.js"></script>
+    <script src="./assets/js/i18n.js"></script>
 </body>
 </html>
