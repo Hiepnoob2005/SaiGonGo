@@ -8,3 +8,4 @@ skibi;bruhbrubruh000@gmail.com;$2b$12$DBFcGNe4OtOxh0BDWBaYiOQIC4ZHgnwi.niGwlJ7TI
 test1;abc@gmail.com;$2b$12$/Cfyt2hwg0jJPPdrlNHEgOvbWzAPxHOGbImZcbNm18nfHmJsey7uu
 test2;duykhenggg;$2b$12$wzH.WHofOV1NhoRZ4oWCkeFd.kBOgGWfLYY4f7JXJCYeq4jOzh6J.
 admin1;admin1@hcmus.edu.vn;$2b$12$YJ7iF9.eKCaySZkO2KThven55OTYkFsak7DBGM/fC.93oHlo8QKPi
+tester123;bruhbruhbruh000@gmail.com;$2b$12$32KQh7GCOSQ.8gNGqC3qyO/rFcHv9k9KHVqiMhCIplZIGxdEuVaHu

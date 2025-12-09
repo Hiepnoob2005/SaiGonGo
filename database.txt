@@ -42,5 +42,16 @@
         "reward_claimed": true
       }
     }
+  },
+  {
+    "username": "tester123",
+    "email": "bruhbruhbruh000@gmail.com",
+    "points": 0,
+    "routes": {
+      "route1": {
+        "status": "locked",
+        "reward_claimed": false
+      }
+    }
   }
 ]

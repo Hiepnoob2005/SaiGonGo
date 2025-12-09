@@ -1,0 +1,422 @@
+/* =========================================
+   1. VARIABLES & RESET (Cấu hình chung)
+   ========================================= */
+:root {
+  /* Bảng màu hiện đại */
+  --primary-color: #008080;  /* Xanh cổ vịt (Teal) */
+  --primary-dark: #006666;
+  --accent-color: #ff9f1c;   /* Cam vàng điểm nhấn */
+  --text-dark: #2d3436;
+  --text-light: #636e72;
+  --bg-light: #f9fbfc;
+  --white: #ffffff;
+  --footer-bg: #1a1a2e;
+
+  /* Font chữ */
+  --font-heading: 'Abril Fatface', cursive;
+  --font-body: 'Heebo', sans-serif;
+  --font-script: 'Comforter Brush', cursive;
+
+  /* Hiệu ứng */
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-header: 0 4px 20px rgba(0, 128, 128, 0.15);
+  --radius: 12px;
+  --transition: 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 10px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-size: 1.6rem;
+  color: var(--text-dark);
+  background-color: var(--bg-light);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a { text-decoration: none; color: inherit; transition: var(--transition); }
+ul { list-style: none; }
+img { max-width: 100%; height: auto; display: block; }
+button { cursor: pointer; border: none; background: none; }
+
+/* Container chung */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: 20px;
+  width: 100%;
+}
+
+/* =========================================
+   2. HEADER (Thanh điều hướng)
+   ========================================= */
+.header {
+  background-color: var(--primary-color);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow-header);
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  color: var(--white);
+  letter-spacing: 1px;
+}
+
+.navbar-list {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.navbar-links {
+  color: var(--white);
+  font-weight: 500;
+  font-size: 1.6rem;
+  position: relative;
+}
+
+.navbar-links:hover {
+  color: var(--accent-color);
+}
+
+/* Nút Login / Logout */
+.btn-outline {
+  border: 2px solid var(--white);
+  color: var(--white);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-outline:hover {
+  background: var(--white);
+  color: var(--primary-color);
+}
+
+/* =========================================
+   3. HERO SECTION (Banner)
+   ========================================= */
+.hero {
+  padding: 80px 0;
+  background-color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.hero-content {
+  flex: 1;
+  max-width: 600px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero .section-subtitle {
+  font-family: var(--font-script);
+  font-size: 4rem;
+  color: var(--accent-color);
+  margin-bottom: 10px;
+  display: block;
+  line-height: 1.2;
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: 5.5rem;
+  color: var(--text-dark);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.hero-text {
+  font-size: 1.8rem;
+  color: var(--text-light);
+  margin-bottom: 30px;
+  max-width: 90%;
+}
+
+.hero-banner {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-banner img {
+  border-radius: 20px 0 20px 0;
+  box-shadow: 20px 20px 0 var(--primary-color);
+  width: 100%;
+  max-width: 500px;
+  object-fit: cover;
+}
+
+/* Shapes */
+.shape {
+  position: absolute;
+  z-index: 1;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: float 4s ease-in-out infinite;
+}
+.shape-1 { top: 10%; left: 5%; width: 50px; }
+.shape-2 { bottom: 10%; right: 40%; width: 40px; }
+.shape-3 { top: 20%; right: 5%; width: 60px; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+/* =========================================
+   4. DESTINATION & SECTIONS (Grid Layout)
+   ========================================= */
+.section { padding: 60px 0; }
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 3.6rem;
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--text-dark);
+}
+
+.section-subtitle {
+  text-align: center;
+  font-family: var(--font-script);
+  font-size: 3rem;
+  color: var(--accent-color);
+  display: block;
+  margin-bottom: 40px;
+}
+
+.destination-list, .popular-list, .blog-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.destination-card, .popular-card, .blog-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.destination-card:hover, .popular-card:hover {
+  transform: translateY(-10px);
+}
+
+.card-banner {
+  height: 250px;
+  overflow: hidden;
+}
+
+.card-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.destination-card:hover img { transform: scale(1.1); }
+
+.card-content { padding: 20px; text-align: center; }
+.card-title { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+.card-subtitle { color: var(--accent-color); font-weight: 600; margin-bottom: 5px; }
+
+/* =========================================
+   5. SPECIFIC PAGE STYLES (Instruction, Toggle, Button)
+   ========================================= */
+
+/* Main Container cho Lộ Trình */
+.main-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 40px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+/* Hộp hướng dẫn */
+.instruction-box {
+  margin: 30px auto;
+  padding: 30px;
+  border: 2px solid var(--primary-color);
+  background: linear-gradient(180deg, #f9fbfc, #e0f2f1);
+  border-radius: 12px;
+  text-align: left;
+  font-size: 1.6rem;
+  line-height: 1.6;
+  color: var(--text-dark);
+  box-shadow: 0 4px 10px rgba(0, 128, 128, 0.1);
+}
+
+/* --- TOGGLE BUTTON (Đã thêm lại) --- */
+.toggle-container {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 15px;
+   margin-bottom: 25px;
+   font-size: 1.6rem;
+   color: var(--text-light);
+   font-weight: 600;
+}
+
+.toggle-switch {
+   position: relative;
+   display: inline-block;
+   width: 50px;
+   height: 28px;
+}
+
+.toggle-switch input {
+   opacity: 0;
+   width: 0;
+   height: 0;
+}
+
+.slider {
+   position: absolute;
+   cursor: pointer;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background-color: #ccc;
+   transition: 0.4s;
+   border-radius: 34px;
+}
+
+.slider:before {
+   position: absolute;
+   content: "";
+   height: 20px;
+   width: 20px;
+   left: 4px;
+   bottom: 4px;
+   background-color: white;
+   transition: 0.4s;
+   border-radius: 50%;
+   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Khi bật toggle, chuyển màu xanh Teal */
+input:checked + .slider {
+   background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+   transform: translateX(22px);
+}
+
+/* --- BUTTONS --- */
+.btn-action {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0, 128, 128, 0.3);
+  transition: all 0.3s;
+  display: inline-block;
+  margin-top: 20px;
+  border: none;
+}
+
+.btn-action:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+}
+
+/* =========================================
+   6. RESPONSIVE MEDIA QUERIES (Mobile)
+   ========================================= */
+
+/* --- Tablet (Dưới 992px) --- */
+@media (max-width: 992px) {
+  .hero .container {
+    flex-direction: column; 
+    text-align: center;
+    gap: 40px;
+  }
+
+  .hero-content { margin: 0 auto; max-width: 100%; }
+  
+  .hero-banner img { width: 80%; margin: 0 auto; }
+
+  .destination-list, .popular-list, .blog-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Menu Toggle */
+  .nav-toggle-btn { display: block; font-size: 3.5rem; color: var(--white); }
+  
+  .navbar {
+    position: absolute;
+    top: 100%; left: 0; width: 100%;
+    background: var(--white);
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    display: none;
+    flex-direction: column;
+  }
+  .navbar.active { display: flex; }
+  
+  .navbar-list { flex-direction: column; width: 100%; gap: 15px; }
+  .navbar-links { color: var(--text-dark); display: block; width: 100%; text-align: center; }
+  .btn-outline { color: var(--primary-color); border-color: var(--primary-color); width: 100%; }
+}
+
+/* --- Mobile (Dưới 575px) --- */
+@media (max-width: 575px) {
+  .hero-title { font-size: 3.5rem; }
+  
+  .destination-list, .popular-list, .blog-list {
+    grid-template-columns: 1fr;
+  }
+
+  .main-container { padding: 20px; width: 95%; }
+  .instruction-box { padding: 15px; font-size: 1.4rem; }
+  
+  .btn-action { width: 100%; padding: 15px; }
+  
+  .toggle-container {
+    flex-direction: column; /* Trên mobile nhỏ thì xếp dọc toggle và label */
+    gap: 10px;
+  }
+}
