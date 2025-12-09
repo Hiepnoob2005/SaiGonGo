@@ -169,94 +169,96 @@ const i18n = {
         });
     },
     
-    /**
+/**
      * Tạo Language Selector UI (giống Spotify)
      * Chỉ tạo nếu có element với id="language-selector-container"
      */
     createLanguageSelector: function() {
-    // 1. Tìm xem container đã tồn tại chưa
-    let container = document.getElementById('language-selector-container');
-
-    // 2. Nếu chưa có, tiến hành tạo mới và chèn vào Navbar
-    if (!container) {
-        const navList = document.querySelector('.navbar-list');
+        // 1. Tìm TẤT CẢ các container (nếu bạn đặt ở cả header và footer)
+        const containers = document.querySelectorAll('#language-selector-container');
         
-        if (navList) {
-            // Tạo thẻ li (để đúng chuẩn cấu trúc ul > li của menu)
-            container = document.createElement('li'); 
-            container.id = 'language-selector-container';
-            
-            // Thêm class này để khớp với CSS Mobile mình đã đưa ở trên (căn giữa)
-            container.className = 'language-item-nav'; 
-            
-            // Thêm vào cuối danh sách menu
-            navList.appendChild(container);
-        } else {
-            // Nếu không tìm thấy menu thì thôi, không làm gì cả
+        // 2. Nếu chưa có container nào trong DOM nhưng có navbar, tạo mới
+        if (containers.length === 0) {
+            const navList = document.querySelector('.navbar-list');
+            if (navList) {
+                const li = document.createElement('li');
+                li.id = 'language-selector-container';
+                li.className = 'language-item-nav'; // Class để CSS căn chỉnh
+                navList.appendChild(li);
+                // Gọi đệ quy lại để xử lý container vừa tạo
+                this.createLanguageSelector(); 
+            }
             return;
         }
-    }
-    
-    // 3. Render nội dung (HTML)
-    // Lúc này biến 'container' chắc chắn đã có (hoặc là cái cũ, hoặc là cái mới tạo)
-    
-    const currentLangInfo = this.supportedLanguages.find(
-        lang => lang.code === this.currentLanguage
-    );
-    
-    container.innerHTML = `
-        <div class="language-selector">
-            <button class="language-btn" id="language-toggle" aria-label="Select language">
-                <svg class="globe-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="2" y1="12" x2="22" y2="12"></line>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                </svg>
-                <span style="margin-left: 5px;">${currentLangInfo ? currentLangInfo.code.toUpperCase() : 'VN'}</span>
-            </button>
+        
+        const currentLangInfo = this.supportedLanguages.find(
+            lang => lang.code === this.currentLanguage
+        );
+        
+        // 3. Render nội dung cho TẤT CẢ container tìm thấy
+        containers.forEach(container => {
+            // Lưu ý: Thêm class 'current-lang-text' vào span để dễ tìm kiếm sau này
+            container.innerHTML = `
+                <div class="language-selector">
+                    <button class="language-btn" aria-label="Select language">
+                        <svg class="globe-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                        <span class="current-lang-text" style="margin-left: 5px;">
+                            ${currentLangInfo ? currentLangInfo.code.toUpperCase() : 'VN'}
+                        </span>
+                    </button>
+                    
+                    <div class="language-dropdown">
+                        <div class="dropdown-header" data-i18n="lang_select">${this.t('lang_select')}</div>
+                        <ul class="language-list">
+                            ${this.supportedLanguages.map(lang => `
+                                <li class="language-item language-option ${lang.code === this.currentLanguage ? 'active' : ''}" 
+                                    data-lang="${lang.code}">
+                                    <span class="lang-flag">${lang.flag}</span>
+                                    <div class="lang-info">
+                                        <span class="lang-name">${lang.name}</span>
+                                        <span class="lang-region">${lang.region}</span>
+                                    </div>
+                                    ${lang.code === this.currentLanguage ? '<span class="check-icon">✓</span>' : ''}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
             
-            <div class="language-dropdown" id="language-dropdown">
-                <div class="dropdown-header" data-i18n="lang_select">${this.t('lang_select')}</div>
-                <ul class="language-list">
-                    ${this.supportedLanguages.map(lang => `
-                        <li class="language-item language-option ${lang.code === this.currentLanguage ? 'active' : ''}" 
-                            data-lang="${lang.code}">
-                            <span class="lang-flag">${lang.flag}</span>
-                            <div class="lang-info">
-                                <span class="lang-name">${lang.name}</span>
-                                <span class="lang-region">${lang.region}</span>
-                            </div>
-                            ${lang.code === this.currentLanguage ? '<span class="check-icon">✓</span>' : ''}
-                        </li>
-                    `).join('')}
-                </ul>
-            </div>
-        </div>
-    `;
-    
-    // 4. Gán sự kiện click
-    this.initLanguageSelectorEvents();
+            // Gán sự kiện riêng cho từng container để tránh xung đột
+            this.initLanguageSelectorEvents(container);
+        });
     },
     
     /**
      * Khởi tạo events cho Language Selector
+     * @param {HTMLElement} container - Container cụ thể cần gán sự kiện
      */
-    initLanguageSelectorEvents: function() {
-        const toggle = document.getElementById('language-toggle');
-        const dropdown = document.getElementById('language-dropdown');
+    initLanguageSelectorEvents: function(container) {
+        // Tìm button và dropdown BÊN TRONG container này thôi (quan trọng!)
+        const toggle = container.querySelector('.language-btn');
+        const dropdown = container.querySelector('.language-dropdown');
         
         if (!toggle || !dropdown) return;
         
-        // Toggle dropdown
+        // Sự kiện click nút mở/đóng
         toggle.addEventListener('click', (e) => {
             e.stopPropagation();
+            // Đóng tất cả các dropdown khác trước khi mở cái này
+            document.querySelectorAll('.language-dropdown').forEach(d => {
+                if (d !== dropdown) d.classList.remove('show');
+            });
             const isExpanded = dropdown.classList.toggle('show');
             toggle.setAttribute('aria-expanded', isExpanded);
         });
         
-        // Click vào ngôn ngữ
-        const langItems = document.querySelectorAll('.language-item');
-        langItems.forEach(item => {
+        // Sự kiện chọn ngôn ngữ
+        container.querySelectorAll('.language-item').forEach(item => {
             item.addEventListener('click', () => {
                 const langCode = item.getAttribute('data-lang');
                 this.setLanguage(langCode);
@@ -265,17 +267,9 @@ const i18n = {
             });
         });
         
-        // Đóng dropdown khi click ra ngoài
+        // Đóng khi click ra ngoài
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.language-selector')) {
-                dropdown.classList.remove('show');
-                toggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-        
-        // Đóng dropdown khi nhấn Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
+            if (!container.contains(e.target)) {
                 dropdown.classList.remove('show');
                 toggle.setAttribute('aria-expanded', 'false');
             }
@@ -286,22 +280,27 @@ const i18n = {
      * Cập nhật UI của Language Selector
      */
     updateLanguageSelector: function() {
-        const currentLangSpan = document.querySelector('.current-lang-text');
-        const langItems = document.querySelectorAll('.language-item');
-        const dropdownHeader = document.querySelector('.dropdown-header');
+        // 1. Tìm TẤT CẢ các vị trí hiển thị tên ngôn ngữ (Header, Footer...)
+        const currentLangSpans = document.querySelectorAll('.current-lang-text');
         
         const currentLangInfo = this.supportedLanguages.find(
             lang => lang.code === this.currentLanguage
         );
         
-        if (currentLangSpan && currentLangInfo) {
-            currentLangSpan.textContent = `${currentLangInfo.region} (${currentLangInfo.name})`;
+        // 2. Cập nhật nội dung ngắn gọn (VI/EN) cho tất cả các nút tìm thấy
+        if (currentLangInfo) {
+            currentLangSpans.forEach(span => {
+                span.textContent = currentLangInfo.code.toUpperCase();
+            });
         }
         
-        if (dropdownHeader) {
-            dropdownHeader.textContent = this.t('lang_select');
-        }
+        // 3. Cập nhật tiêu đề dropdown ("Chọn ngôn ngữ")
+        document.querySelectorAll('.dropdown-header').forEach(header => {
+            header.textContent = this.t('lang_select');
+        });
         
+        // 4. Cập nhật dấu tích (✓) và trạng thái active trong danh sách
+        const langItems = document.querySelectorAll('.language-item');
         langItems.forEach(item => {
             const langCode = item.getAttribute('data-lang');
             const isActive = langCode === this.currentLanguage;

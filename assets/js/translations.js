@@ -435,13 +435,105 @@ const translations = {
         artifact_north_gate_fruit_hint: "Cổng đường Lê Thánh Tôn, nơi bán nhiều trái cây, hoa tươi.",
         
         artifact_west_gate_shoes: "Cửa Tây (Giày dép)",
-        artifact_west_gate_shoes_hint: "Cổng đường Phan Chu Trinh, bán giày dép và đồ lưu niệm."
-    },
+        artifact_west_gate_shoes_hint: "Cổng đường Phan Chu Trinh, bán giày dép và đồ lưu niệm.",
     
+        // === TRANG ĐĂNG NHẬP (login.html) ===
+        login_page_title: "Đăng nhập - SaiGonGo",
+        login_welcome: "Chào mừng trở lại",
+        login_subtitle: "Đăng nhập vào tài khoản của bạn",
+        placeholder_username: "Tên đăng nhập",
+        placeholder_password: "Mật khẩu",
+        link_forgot_pass: "Quên mật khẩu?",
+        btn_signin: "Đăng nhập",
+        divider_or: "hoặc tiếp tục với",
+        text_no_account: "Chưa có tài khoản?",
+        link_signup: "Đăng ký",
+        login_success_title: "Đăng nhập thành công!",
+        login_redirect: "Đang chuyển hướng...",
+
+        // === TRANG ĐĂNG KÝ (register.html) ===
+        register_page_title: "Đăng ký - SaiGonGo",
+        register_header: "Bắt đầu hành trình!",
+        register_subtitle: "Đăng ký tài khoản của bạn",
+        placeholder_email: "Email",
+        placeholder_confirm_pass: "Xác nhận mật khẩu",
+        btn_register: "Đăng ký",
+        text_have_account: "Đã có tài khoản?",
+        link_login: "Đăng nhập",
+        register_success_title: "Đăng ký thành công!",
+
+        // === TRANG QUÊN MẬT KHẨU (forgot_password.html) ===
+        forgot_page_title: "Đặt lại mật khẩu - SaiGonGo",
+        forgot_header: "Quên mật khẩu?",
+        forgot_subtitle: "Nhập email để nhận mã OTP",
+        btn_receive_otp: "Nhận mã OTP",
+        reset_header: "Đặt lại mật khẩu",
+        reset_subtitle_prefix: "Mã OTP đã gửi đến:",
+        placeholder_otp: "Nhập 6 số OTP",
+        placeholder_new_pass: "Nhập mật khẩu mới",
+        placeholder_confirm_new_pass: "Xác nhận mật khẩu mới",
+        btn_reset_pass: "Đặt lại mật khẩu",
+        msg_processing: "Đang xử lý...",
+
+        // === TRANG HỒ SƠ (profile.html) ===
+        profile_page_title: "Hồ sơ người dùng - SaiGonGo",
+        btn_edit_profile: "Chỉnh sửa hồ sơ",
+        stat_xp: "Điểm thưởng (XP)",
+        stat_routes: "Lộ trình hoàn thành",
+        history_title: "Lịch sử hành trình",
+        history_empty: "Chưa có hành trình nào.",
+        status_completed: "Đã hoàn thành",
+        status_incomplete: "Chưa hoàn thành",
+        route1_desc_short: "Bảo tàng - Dinh Độc Lập - Hồ Con Rùa",
+
+        // === TRANG SHOP (shop.html) ===
+        shop_page_title: "Shop Đổi Voucher - Bảo Tàng Khám Phá",
+        shop_header_title: "Shop Đổi Voucher",
+        shop_header_subtitle: "Sử dụng điểm khám phá của bạn để nhận những ưu đãi đặc biệt!",
+        shop_banner_title: "Ưu Đãi Độc Quyền Dành Cho Nhà Thám Hiểm",
+        shop_banner_subtitle: "Đổi điểm, nhận voucher từ các thương hiệu yêu thích!",
+        shop_list_title: "Các Voucher Hiện Có",
+        shop_login_note: "Bạn cần đăng nhập để đổi điểm.",
+        footer_copyright_shop: "© 2023 Bảo Tàng Khám Phá. Tất cả bản quyền được bảo lưu.",
+        footer_back_museum: "Quay lại Trang Bảo Tàng",
+        btn_redeem: "Đổi Ngay",
+        // Tên các voucher
+        voucher_momo_title: "Voucher MoMo 50K",
+        voucher_momo_desc: "Giảm 50.000 VNĐ cho giao dịch tối thiểu 100.000 VNĐ trên MoMo.",
+        voucher_shopee_title: "Voucher ShopeeFood 40K",
+        voucher_shopee_desc: "Giảm 40.000 VNĐ cho đơn hàng ShopeeFood tối thiểu 80.000 VNĐ.",
+        voucher_grab_title: "Voucher GrabFood 60K",
+        voucher_grab_desc: "Giảm 60.000 VNĐ cho đơn hàng GrabFood tối thiểu 120.000 VNĐ.",
+        voucher_be_title: "Voucher BeFood 30K",
+        voucher_be_desc: "Giảm 30.000 VNĐ cho đơn hàng BeFood tối thiểu 60.000 VNĐ.",
+        voucher_highlands_title: "Voucher Highlands Coffee",
+        voucher_highlands_desc: "Tặng 1 đồ uống cỡ trung khi mua bất kỳ đồ uống khác.",
+        voucher_katinat_title: "Voucher Katinat 20%",
+        voucher_katinat_desc: "Giảm 20% tổng hóa đơn tại Katinat Saigon Kafe.",
+
+        // === TRANG TẠO LỘ TRÌNH (taolotrinh.html) ===
+        create_route_title: "Tạo Lộ Trình Riêng",
+        create_route_header: "✨ Thiết Kế Hành Trình",
+        create_route_desc: "Chọn ít nhất <b>2 địa điểm</b> bạn muốn đi, AI sẽ sắp xếp đường đi ngắn nhất cho bạn.",
+        btn_create_route: "🚀 Tạo Lộ Trình Ngay",
+        loading_create_route: "⏳ Đang tính toán khoảng cách và sắp xếp lộ trình...",
+        alert_select_two: "⚠️ Vui lòng chọn ít nhất 2 địa điểm để tạo thành một lộ trình!",
+        alert_connect_error: "❌ Lỗi kết nối đến Server.",
+        success_redirect: "✅ Đã xong! Đang chuyển hướng...",
+        // Địa điểm trong tạo lộ trình
+        loc_dinh_doc_lap: "Dinh Độc Lập",
+        loc_nha_tho: "Nhà thờ Đức Bà",
+        loc_ho_con_rua: "Hồ Con Rùa",
+        loc_buu_dien: "Bưu điện Thành Phố",
+        loc_bao_tang: "Bảo tàng Chiến tích",
+        loc_cho_ben_thanh: "Chợ Bến Thành"
+},
+
     // ===== ENGLISH =====
     en: {
         // === Navigation ===
         nav_home: "Home",
+        nav_create_route: "Create route",
         nav_about: "About Us",
         nav_tours: "Tours",
         nav_destinations: "Destinations",
@@ -867,7 +959,98 @@ const translations = {
         artifact_north_gate_fruit_hint: "Le Thanh Ton street gate, famous for fresh fruits and flowers.",
         
         artifact_west_gate_shoes: "West Gate (Shoes)",
-        artifact_west_gate_shoes_hint: "Phan Chu Trinh street gate, selling shoes and souvenirs."
+        artifact_west_gate_shoes_hint: "Phan Chu Trinh street gate, selling shoes and souvenirs.",
+
+        // === LOGIN PAGE (login.html) ===
+        login_page_title: "Login - SaiGonGo",
+        login_welcome: "Welcome Back",
+        login_subtitle: "Sign in to your account",
+        placeholder_username: "Username",
+        placeholder_password: "Password",
+        link_forgot_pass: "Forgot password?",
+        btn_signin: "Sign In",
+        divider_or: "or continue with",
+        text_no_account: "Don't have an account?",
+        link_signup: "Sign up",
+        login_success_title: "Login Successful!",
+        login_redirect: "Redirecting to your dashboard...",
+
+        // === REGISTER PAGE (register.html) ===
+        register_page_title: "Register - SaiGonGo",
+        register_header: "Start The Journey!",
+        register_subtitle: "Register your account",
+        placeholder_email: "Email",
+        placeholder_confirm_pass: "Confirm Password",
+        btn_register: "Register",
+        text_have_account: "Already have an account?",
+        link_login: "Log in",
+        register_success_title: "Registered Successful!",
+
+        // === FORGOT PASSWORD PAGE (forgot_password.html) ===
+        forgot_page_title: "Reset Password - SaiGonGo",
+        forgot_header: "Forgot Password?",
+        forgot_subtitle: "Enter email to receive OTP",
+        btn_receive_otp: "Receive OTP",
+        reset_header: "Reset Password",
+        reset_subtitle_prefix: "OTP sent to:",
+        placeholder_otp: "Enter 6-digit OTP",
+        placeholder_new_pass: "Enter new password",
+        placeholder_confirm_new_pass: "Confirm new password",
+        btn_reset_pass: "Reset Password",
+        msg_processing: "Processing...",
+
+        // === PROFILE PAGE (profile.html) ===
+        profile_page_title: "User Profile - SaiGonGo",
+        btn_edit_profile: "Edit Profile",
+        stat_xp: "Reward Points (XP)",
+        stat_routes: "Completed Routes",
+        history_title: "Journey History",
+        history_empty: "No journeys yet.",
+        status_completed: "Completed",
+        status_incomplete: "Incomplete",
+        route1_desc_short: "Museum - Independence Palace - Turtle Lake",
+
+        // === SHOP PAGE (shop.html) ===
+        shop_page_title: "Voucher Shop - Discovery Museum",
+        shop_header_title: "Voucher Exchange Shop",
+        shop_header_subtitle: "Use your discovery points to get special offers!",
+        shop_banner_title: "Exclusive Offers for Explorers",
+        shop_banner_subtitle: "Exchange points, get vouchers from favorite brands!",
+        shop_list_title: "Available Vouchers",
+        shop_login_note: "You need to login to redeem points.",
+        footer_copyright_shop: "© 2023 Discovery Museum. All Rights Reserved.",
+        footer_back_museum: "Back to Museum Page",
+        btn_redeem: "Redeem Now",
+        // Voucher names
+        voucher_momo_title: "MoMo Voucher 50K",
+        voucher_momo_desc: "Discount 50,000 VND for minimum transaction 100,000 VND on MoMo.",
+        voucher_shopee_title: "ShopeeFood Voucher 40K",
+        voucher_shopee_desc: "Discount 40,000 VND for ShopeeFood order min 80,000 VND.",
+        voucher_grab_title: "GrabFood Voucher 60K",
+        voucher_grab_desc: "Discount 60,000 VND for GrabFood order min 120,000 VND.",
+        voucher_be_title: "BeFood Voucher 30K",
+        voucher_be_desc: "Discount 30,000 VND for BeFood order min 60,000 VND.",
+        voucher_highlands_title: "Highlands Coffee Voucher",
+        voucher_highlands_desc: "Free 1 medium size drink when buying any other drink.",
+        voucher_katinat_title: "Katinat Voucher 20%",
+        voucher_katinat_desc: "20% off total bill at Katinat Saigon Kafe.",
+
+        // === CREATE ROUTE PAGE (taolotrinh.html) ===
+        create_route_title: "Create Custom Route",
+        create_route_header: "✨ Design Your Journey",
+        create_route_desc: "Choose at least <b>2 locations</b> you want to visit, AI will arrange the shortest path for you.",
+        btn_create_route: "🚀 Create Route Now",
+        loading_create_route: "⏳ Calculating distance and arranging route...",
+        alert_select_two: "⚠️ Please select at least 2 locations to create a route!",
+        alert_connect_error: "❌ Connection error with Server.",
+        success_redirect: "✅ Done! Redirecting...",
+        // Locations in create route
+        loc_dinh_doc_lap: "Independence Palace",
+        loc_nha_tho: "Notre-Dame Cathedral",
+        loc_ho_con_rua: "Turtle Lake",
+        loc_buu_dien: "Central Post Office",
+        loc_bao_tang: "War Remnants Museum",
+        loc_cho_ben_thanh: "Ben Thanh Market"
     }
 };
 
