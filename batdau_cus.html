@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Điểm Xuất Phát - SaiGonGo</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <style>
+    body {
+      font-family: "Times New Roman", Times, serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+      padding: 60px 25px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-top: 10px;
+      margin-bottom: 50px;
+    }
+
+    .location-icon {
+      font-size: 100px;
+      color: #007bff;
+      margin-bottom: 35px;
+    }
+
+    .place-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 10px;
+    }
+
+    .place-address {
+      font-size: 1.15rem;
+      color: #444;
+      margin-bottom: 18px;
+    }
+
+    .map-link {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .map-link:hover {
+      text-decoration: underline;
+    }
+
+    .bottom-btn {
+      width: 100%;
+      text-align: center;
+      padding: 25px;
+      background: #fff;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      border-top: 1px solid #eee;
+    }
+
+    .start-btn {
+      background-color: #ff6600;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 18px 80px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 700;
+      opacity: 0.5;
+      pointer-events: none; /* Mặc định khóa nút */
+    }
+
+    .start-btn.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .distance-info {
+      margin-top: 25px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      background: #f0f8ff;
+      border-radius: 10px;
+      display: inline-block;
+      padding: 10px 20px;
+    }
+
+    .distance-info.ok {
+      background-color: #eaffea;
+      color: #0a8a0a;
+    }
+
+    .distance-info.far {
+      background-color: #fff4e5;
+      color: #cc6600;
+    }
+
+    /* Toggle Dev Mode Style */
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(22px);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Điểm xuất phát</h1>
+    <p>Hãy di chuyển đến địa điểm đầu tiên trong lộ trình của bạn.</p>
+
+    <div class="location-icon">📍</div>
+
+    <div class="place-info">
+      <div id="targetName" class="place-name">Đang tải địa điểm...</div>
+      <div id="targetAddress" class="place-address">...</div>
+      
+      <a id="mapLink" class="map-link" href="#" target="_blank">
+        🗺️ Xem bản đồ
+      </a>
+    </div>
+
+    <div id="distanceBox" class="distance-info">📡 Đang lấy dữ liệu...</div>
+    
+    {% if is_admin %}
+    <div class="toggle-container">
+        <span>Chế độ kiểm tra (Bỏ qua GPS)</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="devMode">
+          <span class="slider"></span>
+        </label>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="bottom-btn">
+    <button id="nextBtn" class="start-btn" onclick="goToNextPage()">
+      Tiếp tục
+    </button>
+  </div>
+
+<script>
+    // Biến toàn cục để lưu thông tin điểm đến
+    let TARGET_LAT = 0;
+    let TARGET_LON = 0;
+    let NEXT_URL = "";
+    const MAX_DISTANCE = 100; // mét (Khoảng cách cho phép)
+
+    // 1. Tải thông tin từ Server ngay khi vào trang
+    async function loadTarget() {
+        try {
+            const res = await fetch('/api/get-current-target');
+            const data = await res.json();
+
+            if (data.success) {
+                // Cập nhật giao diện
+                document.getElementById('targetName').textContent = data.name;
+                document.getElementById('targetAddress').textContent = data.address;
+                
+                // Cập nhật biến tọa độ
+                TARGET_LAT = data.lat;
+                TARGET_LON = data.lon;
+                NEXT_URL = data.next_url; 
+
+                // Cập nhật link Google Maps
+                const mapLink = document.getElementById('mapLink');
+                mapLink.href = `http://googleusercontent.com/maps.google.com/maps?q=${data.lat},${data.lon}&travelmode=walking`;
+
+                // Bắt đầu quy trình kiểm tra GPS
+                startGPSCheck();
+            } else {
+                alert("Lỗi: " + data.message);
+                window.location.href = "taolotrinh.html"; 
+            }
+        } catch (e) {
+            console.error(e);
+            document.getElementById('targetName').textContent = "Lỗi kết nối";
+        }
+    }
+
+    // 2. Hàm tính khoảng cách (Haversine Formula)
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3; 
+      const toRad = deg => deg * Math.PI / 180;
+      const a = Math.sin(toRad(lat2 - lat1) / 2) ** 2 +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(toRad(lon2 - lon1) / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    // 3. Hàm kiểm tra vị trí (Logic chính)
+    function checkLocation() {
+        const distBox = document.getElementById('distanceBox');
+        const nextBtn = document.getElementById('nextBtn');
+        const devMode = document.getElementById('devMode');
+
+        // 🛑 Ưu tiên 1: Kiểm tra chế độ Dev (Chỉ dành cho Admin)
+        if (devMode && devMode.checked) {
+            distBox.textContent = "🛠️ Đã đến (Chế độ Admin)";
+            distBox.className = "distance-info ok";
+            nextBtn.classList.add("active"); // Mở khóa nút ngay
+            return; // Dừng, không cần check GPS thật
+        }
+
+        // 🛑 Ưu tiên 2: Kiểm tra GPS thực tế
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(position => {
+                // Nếu trong lúc chờ GPS mà admin lại bật Dev Mode thì bỏ qua kết quả này
+                if (devMode && devMode.checked) return;
+
+                const userLat = position.coords.latitude;
+                const userLon = position.coords.longitude;
+                
+                // Tính khoảng cách
+                const d = getDistance(userLat, userLon, TARGET_LAT, TARGET_LON);
+
+                if (d < MAX_DISTANCE) {
+                    distBox.textContent = `🎉 Bạn đã đến nơi!`;
+                    distBox.className = "distance-info ok";
+                    nextBtn.classList.add("active"); // Mở khóa nút
+                } else {
+                    distBox.textContent = `📍 Cách điểm đến: ${Math.round(d)} mét`;
+                    distBox.className = "distance-info far";
+                    nextBtn.classList.remove("active"); // Khóa nút
+                }
+            }, err => {
+                if (devMode && devMode.checked) return;
+                distBox.textContent = "❌ Lỗi GPS: " + err.message;
+            }, { enableHighAccuracy: true });
+        } else {
+            distBox.textContent = "❌ Trình duyệt không hỗ trợ GPS";
+        }
+    }
+
+    // 4. Khởi động quy trình kiểm tra
+    function startGPSCheck() {
+        const devMode = document.getElementById('devMode');
+        
+        // Nếu là admin, thêm sự kiện click để check ngay lập tức
+        if (devMode) {
+            devMode.addEventListener('change', () => {
+                // Reset trạng thái hiển thị tạm thời khi chuyển chế độ
+                if (!devMode.checked) {
+                    document.getElementById('distanceBox').textContent = "📡 Đang lấy lại vị trí...";
+                    document.getElementById('nextBtn').classList.remove("active");
+                }
+                checkLocation(); // Gọi hàm check ngay lập tức
+            });
+        }
+
+        // Chạy lần đầu
+        checkLocation();
+
+        // Chạy định kỳ mỗi 3 giây
+        setInterval(checkLocation, 3000);
+    }
+
+    // 5. Chuyển trang
+    function goToNextPage() {
+        if (NEXT_URL) {
+            // Lấy toàn bộ tham số hiện tại (ví dụ: ?mode=route1)
+            const currentParams = window.location.search;
+            
+            // Nối vào link tiếp theo
+            // Kiểm tra xem NEXT_URL đã có dấu ? chưa để nối cho đúng
+            const separator = NEXT_URL.includes('?') ? '&' : '?';
+            
+            // Nếu currentParams rỗng thì không cần nối
+            const finalUrl = currentParams ? `${NEXT_URL}${separator}${currentParams.substring(1)}` : NEXT_URL;
+            
+            window.location.href = finalUrl;
+        }
+    }
+
+    window.onload = loadTarget;
+</script>
+</body>
+</html>

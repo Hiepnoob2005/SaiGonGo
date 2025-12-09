@@ -10,6 +10,10 @@ from io import BytesIO
 from dotenv import load_dotenv
 from PIL import Image 
 import requests
+import json
+import os
+from tempfile import NamedTemporaryFile
+from shutil import move
 # Đã sửa lỗi: Dùng import mới nhất và chính xác cho Gemini
 from google import genai
 import random
@@ -25,30 +29,89 @@ from math import radians, sin, cos, sqrt, atan2
 LOCATIONS = {
     "bao_tang_chien_tich": {
         "name": "Bảo tàng Chiến tích Chiến tranh",
-        "lat": 10.779552675731349,
-        "lon": 106.69221830657582
+        "address": "28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh", # 👈 Thêm dòng này
+        "lat": 10.779552, "lon": 106.692218,
+        "main_file": "baotang.html",       # Trang xác thực
+        "route_file": "ltbaotang.html",     # Trang lộ trình (đến đây)
+        "quiz_file": "quiz_baotang.html"    # Trang câu hỏi
     },
     "dinh_doc_lap": {
         "name": "Dinh Độc Lập",
-        "lat": 10.778226,
-        "lon": 106.696445
+        "address": "135 Nam Kỳ Khởi Nghĩa, Quận 1, TP. Hồ Chí Minh",
+        "lat": 10.778226, "lon": 106.696445,
+        "main_file": "dinhdoclap.html",
+        "route_file": "ltdinhdoclap.html",
+        "quiz_file": "quiz_dinhdoclap.html"
     },
     "nha_tho_duc_ba": {
         "name": "Nhà thờ Đức Bà Sài Gòn",
-        "lat": 10.779783,
-        "lon": 106.699018
+        "address": "01 Công xã Paris, Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+        "lat": 10.779783, "lon": 106.699018,
+        "main_file": "nhathoducba.html",
+        "route_file": "ltnhathoducba.html",
+        "quiz_file": "quiz_nhathoducba.html"
     },
     "buu_dien_thanh_pho": {
         "name": "Bưu điện Thành Phố",
-        "lat": 10.779839286053278,
-        "lon": 106.70002391994127
+        "address": "02 Công xã Paris, Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+        "lat": 10.779839, "lon": 106.700023,
+        "main_file": "buudientp.html",
+        "route_file": "ltbuudientp.html",
+        "quiz_file": "quiz_buudientp.html"
     },
     "ho_con_rua": {
         "name": "Hồ Con Rùa",
-        "lat": 10.782615630794004,
-        "lon": 106.69595372983176
+        "address": "Vòng xoay Công trường Quốc tế, Quận 3, TP. Hồ Chí Minh",
+        "lat": 10.782615, "lon": 106.695953,
+        "main_file": "hoconrua.html",
+        "route_file": "lthoconrua.html",
+        "quiz_file": "quiz_hoconrua.html"
     },
+    "cho_ben_thanh": {
+        "name": "Chợ Bến Thành",
+        "address": "Đ. Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh",
+        "lat": 10.772444, "lon": 106.698055,
+        "main_file": "chobenthanh.html",
+        "route_file": "ltchobenthanh.html",
+        "quiz_file": "quiz_chobenthanh.html"
+    }
 }
+
+ROUTE_1_ORDER = [
+    "bao_tang_chien_tich",
+    "dinh_doc_lap",
+    "nha_tho_duc_ba",
+    "buu_dien_thanh_pho",
+    "ho_con_rua"
+]
+
+USER_DB_FILE = "users_db.json"
+
+def load_db():
+    if not os.path.exists(USER_DB_FILE):
+        return []
+    with open(USER_DB_FILE, "r", encoding="utf-8") as f:
+        try:
+            return json.load(f)
+        except Exception:
+            return []
+
+def save_db(users):
+    """
+    Ghi DB một cách an toàn: viết ra file tạm rồi đổi tên (atomic-ish).
+    KHÔNG dùng mode 'a' (append).
+    """
+    tmp = NamedTemporaryFile("w", delete=False, encoding="utf-8", dir=".")
+    try:
+        json.dump(users, tmp, ensure_ascii=False, indent=2)
+        tmp.close()
+        move(tmp.name, USER_DB_FILE)
+    except Exception:
+        try:
+            os.remove(tmp.name)
+        except Exception:
+            pass
+        raise
 
 # --- Khai báo API key và Khởi tạo GenAI ---
 load_dotenv()
@@ -413,10 +476,6 @@ def reset_password():
 # Các hàm OSRM và Gemini từ bước trước được giữ nguyên và tích hợp vào đây.
 
 USE_STATIC_START_LOCATION = True 
-STATIC_START_LAT = 10.779544664004435
-STATIC_START_LON = 106.69208222854601
-DINH_DOC_LAP_LAT = 10.778226
-DINH_DOC_LAP_LON = 106.696445
 
 # Hàm hỗ trợ dịch OSRM (Đã lược bớt để code gọn hơn)
 def get_vietnamese_instruction(maneuver_type, street_name):
@@ -491,23 +550,26 @@ def get_dynamic_directions():
         # Sử dụng model gemini-2.5-flash để đồng nhất và tối ưu tốc độ/chi phí
         model_name_for_text = "gemini-2.5-flash" 
         
-        # Tạo prompt
+            # --- PROMPT TIẾNG VIỆT (CŨ) ---
+            # --- PROMPT TIẾNG VIỆT (CŨ) ---
         if is_alternative:
-            prompt = (
-                f"Bạn là hướng dẫn viên du lịch TP.HCM. Người dùng báo rằng CON ĐƯỜNG CHÍNH ĐANG BỊ CHẶN hoặc KHÔNG ĐI ĐƯỢC. "
-                f"Hãy chỉ dẫn một LỘ TRÌNH THAY THẾ (đi đường vòng, đi qua hẻm lớn hoặc đường song song) "
-                f"từ '{start['name']}' đến '{end['name']}'. "
-                f"Tuyệt đối không chỉ dẫn đi lại con đường chính ngắn nhất. "
-                f"Hãy liệt kê 4-6 bước đi cụ thể. Bắt đầu câu trả lời bằng: '⚠️ Vì đường chính bị chặn, hãy đi theo lối này:...'"
-            )
+                prompt = (
+                    f"Bạn là hướng dẫn viên du lịch TP.HCM. Người dùng báo rằng CON ĐƯỜNG CHÍNH ĐANG BỊ CHẶN hoặc KHÔNG ĐI ĐƯỢC. "
+                    f"Hãy chỉ dẫn một LỘ TRÌNH THAY THẾ (đi đường vòng, đi qua hẻm lớn hoặc đường song song) "
+                    f"từ '{start['name']}' đến '{end['name']}'. "
+                    f"Nếu vị trí đã quá gần (dưới 100 mét), hãy trả về kết quả người dùng đã đến nơi rồi."
+                    f"Tuyệt đối không chỉ dẫn đi lại con đường chính ngắn nhất. "
+                    f"Hãy liệt kê 4-6 bước đi cụ thể. Bắt đầu câu trả lời bằng: '⚠️ Vì đường chính bị chặn, hãy đi theo lối này:...'"
+                )
         else:
-            prompt = (
-                f"Bạn là hướng dẫn viên du lịch TP.HCM. "
-                f"Hãy mô tả 4–6 bước chỉ đường đi bộ ngắn nhất, dễ hiểu bằng tiếng Việt, "
-                f"từ '{start['name']}' đến '{end['name']}'. "
-                f"Tổng khoảng cách khoảng {round(distance_km, 2)} km. "
-                f"Không kèm liên kết hoặc ký hiệu đặc biệt."
-            )
+                prompt = (
+                    f"Bạn là hướng dẫn viên du lịch TP.HCM. "
+                    f"Hãy mô tả 4–6 bước chỉ đường đi bộ ngắn nhất, dễ hiểu bằng tiếng Việt, "
+                    f"từ '{start['name']}' đến '{end['name']}'. "
+                    f"Nếu vị trí đã quá gần (dưới 100 mét), hãy trả về kết quả người dùng đã đến nơi rồi."
+                    f"Tổng khoảng cách khoảng {round(distance_km, 2)} km. "
+                    f"Không kèm liên kết hoặc ký hiệu đặc biệt."
+                )
         
         # Gọi generate_content bằng client.models
         response = client.models.generate_content(
@@ -541,7 +603,7 @@ def verify_image():
         location_name = request.form["location"]
         image_bytes = file.read()
         img = Image.open(BytesIO(image_bytes))
-
+        
         prompt = (
             f"Bạn là trợ lý giúp xác định chính xác địa điểm trong ảnh. "
             f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'."
@@ -765,6 +827,209 @@ def update_score():
         "success": True, 
         "new_points": new_points,
         "added": points_to_change
+    })
+
+@app.route("/api/create-custom-tour", methods=["POST"])
+def create_custom_tour():
+    # 1. Kiểm tra đăng nhập trước tiên
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Chưa đăng nhập"}), 401
+
+    data = request.json
+    plan = data.get("plan")
+
+    if not plan or len(plan) < 2:
+        return jsonify({"success": False, "message": "Lộ trình không hợp lệ!"}), 400
+
+    users = load_db()
+    
+    # 2. SỬA LỖI: Tìm user bằng current_user.email (An toàn và chính xác)
+    user_record = next((u for u in users if u['email'] == current_user.email), None)
+
+    # 3. Nếu chưa có trong DB game thì tự động tạo (Sync)
+    if not user_record:
+        user_record = sync_user_to_game_db(current_user.email, current_user.username)
+        # Tải lại DB sau khi sync
+        users = load_db()
+        user_record = next((u for u in users if u['email'] == current_user.email), None)
+
+    # 4. GHI LỘ TRÌNH MỚI
+    user_record["current_tour_plan"] = plan
+    user_record["current_step_index"] = 0
+    
+    # Xóa các trường cũ không cần thiết nếu có
+    if 'current_tour_type' in user_record: del user_record['current_tour_type']
+    
+    save_db(users)
+
+    return jsonify({"success": True})
+
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    R = 6371.0
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
+
+@app.route("/api/get-current-target", methods=["GET"])
+def get_current_target():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Chưa đăng nhập"}), 401
+        
+    users = load_db()
+    user_record = next((u for u in users if u['email'] == current_user.email), None)
+    
+    if not user_record or 'current_tour_plan' not in user_record:
+        return jsonify({"success": False, "message": "Chưa có lộ trình nào."}), 404
+        
+    plan = user_record['current_tour_plan']
+    index = user_record.get('current_step_index', 0)
+    
+    if index >= len(plan):
+        return jsonify({"success": False, "finished": True})
+    
+    current_key = plan[index]
+    info = LOCATIONS.get(current_key)
+    
+    if not info:
+        return jsonify({"success": False, "message": "Lỗi dữ liệu địa điểm"}), 500
+
+    return jsonify({
+        "success": True,
+        "key": current_key,
+        "name": info['name'],
+        "address": info.get('address', ''),
+        "lat": info['lat'],
+        "lon": info['lon'],
+        "next_url": info.get('main_file', 'index.html')
+    })
+
+@app.route("/api/start-tour-1", methods=["POST"])
+def start_tour_1():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Chưa đăng nhập"}), 401
+
+    users = load_db()
+    user_record = next((u for u in users if u.get('email') == current_user.email), None)
+    if not user_record:
+        return jsonify({"success": False, "message": "Không tìm thấy user"}), 400
+
+    # Gán lộ trình 1 (overwrite hoàn toàn)
+    user_record['current_tour_plan'] = ROUTE_1_ORDER.copy()
+    user_record['current_step_index'] = 0
+
+    # XÓA mọi trường cũ có thể gây xung đột
+    for k in ['selected_route', 'custom_plan', 'completed_points', 'last_location', 'temp_route_data']:
+        if k in user_record:
+            user_record.pop(k, None)
+
+    save_db(users)
+
+    first_key = ROUTE_1_ORDER[0]
+    return jsonify({
+        "success": True,
+        "message": "Đã bắt đầu Lộ trình 1",
+        "start_url": LOCATIONS[first_key]['route_file']
+    }), 200
+
+
+@app.route("/api/get-next-destination", methods=["POST"])
+def get_next_destination():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Chưa đăng nhập"}), 401
+        
+    data = request.json
+    # current_location: Địa điểm vừa hoàn thành (Ví dụ: 'bao_tang_chien_tich')
+    finished_location_key = data.get("current_location") 
+    
+    users = load_db()
+    user_record = next((u for u in users if u['email'] == current_user.email), None)
+    
+    if not user_record:
+        return jsonify({"success": False, "message": "Không tìm thấy người dùng"}), 400
+
+# Nếu chưa có lộ trình → tự tạo
+    if 'current_tour_plan' not in user_record or not user_record['current_tour_plan']:
+        return jsonify({"success": False, "message": "Chưa có lộ trình."}), 400
+
+        
+    plan = user_record['current_tour_plan']
+    current_index = user_record.get('current_step_index', 0)
+    
+    try:
+        if finished_location_key in plan:
+            current_index = plan.index(finished_location_key)
+        else:
+    # Nếu tên không tồn tại trong tour, coi nó là bước đầu tiên
+            if current_index < 0: current_index = 0
+
+        # KIỂM TRA: Còn điểm tiếp theo không?
+        if current_index + 1 < len(plan):
+            next_key = plan[current_index + 1]
+            next_info = LOCATIONS[next_key]
+            
+            # Cập nhật tiến độ: Tăng lên 1 bước
+            user_record['current_step_index'] = current_index + 1
+            save_db(users)
+            
+            # Tạo link đến trang lộ trình tiếp theo
+            next_url = f"{next_info['route_file']}?from={finished_location_key}"
+            
+            return jsonify({
+                "success": True,
+                "finished": False,
+                "next_url": next_url, 
+                "next_name": next_info['name']
+            })
+        else:
+            # Nếu (current_index + 1) bằng hoặc lớn hơn len(plan) => Đã đi hết
+            return jsonify({ 
+                "success": True, 
+                "finished": True, 
+                "next_url": "ketthuclt1.html" 
+            })
+            
+    except Exception as e:
+        print(f"Lỗi tour: {e}")
+        return jsonify({"success": False, "message": "Lỗi xử lý lộ trình."}), 500
+
+@app.route("/api/start-fixed-route", methods=["POST"])
+def start_fixed_route():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "Vui lòng đăng nhập để bắt đầu!"}), 401
+
+    data = request.json
+    route_id = data.get('route_id', 'route1') # Mặc định là route1
+
+    # Xác định danh sách dựa trên ID
+    selected_plan = []
+    if route_id == 'route1':
+        selected_plan = ROUTE_1_ORDER
+    # else if route_id == 'route2': ... (Mở rộng sau này)
+    
+    if not selected_plan:
+        return jsonify({"success": False, "message": "Lộ trình không tồn tại"}), 404
+
+    # LƯU VÀO DATABASE (Ghi đè lộ trình cũ nếu có)
+    users = load_db()
+    for user in users:
+        if user['email'] == current_user.email:
+            user['current_tour_plan'] = selected_plan # 👈 Lưu danh sách cố định vào đây
+            user['current_step_index'] = 0            # Reset về 0
+            
+            # (Tùy chọn) Lưu biến đánh dấu loại tour để tính điểm khác nhau nếu cần
+            user['current_tour_type'] = 'fixed' 
+            
+            save_db(users)
+            break
+    
+    # Trả về link đến trang bắt đầu chung
+    return jsonify({
+        "success": True,
+        "message": "Đã kích hoạt Lộ trình 1!",
+        "redirect_url": "batdau_cus.html?mode=route1"
     })
 
 # ----------------------------------------------

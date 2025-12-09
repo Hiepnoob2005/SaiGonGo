@@ -194,7 +194,7 @@
 <body>
 
 <div class="container">
-  <a href="index.html" style="text-decoration: none; color: var(--primary); font-weight: bold;" data-i18n="btn_home">← Trang chủ</a>
+  <a href="hoconrua.html" style="text-decoration: none; color: var(--primary); font-weight: bold;" data-i18n="btn_home">← Quay lại</a>
   
   <header>
     <h1 data-i18n="quiz_title_hoconrua">🐢 Spot the Detail: Hồ Con Rùa</h1>
@@ -210,10 +210,62 @@
     </div>
 
   <div id="nextStep">
-    <h3 data-i18n="tour_complete_title">🏆 CHÚC MỪNG HOÀN THÀNH TOUR!</h3>
-    <p data-i18n="tour_complete_text">Bạn đã chinh phục tất cả các địa điểm nổi tiếng.</p>
-    <button class="btn btn-primary" onclick="finishTour()" data-i18n="btn_finish_tour">Về trang chủ 🏠</button>
+    <h3 data-i18n="quiz_complete_title">🎉 Chúc mừng! Bạn đã hoàn thành thử thách.</h3>
+    <p data-i18n="quiz_complete_text">Bạn đã nhận được điểm thưởng cho sự quan sát tinh tế.</p>
+    <button class="btn btn-primary" onclick="window.location.href='ketthuclt1.html'" data-i18n="quiz_continue_cathedral">Tiếp tục hành trình →</button>
   </div>
+
+  <script>
+const urlParams = new URLSearchParams(window.location.search);
+const isRoute1 = urlParams.get('mode') === 'route1';
+async function goToNextStop(currentKey) {
+    // 1. LẤY THAM SỐ TỪ URL ĐỂ KIỂM TRA CHẾ ĐỘ
+    const urlParams = new URLSearchParams(window.location.search);
+    const isRoute1 = urlParams.get('mode') === 'route1';
+
+    // 2. NẾU LÀ LỘ TRÌNH 1 (TĨNH) -> ĐI THẲNG ĐẾN LINK CỐ ĐỊNH
+    if (isRoute1) {
+        // Điểm tiếp theo của Bảo tàng trong Route 1 là Dinh Độc Lập
+        // Quan trọng: Phải kèm theo ?mode=route1 để trang sau biết
+        window.location.href = 'ketthuclt1.html?mode=route1'; 
+        return; // Dừng hàm, không gọi API nữa
+    }
+
+    // 3. NẾU LÀ LỘ TRÌNH TỰ CHỌN (ĐỘNG) -> GỌI API
+    const btn = document.querySelector('#nextStep button');
+    if(btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ Đang lấy lộ trình...";
+    }
+
+    try {
+        const res = await fetch('/api/get-next-destination', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ current_location: currentKey })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            if (data.finished) {
+                window.location.href = data.next_url; 
+            } else {
+                window.location.href = data.next_url;
+            }
+        } else {
+            alert("Lỗi: " + data.message);
+            if(btn) btn.disabled = false;
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Lỗi kết nối.");
+        if(btn) btn.disabled = false;
+    }
+}
+
+</script>
+
 </div>
 
 <div class="modal" id="cameraModal">
@@ -419,19 +471,20 @@
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 {% if is_admin %}
-  <button onclick="adminSkipAll('index.html')" class="admin-badge">
+  <button onclick="adminSkipTest('ho_con_rua')" class="admin-badge">
     <ion-icon name="rocket-outline"></ion-icon>
-    ADMIN FINISH
+    ADMIN SKIP
   </button>
 
   <script>
-    function adminSkipAll(nextUrl) {
-      if(confirm('🚀 ADMIN: Hoàn thành tour và về trang chủ ngay?')) {
-        window.location.href = nextUrl;
+    function adminSkipTest(currentKey) {
+      if(confirm('🚀 ADMIN: Bỏ qua và gọi API lấy điểm tiếp theo?')) {
+        // Hàm này giờ đã thông minh hơn, nó sẽ tự chia nhánh Route 1 hoặc Custom
+        goToNextStop(currentKey);
       }
     }
   </script>
-{% endif %}
+  {% endif %}
 
 </body>
 </html>

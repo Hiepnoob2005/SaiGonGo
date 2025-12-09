@@ -55,7 +55,7 @@
         Bước 1: Hãy di chuyển đến <b>Bảo tàng chiến tích chiến tranh</b> (< 100m) để mở khóa camera. 
       </p>
 
-          <a href="batdau1.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;" data-i18n="btn_back">← Quay lại</a>
+          <a href="ltbaotang.html" class="btn btn-outline" style="position: absolute; top: 10px; left: 25px;" data-i18n="btn_back">← Quay lại</a>
 
           <div style="margin-bottom: 20px;">
             <input type="text" id="locationName" value="Bảo tàng chiến tích chiến tranh" readonly style="
@@ -99,10 +99,25 @@
 
           <div id="result"></div>
 
-          <button id="nextDestinationBtn" onclick="window.location.href='quiz_baotang.html'" data-i18n="btn_continue">
+          <button id="nextDestinationBtn" onclick="goToQuiz()" data-i18n="btn_continue">
             Tiếp tục →
           </button>
 
+<script>
+  function goToQuiz() {
+    // Kiểm tra xem trang hiện tại có đang ở chế độ Route 1 không
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+
+    if (mode === 'route1') {
+      // Nếu có, truyền tiếp sang trang Quiz
+      window.location.href = 'quiz_baotang.html?mode=route1';
+    } else {
+      // Nếu không, đi bình thường
+      window.location.href = 'quiz_baotang.html';
+    }
+  }
+</script> 
           <section id="museum-info" style="
   display: none;
   margin: 60px auto;
@@ -283,11 +298,6 @@
         locationNameInput.value = i18n.t('dest_museum');
     });
     // Init lần đầu
-    window.addEventListener('load', () => {
-        if(typeof i18n !== 'undefined') {
-            locationNameInput.value = i18n.t('dest_museum');
-        }
-    });
 
     // --- 4. LOGIC XỬ LÝ ẢNH (GIỮ NGUYÊN) ---
     photoInput.addEventListener("change", (e) => {
@@ -319,7 +329,7 @@
       formData.append("image", file);
       // Gửi tên mặc định (Tiếng Việt) về server để xử lý, tránh lỗi AI không nhận diện được tên tiếng Anh
       // Hoặc server phải xử lý đa ngôn ngữ. Ở đây tôi hardcode gửi về tiếng Việt nếu server chỉ hiểu tiếng Việt
-      formData.append("location", "Bảo tàng chiến tích chiến tranh"); 
+      formData.append("location", locationName);
 
       try {
         const res = await fetch("/verify-image", { method: "POST", body: formData });
@@ -358,6 +368,18 @@
           // ---------------------------------------------
 
           nextDestinationBtn.style.display = "block";
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get('mode') === 'route1') {
+              // Nếu là Route 1, thêm tham số vào link đến Quiz
+              nextDestinationBtn.onclick = function() {
+                  window.location.href = 'quiz_baotang.html?mode=route1';
+              };
+          } else {
+              // Nếu không, giữ nguyên (hoặc set lại về mặc định)
+              nextDestinationBtn.onclick = function() {
+                  window.location.href = 'quiz_baotang.html';
+              };
+          }
           document.getElementById("museum-info").style.display = "block";
 
           // (Code lưu ảnh cũ của bạn giữ nguyên ở đây nếu cần...)
@@ -405,19 +427,51 @@
     ADMIN SKIP
   </button>
 
-  <script>
-    // Sửa hàm nhận tham số nextUrl
+<script>
     function adminSkipAll(nextUrl) {
-      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
-        // Chuyển hướng ngay lập tức
-        window.location.href = nextUrl;
+      if(confirm('🚀 ADMIN: Bỏ qua xác thực và vào thẳng Quiz?')) {
+        // 2. Kiểm tra xem có đang đi Lộ trình 1 không
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+
+        if (mode === 'route1') {
+            // Nếu có mode, nối thêm vào link tiếp theo
+            // Kiểm tra xem nextUrl đã có dấu ? chưa
+            const separator = nextUrl.includes('?') ? '&' : '?';
+            window.location.href = `quiz_baotang.html?mode=route1`;
+        } else {
+            // Nếu không, đi bình thường
+            window.location.href = nextUrl;
+        }
       }
     }
   </script>
   {% endif %}
+  
   <script src="./assets/js/translations.js"></script>
 <script src="./assets/js/i18n.js"></script>
 <link rel="stylesheet" href="./assets/js/i18n.css">
+
+<script>
+  // --- LOGIC GIỮ NGUYÊN LỘ TRÌNH KHI BẤM QUAY LẠI ---
+window.addEventListener('load', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const isRoute1 = urlParams.get('mode') === 'route1';
+        
+        // 1. Nút Tiếp tục (Sang Quiz)
+        const nextBtn = document.getElementById('nextDestinationBtn');
+        if(nextBtn && isRoute1) {
+             nextBtn.setAttribute('onclick', "window.location.href='quiz_baotang.html?mode=route1'");
+        }
+
+        // 2. Nút Quay lại (Về Lộ trình)
+        const backBtn = document.querySelector('a.btn-outline');
+        if (backBtn && isRoute1) {
+            backBtn.href = "ltbaotang.html?mode=route1";
+        }
+    });
+</script>
+
 </body>
 
 </html>

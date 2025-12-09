@@ -282,6 +282,56 @@
   </div>
 </div>
 
+  <script>
+const urlParams = new URLSearchParams(window.location.search);
+const isRoute1 = urlParams.get('mode') === 'route1';
+async function goToNextStop(currentKey) {
+    // 1. LẤY THAM SỐ TỪ URL ĐỂ KIỂM TRA CHẾ ĐỘ
+    const urlParams = new URLSearchParams(window.location.search);
+    const isRoute1 = urlParams.get('mode') === 'route1';
+
+    // 2. NẾU LÀ LỘ TRÌNH 1 (TĨNH) -> ĐI THẲNG ĐẾN LINK CỐ ĐỊNH
+    if (isRoute1) {
+        // Điểm tiếp theo của Bảo tàng trong Route 1 là Dinh Độc Lập
+        // Quan trọng: Phải kèm theo ?mode=route1 để trang sau biết
+        window.location.href = 'ltbuudientp.html?mode=route1'; 
+        return; // Dừng hàm, không gọi API nữa
+    }
+
+    // 3. NẾU LÀ LỘ TRÌNH TỰ CHỌN (ĐỘNG) -> GỌI API
+    const btn = document.querySelector('#nextStep button');
+    if(btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ Đang lấy lộ trình...";
+    }
+
+    try {
+        const res = await fetch('/api/get-next-destination', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ current_location: currentKey })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            if (data.finished) {
+                window.location.href = data.next_url; 
+            } else {
+                window.location.href = data.next_url;
+            }
+        } else {
+            alert("Lỗi: " + data.message);
+            if(btn) btn.disabled = false;
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Lỗi kết nối.");
+        if(btn) btn.disabled = false;
+    }
+}
+</script>
+
 <div class="modal" id="cameraModal">
   <div class="modal-content">
     <h3 id="modalTitle">Tên hiện vật</h3>
@@ -436,27 +486,27 @@
   });
 </script>
 
+<script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
 
-    {% if is_admin %}
-  <button onclick="adminSkipAll('ltbuudientp.html')" class="admin-badge">
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+{% if is_admin %}
+  <button onclick="adminSkipTest('nha_tho_duc_ba')" class="admin-badge">
     <ion-icon name="rocket-outline"></ion-icon>
     ADMIN SKIP
   </button>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
   <script>
-    // Sửa hàm nhận tham số nextUrl
-    function adminSkipAll(nextUrl) {
-      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
-        // Chuyển hướng ngay lập tức
-        window.location.href = nextUrl;
+    function adminSkipTest(currentKey) {
+      if(confirm('🚀 ADMIN: Bỏ qua và gọi API lấy điểm tiếp theo?')) {
+        // Hàm này giờ đã thông minh hơn, nó sẽ tự chia nhánh Route 1 hoặc Custom
+        goToNextStop(currentKey);
       }
     }
   </script>
   {% endif %}
-<script src="./assets/js/translations.js"></script>
-<script src="./assets/js/i18n.js"></script>
 
 </body>
 </html>
