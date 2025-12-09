@@ -174,51 +174,68 @@ const i18n = {
      * Chỉ tạo nếu có element với id="language-selector-container"
      */
     createLanguageSelector: function() {
-        const container = document.getElementById('language-selector-container');
-        if (!container) {
-            // Không có container thì không tạo selector
-            // Nhưng vẫn áp dụng ngôn ngữ đã lưu
+    // 1. Tìm xem container đã tồn tại chưa
+    let container = document.getElementById('language-selector-container');
+
+    // 2. Nếu chưa có, tiến hành tạo mới và chèn vào Navbar
+    if (!container) {
+        const navList = document.querySelector('.navbar-list');
+        
+        if (navList) {
+            // Tạo thẻ li (để đúng chuẩn cấu trúc ul > li của menu)
+            container = document.createElement('li'); 
+            container.id = 'language-selector-container';
+            
+            // Thêm class này để khớp với CSS Mobile mình đã đưa ở trên (căn giữa)
+            container.className = 'language-item-nav'; 
+            
+            // Thêm vào cuối danh sách menu
+            navList.appendChild(container);
+        } else {
+            // Nếu không tìm thấy menu thì thôi, không làm gì cả
             return;
         }
-        
-        const currentLangInfo = this.supportedLanguages.find(
-            lang => lang.code === this.currentLanguage
-        );
-        
-        container.innerHTML = `
-            <div class="language-selector">
-                <button class="language-btn" id="language-toggle" aria-label="Select language">
-                    <svg class="globe-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                    </svg>
-                    <span class="current-lang-text">${currentLangInfo.region} (${currentLangInfo.name})</span>
-                    <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </button>
-                
-                <div class="language-dropdown" id="language-dropdown">
-                    <div class="dropdown-header" data-i18n="lang_select">${this.t('lang_select')}</div>
-                    <ul class="language-list">
-                        ${this.supportedLanguages.map(lang => `
-                            <li class="language-item language-option ${lang.code === this.currentLanguage ? 'active' : ''}" 
-                                data-lang="${lang.code}">
-                                <span class="lang-flag">${lang.flag}</span>
-                                <div class="lang-info">
-                                    <span class="lang-name">${lang.name}</span>
-                                    <span class="lang-region">${lang.region}</span>
-                                </div>
-                                ${lang.code === this.currentLanguage ? '<span class="check-icon">✓</span>' : ''}
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
+    }
+    
+    // 3. Render nội dung (HTML)
+    // Lúc này biến 'container' chắc chắn đã có (hoặc là cái cũ, hoặc là cái mới tạo)
+    
+    const currentLangInfo = this.supportedLanguages.find(
+        lang => lang.code === this.currentLanguage
+    );
+    
+    container.innerHTML = `
+        <div class="language-selector">
+            <button class="language-btn" id="language-toggle" aria-label="Select language">
+                <svg class="globe-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span style="margin-left: 5px;">${currentLangInfo ? currentLangInfo.code.toUpperCase() : 'VN'}</span>
+            </button>
+            
+            <div class="language-dropdown" id="language-dropdown">
+                <div class="dropdown-header" data-i18n="lang_select">${this.t('lang_select')}</div>
+                <ul class="language-list">
+                    ${this.supportedLanguages.map(lang => `
+                        <li class="language-item language-option ${lang.code === this.currentLanguage ? 'active' : ''}" 
+                            data-lang="${lang.code}">
+                            <span class="lang-flag">${lang.flag}</span>
+                            <div class="lang-info">
+                                <span class="lang-name">${lang.name}</span>
+                                <span class="lang-region">${lang.region}</span>
+                            </div>
+                            ${lang.code === this.currentLanguage ? '<span class="check-icon">✓</span>' : ''}
+                        </li>
+                    `).join('')}
+                </ul>
             </div>
-        `;
-        
-        this.initLanguageSelectorEvents();
+        </div>
+    `;
+    
+    // 4. Gán sự kiện click
+    this.initLanguageSelectorEvents();
     },
     
     /**

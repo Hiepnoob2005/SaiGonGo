@@ -130,6 +130,7 @@
             text-align: left;
         }
 
+        /* --- PHẦN CHỈNH SỬA TAG (NÚT NHỎ) --- */
         .tag {
             display: inline-block;
             padding: 6px 14px;
@@ -137,6 +138,8 @@
             font-size: 0.85rem;
             font-weight: 700;
             margin-bottom: 12px;
+            margin-right: 5px; /* Thêm khoảng cách giữa các tag nếu có nhiều tag */
+            letter-spacing: 0.5px;
         }
 
         .tag-food { background-color: #fff3cd; color: #856404; }
@@ -205,23 +208,48 @@
             gap: 5px;
         }
 
+        /* --- PHẦN CHỈNH SỬA NÚT (MAIN BUTTONS) --- */
+
+        /* Container bao quanh nút để căn giữa và tạo khoảng cách */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* Khoảng cách giữa các nút nếu có nhiều nút */
+            margin-top: 40px;
+            flex-wrap: wrap; /* Tự xuống dòng trên mobile */
+        }
+
         .btn-home {
-            display: inline-block;
-            margin-top: 50px;
+            display: inline-flex; /* Thay đổi từ inline-block sang inline-flex để căn chữ */
+            align-items: center;
+            justify-content: center;
             padding: 15px 40px;
             background-color: var(--primary-orange);
             color: white;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 50px; /* Bo tròn đều hơn */
             font-weight: 700;
             font-size: 1.1rem;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.2);
+            border: none;
+            cursor: pointer;
+            min-width: 200px; /* Đảm bảo nút không quá bé */
         }
 
         .btn-home:hover {
             background-color: #e65c00;
-            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(255, 102, 0, 0.4);
+            transform: translateY(-2px); /* Hiệu ứng nổi lên khi hover */
         }
+
+        .btn-home:active {
+            transform: translateY(1px); /* Hiệu ứng nhấn xuống */
+            box-shadow: 0 2px 10px rgba(255, 102, 0, 0.3);
+        }
+
+        /* --- MODAL & CLOSE BUTTON --- */
 
         .modal {
             display: none;
@@ -266,16 +294,60 @@
 
         .close-btn {
             position: absolute;
-            top: 20px; right: 35px;
+            top: 30px; /* Tăng khoảng cách top */
+            right: 40px; /* Tăng khoảng cách right */
             color: #f1f1f1;
-            font-size: 40px;
+            font-size: 45px; /* To hơn chút để dễ bấm */
             font-weight: bold;
             transition: 0.3s;
             cursor: pointer;
             z-index: 10000;
+            line-height: 1;
+            background: rgba(255, 255, 255, 0.1); /* Nền mờ nhẹ để dễ nhìn */
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            border-radius: 50%; /* Bo tròn nút đóng */
         }
 
-        .close-btn:hover { color: #ff6600; text-decoration: none; }
+        .close-btn:hover { 
+            color: #ff6600; 
+            text-decoration: none; 
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg); /* Hiệu ứng xoay khi hover */
+        }
+        .btn-back-reward {
+            background: var(--bg-color, #f0f0f0); /* Màu nền (dùng biến hoặc màu mặc định) */
+            color: #5600a7;
+            font-weight: bold;
+            border: 2px solid #5600a7; /* Thêm viền cho rõ nét */
+            border-radius: 8px;
+            padding: 12px 30px;
+            cursor: pointer;
+            text-decoration: none; /* Bỏ gạch chân link */
+            display: block;        /* Để căn lề */
+            margin: 30px auto;     /* Căn giữa, cách trên 30px */
+            width: fit-content;    /* Chiều rộng vừa khít nội dung */
+            text-align: center;
+            transition: all 0.3s ease; /* Hiệu ứng mượt */
+        }
+
+        /* Hiệu ứng khi di chuột vào */
+        .btn-back-reward:hover {
+            background: #5600a7;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(86, 0, 167, 0.3);
+        }
+
+        /* --- QUAN TRỌNG: Giao diện Mobile (Màn hình nhỏ hơn 600px) --- */
+        @media (max-width: 600px) {
+            .btn-back-reward {
+                width: 90%;       /* Nút rộng 90% màn hình để dễ bấm bằng ngón tay */
+                font-size: 1.1rem; /* Chữ to hơn một chút */
+                padding: 15px;     /* Nút cao hơn để dễ chạm */
+            }
+        }
     </style>
 </head>
 
@@ -395,10 +467,9 @@
             <p id="no-photo-msg" style="display:none; color: #999;" data-i18n="complete_album_empty">Chưa có hình ảnh nào được lưu.</p>
         </section>
 
-        <a href="index.html" class="btn-home">
-            <ion-icon name="home-outline" style="vertical-align: middle; margin-bottom: 3px;"></ion-icon>
-            <span data-i18n="btn_back_home">Về trang chủ</span>
-        </a>
+        <div class="button-container">
+            <a href="index.html" class="btn-home">Về Trang Chủ</a>
+        </div>
 
     </main>
 
@@ -464,10 +535,17 @@
     </script>
 
     <button id="resetBtn" style="
-    background: #dc3545; color: white; padding: 10px 20px; border: none; 
-    border-radius: 8px; cursor: pointer; margin-top: 30px; font-weight: bold;"
-    data-i18n="complete_btn_reset">
-        🗑️ Xóa nhật ký & Đi lại từ đầu
+            background: #dc3545; 
+            color: white; 
+            display: block; /* Chuyển thành dạng khối để căn lề */
+            margin: 30px auto; /* Tự động căn giữa trái/phải, cách trên 30px */
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold;"
+        data-i18n="complete_btn_reset">
+            🗑️ Xóa nhật ký & Đi lại từ đầu
     </button>
 
     <script>
@@ -486,12 +564,12 @@
         <div id="caption"></div>
     </div>
 
-<div style="text-align: center; margin: 40px;">
-        <p id="status-msg" style="color: #666; font-style: italic;" data-i18n="complete_status_updating">Đang cập nhật kết quả hành trình...</p>
-        
-        <a href="lotrinh1.html" class="btn btn-primary" style="font-size: 1.5rem; padding: 15px 40px; text-decoration: none; color: white;" data-i18n="complete_btn_chest">
+    <div style="text-align: center; margin: 40px;">
+        <p id="status-msg" style="color: #666666; font-style: italic;" data-i18n="complete_status_updating">Đang cập nhật kết quả hành trình...</p>
+        <a class="btn-back-reward" data-i18n="complete_btn_chest" href='lotrinh1.html'>
             🔙 Quay lại mở Rương kho báu
         </a>
+
     </div>
 
     <script>

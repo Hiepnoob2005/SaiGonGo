@@ -195,6 +195,43 @@
     <p data-i18n="quiz_complete_text">Bạn đã khám phá những nét độc đáo nhất của ngôi chợ biểu tượng này.</p>
     <button class="btn btn-primary" onclick="window.location.href='ltdinhdoclap.html'" data-i18n="quiz_continue_btn">Tiếp tục hành trình →</button>
   </div>
+
+  <script>
+async function goToNextStop(currentKey) {
+    // Hiển thị loading
+    const btn = document.querySelector('#nextStep button');
+    btn.disabled = true;
+    btn.textContent = "⏳ Đang lấy lộ trình...";
+
+    try {
+        const res = await fetch('/api/get-next-destination', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ current_location: currentKey })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            if (data.finished) {
+                // Đã hoàn thành toàn bộ
+                window.location.href = data.next_url; 
+            } else {
+                // Chuyển đến trang lộ trình tiếp theo (đã kèm ?from=...)
+                window.location.href = data.next_url;
+            }
+        } else {
+            alert("Lỗi: " + data.message);
+            btn.disabled = false;
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Lỗi kết nối.");
+        btn.disabled = false;
+    }
+}
+</script>
+
 </div>
 
 <div class="modal" id="cameraModal">
@@ -372,11 +409,18 @@
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 {% if is_admin %}
-  <button onclick="adminSkip('ltdinhdoclap.html')" class="admin-badge">
-    <ion-icon name="rocket-outline"></ion-icon> ADMIN SKIP
+  <button onclick="adminSkipTest('cho_ben_thanh')" class="admin-badge">
+    <ion-icon name="rocket-outline"></ion-icon>
+    ADMIN SKIP
   </button>
-  <script>function adminSkip(url) { if(confirm('Skip?')) window.location.href=url; }</script>
-{% endif %}
 
+  <script>
+    function adminSkipTest(currentKey) {
+      if(confirm('🚀 ADMIN: Bỏ qua và gọi API lấy điểm tiếp theo?')) {
+        goToNextStop(currentKey);
+      }
+    }
+  </script>
+  {% endif %}
 </body>
 </html>

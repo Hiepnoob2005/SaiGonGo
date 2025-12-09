@@ -6,7 +6,7 @@
   <title>Tạo Lộ Trình Riêng - SaiGonGo</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
-  
+  <link rel="stylesheet" href="./assets/css/lotrinh_SAME_style.css" />
   <style>
     /* --- GIỮ NGUYÊN CSS CHUNG CỦA DỰ ÁN --- */
     body {
@@ -14,6 +14,16 @@
       background-color: #f8f8f8;
       text-align: center;
       padding-top: 50px; 
+    }
+
+    .header {
+        background-color: var(--primary-color);
+        padding: 15px 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: var(--shadow-header);
     }
 
     .main-container {
@@ -136,7 +146,6 @@
         color: #007bff;
         font-weight: 600;
     }
-
   </style>
 </head>
 
@@ -211,13 +220,32 @@
     <footer class="footer" style="background-image: url('./assets/images/footer-bg.png'); min-height: 100px;">
     </footer>
 
-   <script>
-        // 1. Mảng lưu thứ tự chọn
+    <script>
+        // 1. Mảng lưu thứ tự chọn (Để giữ đúng vị trí A chọn trước B)
         let selectedOrder = [];
 
-        // 2. Gán sự kiện cho tất cả checkbox khi trang tải xong
+        // 2. Gán sự kiện ngay khi tải trang
         document.addEventListener('DOMContentLoaded', () => {
             const checkboxes = document.querySelectorAll('input[name="destinations"]');
+            
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    if (e.target.checked) {
+                        // Nếu tick vào -> Thêm vào cuối danh sách
+                        selectedOrder.push(value);
+                    } else {
+                        // Nếu bỏ tick -> Xóa khỏi danh sách
+                        selectedOrder = selectedOrder.filter(item => item !== value);
+                    }
+                });
+            });
+        });
+
+        async function createTour() {
+            // Lấy sở thích (nếu có input này, nếu không thì để rỗng)
+            const prefElement = document.getElementById('userPref');
+            const preference = prefElement ? prefElement.value : "";    
             
             checkboxes.forEach(cb => {
                 cb.addEventListener('change', (e) => {
@@ -231,14 +259,14 @@
                     }
                 });
             });
-        });
+        };
 
         async function createTour() {
             const preference = document.getElementById('userPref') ? document.getElementById('userPref').value : "";
             const btn = document.getElementById('createBtn');
             const loading = document.getElementById('loadingOverlay');
 
-            // 3. Validate dựa trên mảng selectedOrder
+            // 3. Kiểm tra dựa trên mảng selectedOrder
             if (selectedOrder.length < 2) {
                 alert("⚠️ Vui lòng chọn ít nhất 2 địa điểm theo thứ tự bạn muốn đi!");
                 return;
@@ -251,12 +279,11 @@
 
             try {
                 const res = await fetch('/api/create-custom-tour', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        locations: selectedOrder, // 👈 Gửi mảng đã sắp xếp theo thứ tự click
-                        preference: preference
-                    })
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                plan: selectedOrder
+                }),
                 });
 
                 const data = await res.json();

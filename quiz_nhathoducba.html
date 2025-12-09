@@ -282,6 +282,42 @@
   </div>
 </div>
 
+  <script>
+async function goToNextStop(currentKey) {
+    // Hiển thị loading
+    const btn = document.querySelector('#nextStep button');
+    btn.disabled = true;
+    btn.textContent = "⏳ Đang lấy lộ trình...";
+
+    try {
+        const res = await fetch('/api/get-next-destination', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ current_location: currentKey })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            if (data.finished) {
+                // Đã hoàn thành toàn bộ
+                window.location.href = data.next_url; 
+            } else {
+                // Chuyển đến trang lộ trình tiếp theo (đã kèm ?from=...)
+                window.location.href = data.next_url;
+            }
+        } else {
+            alert("Lỗi: " + data.message);
+            btn.disabled = false;
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Lỗi kết nối.");
+        btn.disabled = false;
+    }
+}
+</script>
+
 <div class="modal" id="cameraModal">
   <div class="modal-content">
     <h3 id="modalTitle">Tên hiện vật</h3>
@@ -436,27 +472,26 @@
   });
 </script>
 
+<script src="./assets/js/translations.js"></script>
+<script src="./assets/js/i18n.js"></script>
 
-    {% if is_admin %}
-  <button onclick="adminSkipAll('ltbuudientp.html')" class="admin-badge">
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+{% if is_admin %}
+  <button onclick="adminSkipTest('nha_tho_duc_ba')" class="admin-badge">
     <ion-icon name="rocket-outline"></ion-icon>
     ADMIN SKIP
   </button>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
   <script>
-    // Sửa hàm nhận tham số nextUrl
-    function adminSkipAll(nextUrl) {
-      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
-        // Chuyển hướng ngay lập tức
-        window.location.href = nextUrl;
+    function adminSkipTest(currentKey) {
+      if(confirm('🚀 ADMIN: Bỏ qua và gọi API lấy điểm tiếp theo?')) {
+        goToNextStop(currentKey);
       }
     }
   </script>
   {% endif %}
-<script src="./assets/js/translations.js"></script>
-<script src="./assets/js/i18n.js"></script>
 
 </body>
 </html>

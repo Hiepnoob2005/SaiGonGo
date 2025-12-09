@@ -1,50 +1,18 @@
 [
   {
-    "username": "dphuoc",
-    "email": "lnphuoc1608@gmail.com",
-    "points": 50,
-    "routes": {
-      "route1": {
-        "status": "completed",
-        "reward_claimed": true
-      }
-    }
-  },
-  {
-    "username": "test1",
-    "email": "abc@gmail.com",
-    "points": 103,
-    "routes": {
-      "route1": {
-        "status": "completed",
-        "reward_claimed": true
-      }
-    }
-  },
-  {
-    "username": "24127020",
-    "email": "oizooi12345@gmail.com",
-    "points": 13,
-    "routes": {
-      "route1": {
-        "status": "locked",
-        "reward_claimed": false
-      }
-    }
-  },
-  {
     "username": "admin1",
     "email": "admin1@hcmus.edu.vn",
-    "points": 50,
+    "points": 0,
     "routes": {
       "route1": {
         "status": "completed",
-        "reward_claimed": true
+        "reward_claimed": false
       }
     },
     "current_tour_plan": [
-      "cho_ben_thanh",
-      "bao_tang_chien_tich"
+      "dinh_doc_lap",
+      "nha_tho_duc_ba",
+      "ho_con_rua"
     ],
     "current_step_index": 0
   }

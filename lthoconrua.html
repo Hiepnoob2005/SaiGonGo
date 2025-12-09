@@ -1,147 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-i18n="lt_turtle_title">Lộ trình đến Hồ Con Rùa</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
-    <style>
-        /* CSS Tùy chỉnh */
-        body {
-            font-family: "Times New Roman", Times, serif;
-            background-color: #f8f8f8;
-            text-align: center;
-            padding-top: 50px;
-        }
-
-        .main-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .instruction-box {
-            margin: 30px auto;
-            padding: 30px 35px;
-            border: 3px solid #e63946;
-            background: linear-gradient(180deg, #fff6f6, #ffeaea);
-            border-radius: 16px;
-            text-align: left;
-            white-space: pre-wrap;
-            font-size: 1.5rem;
-            line-height: 1.6;
-            font-weight: 600;
-            color: #222;
-            box-shadow: 0 6px 18px rgba(230, 57, 70, 0.2);
-            min-height: 130px;
-            max-width: 800px;
-            transition: all 0.3s ease;
-        }
-
-        .instruction-box.show {
-            transform: scale(1.02);
-            box-shadow: 0 8px 24px rgba(230, 57, 70, 0.35);
-        }
-
-        /* Các nút */
-        .btn-action {
-            background-color: #d62828;
-            color: #fff;
-            padding: 18px 50px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            transition: all 0.25s ease;
-            margin-top: 25px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 14px rgba(214, 40, 40, 0.4);
-        }
-
-        .btn-action:hover {
-            background-color: #e63946;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 18px rgba(230, 57, 70, 0.5);
-        }
-
-        .btn-map {
-            background-color: #007bff;
-            padding: 12px 25px;
-            font-size: 1rem;
-        }
-
-        .btn-map:hover {
-            background-color: #0056b3;
-        }
-
-        .challenge-section {
-            margin-top: 30px;
-            padding: 20px;
-            border-top: 1px solid #ddd;
-        }
-
-        /* CSS cho toggle */
-        .toggle-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            color: #555;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 45px;
-            height: 25px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 25px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background-color: #2196F3;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(18px);
-        }
-    </style>
+    <link rel="stylesheet" href="./assets/css/lotrinh_SAME_style.css" />
 </head>
 
 <body id="top">
@@ -175,8 +40,9 @@
           transition: all 0.3s ease;" data-i18n="lt_locating">
             📍 Đang xác định vị trí...
         </div>
-        <a href="quiz_buudientp.html" class="btn btn-outline" style="margin: 10px 0 20px 0;" data-i18n="btn_back">← Trở về</a>
         <input type="text" id="locationName" value="Hồ Con Rùa" readonly style="margin-bottom: 20px; display: none;" />
+        <a href="quiz_buudientp.html" class="btn btn-outline" style="margin: 10px 0 20px 0;" data-i18n="btn_back">← Trở
+            về</a>
 
         {% if is_admin %}
 
@@ -187,11 +53,12 @@
                 <span class="slider"></span>
             </label>
             <span id="locationModeLabel">Chế độ Thử nghiệm (Hồ Con Rùa)</span>
-        </div> 
+        </div>
         {% endif %}
         <button id="getDirectionsBtn" class="btn-action" data-i18n="btn_request_route">✅ Yêu cầu Lộ trình GPS</button>
 
-        <button id="altRouteBtn" class="btn-action" style="background-color: #ff9800; display: none; margin-top: 10px;" data-i18n="btn_alt_route">
+        <button id="altRouteBtn" class="btn-action" style="background-color: #ff9800; display: none; margin-top: 10px;"
+            data-i18n="btn_alt_route">
             ⚠️ Nếu đường bị chặn. Tìm lối khác
         </button>
 
@@ -206,14 +73,14 @@
         </a>
 
         <div style="margin-top: 25px;">
-            <a href="ketthuclt1.html" class="btn-action"
-                style="display: inline-block; text-decoration: none; background-color: #f92929;" data-i18n="lt_skip_to_next">
-                ⏩ Bỏ qua lộ trình này sẽ kết thúc chuyến đi
-            </a>
+            <button id="skipBtn" class="btn-action" style="background-color:#f92929">
+                Bỏ qua địa điểm này
+            </button>
         </div>
 
         <section class="challenge-section" id="photoChallenge" style="display: none;">
-            <a href="hoconrua.html" class="btn-action" style="text-decoration: none; background-color: green;" data-i18n="quiz_continue_turtle">
+            <a href="hoconrua.html" class="btn-action" style="text-decoration: none; background-color: green;"
+                data-i18n="quiz_continue_turtle">
                 Hoàn thành thử thách →
             </a>
         </section>
@@ -223,8 +90,23 @@
     </footer>
 
     <script>
-        const START_KEY = "buu_dien_thanh_pho";
-        const END_KEY = "ho_con_rua";
+        // --- 1. LẤY THÔNG TIN TỪ URL ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const fromKey = urlParams.get('from'); // Lấy điểm xuất phát từ URL
+
+        // --- 2. CẤU HÌNH ĐỊA ĐIỂM ĐỘNG ---
+        // Nếu có 'from', dùng nó. Nếu không (truy cập trực tiếp), dùng một điểm mặc định nào đó hoặc báo lỗi
+        const START_KEY = fromKey ? fromKey : "buu_dien_thanh_pho";
+        const END_KEY = "ho_con_rua"; // Điểm đến của trang này là CỐ ĐỊNH
+
+        // --- 3. XỬ LÝ NÚT QUAY LẠI THÔNG MINH ---
+        // Khi bấm quay lại, ta muốn về trang Quiz của địa điểm trước đó
+        const backBtn = document.querySelector('a.btn-outline'); // Nút "Trở về"
+        if (backBtn && fromKey) {
+            // Giả sử tên file quiz là quiz_{key}.html (theo quy tắc đặt tên)
+            // Hoặc bạn có thể gọi API để lấy tên file chính xác nếu muốn chắc chắn
+            backBtn.href = `quiz_${fromKey}.html`;
+        }
 
         const getDirectionsBtn = document.getElementById("getDirectionsBtn");
         const altRouteBtn = document.getElementById("altRouteBtn");
@@ -234,12 +116,12 @@
         const photoChallenge = document.getElementById("photoChallenge");
         const locationToggle = document.getElementById("dynamicLocationToggle");
         const locationModeLabel = document.getElementById("locationModeLabel");
-        
+
         let useDynamicLocation = false;
 
         // Init Toggle
         locationToggle.checked = !useDynamicLocation;
-        
+
         function updateLocationLabel() {
             // Cần thêm key lt_test_mode_turtle vào translations nếu chưa có
             // Tạm dùng text cứng nếu chưa thêm key, hoặc dùng i18n
@@ -254,9 +136,9 @@
             useDynamicLocation = !locationToggle.checked;
             updateLocationLabel();
         });
-        
+
         window.addEventListener('load', () => {
-             if(typeof i18n !== 'undefined') updateLocationLabel();
+            if (typeof i18n !== 'undefined') updateLocationLabel();
         });
 
         // --- HÀM 1: XỬ LÝ NÚT BẤM & LẤY VỊ TRÍ ---
@@ -325,7 +207,7 @@
                     if (isAlternative) {
                         loadingStatus.textContent = i18n.t('lt_alt_route_found');
                     } else {
-                        loadingStatus.textContent = i18n.t('lt_route_ready', {destination: destName, distance: data.total_distance_km});
+                        loadingStatus.textContent = i18n.t('lt_route_ready', { destination: destName, distance: data.total_distance_km });
                         altRouteBtn.style.display = "inline-block";
                     }
 
@@ -350,8 +232,8 @@
             }
         }
 
-        getDirectionsBtn.addEventListener("click", () => getAndSendLocation(false)); 
-        altRouteBtn.addEventListener("click", () => getAndSendLocation(true));       
+        getDirectionsBtn.addEventListener("click", () => getAndSendLocation(false));
+        altRouteBtn.addEventListener("click", () => getAndSendLocation(true));
 
     </script>
 
@@ -382,7 +264,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         points: -2,
-                        routeId: 'route1' 
+                        routeId: 'route1'
                     })
                 });
                 const data = await res.json();
@@ -394,7 +276,7 @@
                     anim.className = "point-animation anim-minus";
                     setTimeout(() => { anim.className = "point-animation"; }, 2000);
                 } else {
-                    console.log(data.message); 
+                    console.log(data.message);
                 }
             } catch (e) {
                 console.error("Lỗi cập nhật điểm:", e);
@@ -409,7 +291,7 @@
         const distanceBox = document.getElementById("distanceProgress");
 
         function getDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371e3; 
+            const R = 6371e3;
             const toRad = deg => deg * Math.PI / 180;
             const φ1 = toRad(lat1);
             const φ2 = toRad(lat2);
@@ -437,7 +319,7 @@
                             distanceBox.style.color = "#0a8a0a";
                             distanceBox.style.border = "2px solid #9be59b";
                         } else {
-                            distanceBox.textContent = i18n.t('lt_distance', {distance: km});
+                            distanceBox.textContent = i18n.t('lt_distance', { distance: km });
                             distanceBox.style.backgroundColor = "#e8f2ff";
                             distanceBox.style.color = "#0056b3";
                             distanceBox.style.border = "2px solid #bcd8ff";
@@ -458,28 +340,65 @@
         updateDistance();
         setInterval(updateDistance, 120000);
     </script>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-  {% if is_admin %}
-  <button onclick="adminSkipAll('ketthuclt1.html')" class="admin-badge">
-    <ion-icon name="rocket-outline"></ion-icon>
-    ADMIN SKIP
-  </button>
 
-  <script>
-    // Sửa hàm nhận tham số nextUrl
-    function adminSkipAll(nextUrl) {
-      if(confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
-        // Chuyển hướng ngay lập tức
-        window.location.href = nextUrl;
-      }
-    }
-  </script>
-  {% endif %}
-    
-<script src="./assets/js/translations.js"></script>
-<script src="./assets/js/i18n.js"></script>
+    <script>
+        document.getElementById("skipBtn").addEventListener("click", async () => {
+            // Tên key của trang hiện tại
+            const CURRENT_KEY = "ho_con_rua";
+            // ⚠️ Mỗi trang đổi tên này cho đúng!
+
+            try {
+                const res = await fetch("/api/get-next-destination", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ current_location: CURRENT_KEY })
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    alert("Không thể chuyển tiếp: " + data.message);
+                    return;
+                }
+
+                // Nếu đã hết lộ trình
+                if (data.finished) {
+                    window.location.href = data.next_url;
+                    return;
+                }
+
+                // Ngược lại → đến trang lộ trình tiếp theo
+                window.location.href = data.next_url;
+            }
+            catch (err) {
+                console.error(err);
+                alert("Lỗi kết nối server.");
+            }
+        });
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    {% if is_admin %}
+    <button onclick="adminSkipAll('hoconrua.html')" class="admin-badge">
+        <ion-icon name="rocket-outline"></ion-icon>
+        ADMIN SKIP
+    </button>
+
+    <script>
+        // Sửa hàm nhận tham số nextUrl
+        function adminSkipAll(nextUrl) {
+            if (confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
+                // Chuyển hướng ngay lập tức
+                window.location.href = nextUrl;
+            }
+        }
+    </script>
+    {% endif %}
+
+    <script src="./assets/js/translations.js"></script>
+    <script src="./assets/js/i18n.js"></script>
 
 </body>
+
 </html>

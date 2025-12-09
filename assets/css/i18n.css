@@ -1,77 +1,68 @@
-/**
- * SaiGonGo - Language Selector Styles
- * Spotify-inspired design
- */
-
-/* Language Selector Container */
+/* Container bao quanh nút (được nhúng vào trong li hoặc div của navbar) */
 #language-selector-container {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+    /* Margin trái để tạo khoảng cách với nút Login */
+    margin-left: 20px; 
 }
 
 .language-selector {
-  position: relative;
-  display: inline-block;
+    position: relative; /* Để dropdown căn theo nút này */
+    display: inline-block;
 }
 
-/* Main Button */
+/* --- NÚT CHỌN NGÔN NGỮ (Sửa lại) --- */
 .language-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    padding: 8px 16px;
+    padding: 8px 12px;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    color: #fff;
+    
+    /* Viền trắng để nổi trên nền xanh */
+    border: 1px solid rgba(255, 255, 255, 0.6); 
+    border-radius: 50px; /* Bo tròn viên thuốc */
+    
+    color: white; 
     font-size: 14px;
-    font-family: inherit;
     cursor: pointer;
     transition: all 0.2s ease;
+    
+    /* QUAN TRỌNG: Bỏ fixed để nó nằm trong dòng chảy của menu */
+    position: static; 
+    box-shadow: none; /* Bỏ bóng đổ quá đậm nếu không cần thiết */
 }
 
 .language-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
 }
 
-.language-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 191, 165, 0.5);
-}
-
-/* Icons */
+/* Icon quả địa cầu */
 .globe-icon {
-  flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    stroke: currentColor; /* Màu theo màu chữ */
 }
 
-.chevron-icon {
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
-
-.language-btn[aria-expanded="true"] .chevron-icon {
-  transform: rotate(180deg);
-}
-
-/* Dropdown */
+/* --- MENU XỔ XUỐNG (Dropdown) --- */
 .language-dropdown {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 8px;
-  min-width: 220px;
-  background: #1e3a4c;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-50%) translateY(10px);
-  transition: all 0.2s ease;
-  z-index: 1000;
-  overflow: hidden;
+    position: absolute;
+    top: 120%; /* Đẩy xuống dưới nút một chút */
+    right: 0;  /* Căn lề phải khớp với nút */
+    left: auto; /* Bỏ căn trái */
+    transform: translateY(10px);
+    
+    min-width: 200px;
+    background: var(--viridian-green); /* Nền trắng sạch sẽ */
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 9999;
 }
 
 .language-dropdown.show {
@@ -80,11 +71,88 @@
     transform: translateY(0);
 }
 
+/* Header của dropdown */
+.dropdown-header {
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #888;
+    border-bottom: 1px solid white;
+    background: white;
+}
+
+/* Danh sách ngôn ngữ */
+.language-list {
+    list-style: none;
+    margin: 0;
+    padding: 5px 0;
+}
+
+.language-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.language-item:hover {
+    background: #f0f8ff; /* Màu xanh nhạt khi hover */
+}
+
+.language-item.active {
+    background: rgba(0, 128, 128, 0.1); /* Màu Teal nhạt */
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.check-icon {
+    margin-left: auto; /* Đẩy dấu tích sang phải cùng */
+    color: #ffffff;
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 992px) {
+    #language-selector-container {
+        margin-left: 0;
+        justify-content: center;
+        width: 100%;
+        margin-top: 15px; /* Cách các nút trên */
+        margin-bottom: 20px;
+    }
+
+    .language-btn {
+        color: #333; /* Chữ đen trên nền trắng mobile */
+        border-color: #ccc;
+        width: 100%; /* Nút rộng ra cho dễ bấm */
+        justify-content: center;
+    }
+
+    .language-dropdown {
+        width: 100%;
+        right: 0;
+        left: 0;
+        position: static; /* Trên mobile cho nó hiện ngay dưới luôn */
+        box-shadow: none;
+        border: 1px solid #eee;
+        margin-top: 10px;
+        display: none; /* Mặc định ẩn, dùng JS toggle class show để hiện */
+    }
+    
+    .language-dropdown.show {
+        display: block;
+        transform: none;
+    }
+}
+
 .dropdown-header {
     padding: 16px;
     font-size: 14px;
     font-weight: 600;
-    color: #fff;
+    color: var(--viridian-green);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -101,7 +169,7 @@
     align-items: center;
     gap: 12px;
     padding: 12px 16px;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--viridian-green);
     cursor: pointer;
     transition: all 0.15s ease;
 }
@@ -111,11 +179,11 @@
 }
 
 .language-option.active {
-  background: rgba(0, 191, 165, 0.15);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .language-option.active .lang-name {
-  color: #00bfa5;
+  color: white;
 }
 
 /* Flag */
@@ -143,7 +211,7 @@
 
 /* Check Icon */
 .check-icon {
-  color: #00bfa5;
+  color: #ffffff;
   font-weight: bold;
 }
 
@@ -151,7 +219,10 @@
 @media (max-width: 768px) {
   .language-btn {
     padding: 6px 12px;
-  }
+    border: 1px solid var(--viridian-green);
+    color: var(--viridian-green);
+}
+
   
   .language-dropdown {
     min-width: 200px;
@@ -220,9 +291,9 @@
 }
 
 .footer-light .lang-name {
-  color: #333;
+  color: #ffffff;
 }
 
 .footer-light .lang-region {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.6);
 }
