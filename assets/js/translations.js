@@ -146,6 +146,7 @@ const translations = {
         dest_post_office: "Bưu điện Thành phố",
         dest_book_street: "Đường sách Nguyễn Văn Bình",
         dest_turtle_lake: "Hồ Con Rùa",
+        dest_museum: "Bảo tàng Chiến tích Chiến tranh",
         
         // === Addresses ===
         addr_museum: "28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh",
@@ -225,7 +226,7 @@ const translations = {
         lt_gps_error: "⚠️ Không thể xác định vị trí. Hãy bật GPS.",
         lt_browser_error: "❌ Trình duyệt không hỗ trợ GPS.",
         lt_use_real_location: "Sử dụng vị trí thực tế",
-        lt_test_mode: "Chế độ Thử nghiệm (Bảo tàng)",
+        lt_test_mode: "Chế độ Thử nghiệm",
         lt_route_placeholder: "Lộ trình sẽ xuất hiện ở đây sau khi bạn nhấn nút Yêu cầu Lộ trình.",
         lt_getting_gps: "⏳ Đang lấy vị trí GPS hiện tại...",
         lt_creating_route: "⏳ Đang gửi tọa độ và yêu cầu AI tạo lộ trình...",
@@ -266,7 +267,7 @@ const translations = {
         // === Bổ sung cho nhathoducba.html & ltnhathoducba.html ===
         cathedral_intro_title: "🏛️ Giới thiệu về Nhà thờ Đức Bà",
         lt_cathedral_title: "Điểm đến Tiếp theo: Nhà thờ Đức Bà",
-        lt_test_mode_cathedral: "Chế độ Thử nghiệm (Nhà thờ Đức Bà)",
+        lt_test_mode_cathedral: "Chế độ Thử nghiệm",
 
         // === Quiz Nhà thờ Đức Bà ===
         quiz_cathedral_title: "⛪ Spot the Detail: Nhà thờ Đức Bà",
@@ -292,7 +293,7 @@ const translations = {
         post_info_text: "Bưu điện Trung tâm Sài Gòn được xây dựng trong khoảng 1886-1891 theo thiết kế của kiến trúc sư người Pháp Gustave Eiffel. Đây là một trong những công trình kiến trúc lâu đời và đẹp nhất tại Việt Nam.",
         // === Bưu điện Thành phố ===
         lt_post_title: "Lộ trình đến Bưu điện Thành Phố",
-        lt_test_mode_post: "Chế độ Thử nghiệm (Bưu điện)",
+        lt_test_mode_post: "Chế độ Thử nghiệm",
         
         post_info_title: "🏛️ Giới thiệu về Bưu điện Thành phố",
         post_info_text: "<b>Bưu điện Trung tâm Thành phố</b> nằm tại Số 2, Công xã Paris, Quận 1... là kiệt tác kết hợp kiến trúc Gothic, Phục hưng và Pháp, xây dựng từ 1886-1891.",
@@ -364,10 +365,10 @@ const translations = {
         lt_cathedral_title: "Điểm đến Tiếp theo: Nhà thờ Đức Bà",
         lt_post_title: "Điểm đến Tiếp theo: Bưu điện Thành phố",
         lt_turtle_title: "Điểm đến Tiếp theo: Hồ Con Rùa",
-        lt_test_mode_museum: "Chế độ Thử nghiệm (Bảo tàng)",
-        lt_test_mode_palace: "Chế độ Thử nghiệm (Dinh Độc Lập)",
-        lt_test_mode_cathedral: "Chế độ Thử nghiệm (Nhà thờ Đức Bà)",
-        lt_test_mode_post: "Chế độ Thử nghiệm (Bưu điện)",
+        lt_test_mode_museum: "Chế độ Thử nghiệm",
+        lt_test_mode_palace: "Chế độ Thử nghiệm",
+        lt_test_mode_cathedral: "Chế độ Thử nghiệm",
+        lt_test_mode_post: "Chế độ Thử nghiệm",
         lt_directions_placeholder: "Lộ trình sẽ xuất hiện ở đây sau khi bạn nhấn nút Yêu cầu Lộ trình.",
         lt_skip_to_next: "Bỏ qua đến điểm đến →",
         
@@ -749,7 +750,7 @@ const translations = {
         lt_gps_error: "⚠️ Unable to determine location. Please enable GPS.",
         lt_browser_error: "❌ Browser does not support GPS.",
         lt_use_real_location: "Use real location",
-        lt_test_mode: "Test Mode (Museum)",
+        lt_test_mode: "Test Mode",
         lt_route_placeholder: "Route will appear here after you press the Request Route button.",
         lt_getting_gps: "⏳ Getting current GPS location...",
         lt_creating_route: "⏳ Sending coordinates and requesting AI to create route...",
@@ -790,7 +791,7 @@ const translations = {
         // === Supplement for nhathoducba.html & ltnhathoducba.html ===
         cathedral_intro_title: "🏛️ Introduction to Notre-Dame Cathedral",
         lt_cathedral_title: "Next Destination: Notre-Dame Cathedral",
-        lt_test_mode_cathedral: "Test Mode (Notre-Dame Cathedral)",
+        lt_test_mode_cathedral: "Test Mode",
 
         // === Quiz Notre-Dame Cathedral ===
         quiz_cathedral_title: "⛪ Spot the Detail: Notre-Dame Cathedral",
@@ -816,7 +817,7 @@ const translations = {
         post_info_text: "Saigon Central Post Office was built between 1886-1891 according to the design of French architect Gustave Eiffel. It is one of the oldest and most beautiful architectural works in Vietnam.",
         // === Central Post Office ===
         lt_post_title: "Route to Central Post Office",
-        lt_test_mode_post: "Test Mode (Post Office)",
+        lt_test_mode_post: "Test Mode",
         
         post_info_title: "🏛️ Introduction to Central Post Office",
         post_info_text: "<b>Saigon Central Post Office</b> is located at No. 2, Paris Commune Square... a masterpiece combining Gothic, Renaissance and French architecture, built from 1886-1891.",
@@ -888,10 +889,9 @@ const translations = {
         lt_cathedral_title: "Next Destination: Notre-Dame Cathedral",
         lt_post_title: "Next Destination: Central Post Office",
         lt_turtle_title: "Next Destination: Turtle Lake",
-        lt_test_mode_museum: "Test Mode (Museum)",
-        lt_test_mode_palace: "Test Mode (Independence Palace)",
-        lt_test_mode_cathedral: "Test Mode (Notre-Dame Cathedral)",
-        lt_test_mode_post: "Test Mode (Post Office)",
+        lt_museum_title: "Next Destination: War Remnants Museum",
+        lt_benthanh_title: "Next Destination: Ben Thanh Market",
+        lt_test_mode_post: "Test Mode",
         lt_directions_placeholder: "Directions will appear here after you press the Request Route button.",
         lt_skip_to_next: "Skip to destination →",
         

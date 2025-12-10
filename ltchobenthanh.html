@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="lt_ben_thanh_market">Lộ trình đến Chợ Bến Thành</title>
+    <title data-i18n="lt_market_title">Lộ trình đến Chợ Bến Thành</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/lotrinh_SAME_style.css" />
 </head>
@@ -53,7 +53,7 @@
                 <input type="checkbox" id="dynamicLocationToggle">
                 <span class="slider"></span>
             </label>
-            <span id="locationModeLabel" data-i18n="lt_test_mode_post">Chế độ Thử nghiệm (Chợ Bến Thành)</span>
+            <span id="locationModeLabel" data-i18n="lt_test_mode">Chế độ Thử nghiệm</span>
         </div>
         {% endif %}
 
@@ -92,19 +92,23 @@
     <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
     </footer>
 
-    <script>
-        const fromKey = urlParams.get('from');
+   <script>
+        // 1. Khai báo urlParams TRƯỚC TIÊN
         const urlParams = new URLSearchParams(window.location.search);
-        const isRoute1 = urlParams.get('mode') === 'route1';
+        // Thêm dòng này ở đầu phần <script>
         let dynamicMapUrl = "";
+        // 2. Lấy các thông tin cần thiết
+        const fromKey = urlParams.get('from');
+        const isRoute1 = urlParams.get('mode') === 'route1';
 
+        // 3. XÁC ĐỊNH ĐIỂM BẮT ĐẦU (START_KEY)
         let START_KEY;
 
         if (isRoute1) {
             // 👉 TRƯỜNG HỢP 1: LỘ TRÌNH 1 (CỐ ĐỊNH)
             // Trong lộ trình 1, trước Dinh Độc Lập LUÔN LUÔN là Bảo Tàng.
             // Nên ta gán cứng luôn, không cần quan tâm 'from'.
-            START_KEY = "cho_ben_thanh";
+            START_KEY = "ho_con_rua";
         } else {
             // 👉 TRƯỜNG HỢP 2: TỰ TẠO LỘ TRÌNH (ĐỘNG)
             // Phải lấy từ biến 'from' trên URL.
@@ -113,9 +117,11 @@
             } else {
                 // Nếu không có 'from' (do lỗi truyền tham số), ta mới dùng tạm mặc định
                 console.warn("Thiếu tham số 'from', dùng mặc định.");
-                START_KEY = "cho_ben_thanh";
+                START_KEY = "ho_con_rua";
             }
         }
+
+        const END_KEY = "cho_ben_thanh";
 
         window.addEventListener('load', () => {
             const challengeBtn = document.querySelector('#photoChallenge a');
@@ -127,7 +133,7 @@
                 challengeBtn.href = `chobenthanh.html?from=${urlParams.get('from')}`;
             }
         });
-        const END_KEY = "cho_ben_thanh";
+        
 
         const getDirectionsBtn = document.getElementById("getDirectionsBtn");
         const altRouteBtn = document.getElementById("altRouteBtn");
@@ -219,12 +225,13 @@
                 const data = await res.json();
                 // Tên địa điểm đích cho thông báo
                 // Có thể cần thêm key dest_post_office vào translations
-                const destName = i18n.t('dest_post_office');
+                const destName = i18n.t('dest_market');
 
                 if (data.success) {
                     directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>');
                     directionsBox.classList.add("show");
                     dynamicMapUrl = data.map_url;
+                    document.getElementById("btnOpenMap").style.display = 'inline-block';
 
                     if (isAlternative) {
                         loadingStatus.textContent = i18n.t('lt_alt_route_found');
@@ -428,21 +435,26 @@
         ADMIN SKIP
     </button>
 
-    <script>
-        // Sửa hàm nhận tham số nextUrl
+     <script>
         function adminSkipAll(nextUrl) {
             if (confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
                 // Chuyển hướng ngay lập tức
-                window.location.href = nextUrl;
+                const urlParams = new URLSearchParams(window.location.search);
+                const mode = urlParams.get('mode');
+
+                if (mode === 'route1') {
+                    // Nếu có mode, nối thêm vào link tiếp theo
+                    // Kiểm tra xem nextUrl đã có dấu ? chưa
+                    const separator = nextUrl.includes('?') ? '&' : '?';
+                    window.location.href = `chobenthanh.html?mode=route1`;
+                } else {
+                    // Nếu không, đi bình thường
+                    window.location.href = nextUrl;
+                }
             }
         }
     </script>
     {% endif %}
-
-    <script src="./assets/js/translations.js"></script>
-    <script src="./assets/js/i18n.js"></script>
-
 </body>
 
 </html>
-googleusercontent.com

@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="lt_museum_title">Lộ trình đến Bảo tàng Chứng tích Chiến tranh</title>
+    <title data-i18n="lt_museum_title">Lộ trình đến Bảo tàng Chứng tích Chiến Tranh</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/lotrinh_SAME_style.css" />
 </head>
 
 <body id="top">
@@ -22,27 +23,28 @@
     </header>
 
     <main class="main-container">
-        <h2 data-i18n="lt_museum_title">Điểm đến Tiếp theo: Bảo tàng Chứng tích Chiến tranh</h2>
+        <h2 data-i18n="lt_museum_title">Điểm đến Tiếp theo: Bảo tàng Chứng tích Chiến Tranh</h2>
         <div id="distanceProgress" style="
-          font-size: 1.6rem;
-          font-weight: 800;
-          color: #0056b3;
-          background-color: #e8f2ff;
-          border: 2px solid #bcd8ff;
-          border-radius: 15px;
-          padding: 20px 30px;
-          text-align: center;
-          margin: 25px auto;
-          width: 80%;
-          max-width: 500px;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-          transition: all 0.3s ease;" data-i18n="lt_locating">
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0056b3;
+            background-color: #e8f2ff;
+            border: 2px solid #bcd8ff;
+            border-radius: 15px;
+            padding: 20px 30px;
+            text-align: center;
+            margin: 25px auto;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+" data-i18n="lt_locating">
             📍 Đang xác định vị trí...
         </div>
-        <input type="text" id="locationName" value="Bảo tàng Chứng tích Chiến tranh" readonly
+        <input type="text" id="locationName" value="Bảo tàng Chứng tích Chiến Tranh" readonly
             style="margin-bottom: 20px; display: none;" />
-        <a href="ltbaotang.html" class="btn btn-outline" style="margin: 10px 0 20px 0;" data-i18n="btn_back">←
-            Trở về</a>
+        <a href="ltbaotang.html" class="btn btn-outline" style="margin: 10px 0 20px 0;" data-i18n="btn_back">← Trở
+            về</a>
 
         {% if is_admin %}
 
@@ -52,8 +54,7 @@
                 <input type="checkbox" id="dynamicLocationToggle">
                 <span class="slider"></span>
             </label>
-            <span id="locationModeLabel" data-i18n="lt_test_mode_post">Chế độ Thử nghiệm (Bảo tàng Chứng tích Chiến
-                tranh)</span>
+            <span id="locationModeLabel" data-i18n="lt_test_mode">Chế độ Thử nghiệm</span>
         </div>
         {% endif %}
 
@@ -83,7 +84,7 @@
 
         <section class="challenge-section" id="photoChallenge" style="display: none;">
             <a href="baotang.html" class="btn-action" style="text-decoration: none; background-color: green;"
-                data-i18n="quiz_continue_post">
+                data-i18n="quiz_continue_cathedral">
                 Hoàn thành thử thách →
             </a>
         </section>
@@ -121,6 +122,8 @@
             }
         }
 
+        const END_KEY = "bao_tang_chien_tich";
+
         window.addEventListener('load', () => {
             const challengeBtn = document.querySelector('#photoChallenge a');
             if (challengeBtn && isRoute1) {
@@ -131,7 +134,6 @@
                 challengeBtn.href = `baotang.html?from=${urlParams.get('from')}`;
             }
         });
-        const END_KEY = "bao_tang_chung_tich_chien_tranh";
 
         const getDirectionsBtn = document.getElementById("getDirectionsBtn");
         const altRouteBtn = document.getElementById("altRouteBtn");
@@ -223,7 +225,7 @@
                 const data = await res.json();
                 // Tên địa điểm đích cho thông báo
                 // Có thể cần thêm key dest_post_office vào translations
-                const destName = i18n.t('dest_post_office');
+                const destName = i18n.t('dest_museum_name');
 
                 if (data.success) {
                     directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>');
@@ -377,13 +379,13 @@
         setInterval(updateDistance, 120000);
     </script>
 
-    <script src="./assets/js/translations.js"></script>
+    <script src="./assets/js/trans lations.js"></script>
     <script src="./assets/js/i18n.js"></script>
 
     <script>
         document.getElementById("skipBtn").addEventListener("click", async () => {
         // Tên key của trang hiện tại
-        const CURRENT_KEY = "bao_tang_chung_tich";
+        const CURRENT_KEY = "bao_tang_chien_tich";
 
         // --- 1. KIỂM TRA CHẾ ĐỘ ---
         const urlParams = new URLSearchParams(window.location.search);
@@ -429,6 +431,7 @@
     </script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    
     {% if is_admin %}
     <button onclick="adminSkipAll('baotang.html')" class="admin-badge">
         <ion-icon name="rocket-outline"></ion-icon>
@@ -436,11 +439,21 @@
     </button>
 
     <script>
-        // Sửa hàm nhận tham số nextUrl
         function adminSkipAll(nextUrl) {
             if (confirm('🚀 ADMIN: Bỏ qua và đi tới trang tiếp theo ngay?')) {
                 // Chuyển hướng ngay lập tức
-                window.location.href = nextUrl;
+                const urlParams = new URLSearchParams(window.location.search);
+                const mode = urlParams.get('mode');
+
+                if (mode === 'route1') {
+                    // Nếu có mode, nối thêm vào link tiếp theo
+                    // Kiểm tra xem nextUrl đã có dấu ? chưa
+                    const separator = nextUrl.includes('?') ? '&' : '?';
+                    window.location.href = `baotang.html?mode=route1`;
+                } else {
+                    // Nếu không, đi bình thường
+                    window.location.href = nextUrl;
+                }
             }
         }
     </script>
@@ -452,4 +465,3 @@
 </body>
 
 </html>
-googleusercontent.com

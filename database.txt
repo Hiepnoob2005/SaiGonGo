@@ -11,8 +11,8 @@
     },
     "current_tour_plan": [
       "dinh_doc_lap",
-      "nha_tho_duc_ba",
-      "ho_con_rua"
+      "bao_tang_chien_tich",
+      "cho_ben_thanh"
     ],
     "current_step_index": 2
   }
