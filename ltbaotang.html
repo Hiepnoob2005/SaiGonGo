@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="lt_museum_title">Lộ trình đến Bảo tàng Chứng tích Chiến Tranh</title>
+    <title data-i18n="lt_museum_title">Lộ trình đến Bảo tàng Chiến tích Chiến Tranh</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/lotrinh_SAME_style.css" />
 </head>
@@ -224,7 +224,7 @@
                 const data = await res.json();
                 // Tên địa điểm đích cho thông báo
                 // Có thể cần thêm key dest_post_office vào translations
-                const destName = i18n.t('dest_museum_name');
+                const destName = i18n.t('dest_museum');
 
                 if (data.success) {
                     directionsBox.innerHTML = data.route_text.replace(/\n/g, '<br>');

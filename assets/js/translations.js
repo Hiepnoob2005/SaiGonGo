@@ -147,6 +147,7 @@ const translations = {
         dest_book_street: "Đường sách Nguyễn Văn Bình",
         dest_turtle_lake: "Hồ Con Rùa",
         dest_museum: "Bảo tàng Chiến tích Chiến tranh",
+        dest_market: "Chợ Bến Thành",
         
         // === Addresses ===
         addr_museum: "28 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh",
