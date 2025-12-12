@@ -73,7 +73,7 @@
         </div>
 
         <button id="btnOpenMap" class="btn-action btn-map" onclick="openGoogleMap()"
-            style="display: none; background-color: #2196F3;">
+            style="display: none; background-color: #2196F3;" data-i18n="btn_open_map">
             🗺️ Mở Map Trợ giúp
         </button>
         <div style="margin-top: 25px;">
@@ -84,8 +84,8 @@
 
         <section class="challenge-section" id="photoChallenge" style="display: none;">
             <a href="buudientp.html" class="btn-action" style="text-decoration: none; background-color: green;"
-                data-i18n="quiz_continue_post">
-                Hoàn thành thử thách →
+                data-i18n="btn_continue_general">
+                Tiếp tục →
             </a>
         </section>
     </main>
@@ -218,6 +218,8 @@
                         start: START_KEY,
                         end: END_KEY,
                         alternative: isAlternative,
+                        // --- THÊM DÒNG NÀY ---
+                        lang: i18n.currentLanguage
                     }),
                 });
 

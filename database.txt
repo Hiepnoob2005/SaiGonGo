@@ -10,10 +10,10 @@
       }
     },
     "current_tour_plan": [
-      "dinh_doc_lap",
-      "bao_tang_chien_tich",
-      "cho_ben_thanh"
+      "nha_tho_duc_ba",
+      "cho_ben_thanh",
+      "ho_con_rua"
     ],
-    "current_step_index": 0
+    "current_step_index": 2
   }
 ]

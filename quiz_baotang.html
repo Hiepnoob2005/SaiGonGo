@@ -414,7 +414,7 @@ async function goToNextStop(currentKey) {
     formData.append('image', file);
     formData.append('detail_id', currentDetailId);
     formData.append('report_missing', isReportMissing);
-
+    
     try {
       const res = await fetch('/api/verify-detail', {
         method: 'POST',
