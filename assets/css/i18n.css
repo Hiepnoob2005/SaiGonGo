@@ -117,18 +117,21 @@
 /* --- RESPONSIVE MOBILE --- */
 @media (max-width: 992px) {
     #language-selector-container {
-        margin-left: 0;
-        justify-content: center;
-        width: 100%;
-        margin-top: 15px; /* Cách các nút trên */
-        margin-bottom: 20px;
+        margin: 0; 
+        padding: 0 10px; /* Thêm chút khoảng cách an toàn */
+        width: auto;
+        height: auto;
+        
+        /* Đảm bảo không dính flex grow làm đẩy nút khác */
+        flex-grow: 0; 
+        flex-shrink: 0;
     }
 
     .language-btn {
         color: #333; /* Chữ đen trên nền trắng mobile */
         border-color: #ccc;
-        width: 100%; /* Nút rộng ra cho dễ bấm */
-        justify-content: center;
+        width: auto; /* Nút rộng ra cho dễ bấm */
+        padding: 6px 12px;
     }
 
     .language-dropdown {
