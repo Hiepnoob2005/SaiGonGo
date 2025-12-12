@@ -220,7 +220,9 @@
                         current_lon: lon,
                         start: START_KEY,
                         end: END_KEY,
-                        alternative: isAlternative, // Quan trọng: Gửi cờ tìm đường khác
+                        alternative: isAlternative,
+                        // --- THÊM DÒNG NÀY ---
+                        lang: i18n.currentLanguage
                     }),
                 });
 

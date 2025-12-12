@@ -321,6 +321,10 @@ async function goToNextStop(currentKey) {
     formData.append('detail_id', currentDetailId);
     formData.append('report_missing', isReportMissing);
 
+    // --- THÊM DÒNG NÀY ---
+    // Gửi ngôn ngữ hiện tại của trình duyệt lên server
+    formData.append('lang', i18n.currentLanguage);
+
     try {
       const res = await fetch('/api/verify-detail', { method: 'POST', body: formData });
       const data = await res.json();
