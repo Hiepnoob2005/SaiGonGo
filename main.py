@@ -548,7 +548,7 @@ def get_dynamic_directions():
         
         # SỬA LỖI: Gọi mô hình qua client.models.get()
         # Sử dụng model gemini-1.5-flash để đồng nhất và tối ưu tốc độ/chi phí
-        model_name_for_text = "gemini-1.5-flash" 
+        model_name_for_text = "gemini-2.5-flash" 
         
             # --- PROMPT TIẾNG VIỆT (CŨ) ---
             # --- PROMPT TIẾNG VIỆT (CŨ) ---
