@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Điểm Xuất Phát - SaiGonGo</title>
+  <title data-i18n="cus_page_title">Điểm Xuất Phát - SaiGonGo</title>
   <link rel="stylesheet" href="./assets/css/style.css" />
   <style>
     body {
@@ -177,25 +177,25 @@
 <body>
 
   <div class="container">
-    <h1>Điểm xuất phát</h1>
-    <p>Hãy di chuyển đến địa điểm đầu tiên trong lộ trình của bạn.</p>
+    <h1 data-i18n="cus_header">Điểm xuất phát</h1>
+    <p data-i18n="cus_instruction">Hãy di chuyển đến địa điểm đầu tiên trong lộ trình của bạn.</p>
 
     <div class="location-icon">📍</div>
 
     <div class="place-info">
-      <div id="targetName" class="place-name">Đang tải địa điểm...</div>
+      <div id="targetName" class="place-name" data-i18n="status_loading_location">Đang tải địa điểm...</div>
       <div id="targetAddress" class="place-address">...</div>
       
-      <a id="mapLink" class="map-link" href="#" target="_blank">
+      <a id="mapLink" class="map-link" href="#" target="_blank" data-i18n="start_view_map">
         🗺️ Xem bản đồ
       </a>
     </div>
 
-    <div id="distanceBox" class="distance-info">📡 Đang lấy dữ liệu...</div>
+    <div id="distanceBox" class="distance-info" data-i18n="status_fetching_data">📡 Đang lấy dữ liệu...</div>
     
     {% if is_admin %}
     <div class="toggle-container">
-        <span>Chế độ kiểm tra (Bỏ qua GPS)</span>
+        <span data-i18n="museum_dev_mode">Chế độ kiểm tra (Bỏ qua GPS)</span>
         <label class="toggle-switch">
           <input type="checkbox" id="devMode">
           <span class="slider"></span>
@@ -205,10 +205,13 @@
   </div>
 
   <div class="bottom-btn">
-    <button id="nextBtn" class="start-btn" onclick="goToNextPage()">
+    <button id="nextBtn" class="start-btn" onclick="goToNextPage()" data-i18n="btn_continue">
       Tiếp tục
     </button>
   </div>
+
+  <script src="./assets/js/translations.js"></script>
+  <script src="./assets/js/i18n.js"></script>
 
 <script>
     // Biến toàn cục để lưu thông tin điểm đến
@@ -225,6 +228,7 @@
 
             if (data.success) {
                 // Cập nhật giao diện
+                // Lưu ý: Tên địa điểm từ server trả về có thể là tiếng Việt cứng nếu DB chưa hỗ trợ đa ngôn ngữ
                 document.getElementById('targetName').textContent = data.name;
                 document.getElementById('targetAddress').textContent = data.address;
                 
@@ -245,7 +249,7 @@
             }
         } catch (e) {
             console.error(e);
-            document.getElementById('targetName').textContent = "Lỗi kết nối";
+            document.getElementById('targetName').textContent = typeof i18n !== 'undefined' ? i18n.t('status_connection_error_short') : "Lỗi kết nối";
         }
     }
 
@@ -267,7 +271,7 @@
 
         // 🛑 Ưu tiên 1: Kiểm tra chế độ Dev (Chỉ dành cho Admin)
         if (devMode && devMode.checked) {
-            distBox.textContent = "🛠️ Đã đến (Chế độ Admin)";
+            distBox.textContent = typeof i18n !== 'undefined' ? i18n.t('status_arrived_admin') : "🛠️ Đã đến (Chế độ Admin)";
             distBox.className = "distance-info ok";
             nextBtn.classList.add("active"); // Mở khóa nút ngay
             return; // Dừng, không cần check GPS thật
@@ -286,20 +290,23 @@
                 const d = getDistance(userLat, userLon, TARGET_LAT, TARGET_LON);
 
                 if (d < MAX_DISTANCE) {
-                    distBox.textContent = `🎉 Bạn đã đến nơi!`;
+                    distBox.textContent = typeof i18n !== 'undefined' ? i18n.t('cus_arrived') : "🎉 Bạn đã đến nơi!";
                     distBox.className = "distance-info ok";
                     nextBtn.classList.add("active"); // Mở khóa nút
                 } else {
-                    distBox.textContent = `📍 Cách điểm đến: ${Math.round(d)} mét`;
+                    distBox.textContent = typeof i18n !== 'undefined' 
+                        ? i18n.t('cus_distance_remaining', {distance: Math.round(d)}) 
+                        : `📍 Cách điểm đến: ${Math.round(d)} mét`;
                     distBox.className = "distance-info far";
                     nextBtn.classList.remove("active"); // Khóa nút
                 }
             }, err => {
                 if (devMode && devMode.checked) return;
-                distBox.textContent = "❌ Lỗi GPS: " + err.message;
+                const errPrefix = typeof i18n !== 'undefined' ? i18n.t('status_gps_error_prefix') : "❌ Lỗi GPS: ";
+                distBox.textContent = errPrefix + err.message;
             }, { enableHighAccuracy: true });
         } else {
-            distBox.textContent = "❌ Trình duyệt không hỗ trợ GPS";
+            distBox.textContent = typeof i18n !== 'undefined' ? i18n.t('start_browser_error') : "❌ Trình duyệt không hỗ trợ GPS";
         }
     }
 
@@ -312,7 +319,7 @@
             devMode.addEventListener('change', () => {
                 // Reset trạng thái hiển thị tạm thời khi chuyển chế độ
                 if (!devMode.checked) {
-                    document.getElementById('distanceBox').textContent = "📡 Đang lấy lại vị trí...";
+                    document.getElementById('distanceBox').textContent = typeof i18n !== 'undefined' ? i18n.t('status_retrying_location') : "📡 Đang lấy lại vị trí...";
                     document.getElementById('nextBtn').classList.remove("active");
                 }
                 checkLocation(); // Gọi hàm check ngay lập tức
@@ -344,6 +351,15 @@
     }
 
     window.onload = loadTarget;
+    
+    // Hỗ trợ cập nhật ngôn ngữ động nếu người dùng đổi ngôn ngữ ở tab khác
+    window.addEventListener('languageChanged', () => {
+        // Cập nhật lại text thông báo (nếu đang không ở chế độ admin)
+        const devMode = document.getElementById('devMode');
+        if (!devMode || !devMode.checked) {
+             checkLocation();
+        }
+    });
 </script>
 </body>
 </html>

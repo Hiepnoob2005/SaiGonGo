@@ -14,6 +14,6 @@
       "bao_tang_chien_tich",
       "cho_ben_thanh"
     ],
-    "current_step_index": 2
+    "current_step_index": 0
   }
 ]

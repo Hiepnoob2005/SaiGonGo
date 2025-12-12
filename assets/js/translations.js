@@ -554,7 +554,20 @@ const translations = {
         place_rehab_desc: "Vừa thưởng thức ẩm thực vừa ngắm cảnh thành phố từ trên cao.",
         
         place_genchay_name: "Gen Chay",
-        place_genchay_desc: "Cửa hàng đồ ăn chay thế hệ mới với các món độc lạ."
+        place_genchay_desc: "Cửa hàng đồ ăn chay thế hệ mới với các món độc lạ.",
+
+        // === batdau_cus.html ===
+        cus_page_title: "Điểm Xuất Phát - SaiGonGo",
+        cus_header: "Điểm xuất phát",
+        cus_instruction: "Hãy di chuyển đến địa điểm đầu tiên trong lộ trình của bạn.",
+        status_loading_location: "Đang tải địa điểm...",
+        status_fetching_data: "📡 Đang lấy dữ liệu...",
+        status_arrived_admin: "🛠️ Đã đến (Chế độ Admin)",
+        cus_arrived: "🎉 Bạn đã đến nơi!",
+        cus_distance_remaining: "📍 Cách điểm đến: {distance} mét",
+        status_gps_error_prefix: "❌ Lỗi GPS: ",
+        status_retrying_location: "📡 Đang lấy lại vị trí...",
+        status_connection_error_short: "Lỗi kết nối"
 },
 
     // ===== ENGLISH =====
@@ -1103,7 +1116,20 @@ const translations = {
         place_rehab_desc: "Enjoy cuisine while admiring the city view from above.",
         
         place_genchay_name: "Gen Chay",
-        place_genchay_desc: "New generation vegetarian shop with unique and delicious dishes."
+        place_genchay_desc: "New generation vegetarian shop with unique and delicious dishes.",
+
+        // === batdau_cus.html ===
+        cus_page_title: "Starting Point - SaiGonGo",
+        cus_header: "Starting Point",
+        cus_instruction: "Please move to the first location of your route.",
+        status_loading_location: "Loading location...",
+        status_fetching_data: "📡 Fetching data...",
+        status_arrived_admin: "🛠️ Arrived (Admin Mode)",
+        cus_arrived: "🎉 You have arrived!",
+        cus_distance_remaining: "📍 Distance remaining: {distance} meters",
+        status_gps_error_prefix: "❌ GPS Error: ",
+        status_retrying_location: "📡 Retrying location...",
+        status_connection_error_short: "Connection Error"
     }
 };
 
