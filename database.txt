@@ -2,11 +2,11 @@
   {
     "username": "admin1",
     "email": "admin1@hcmus.edu.vn",
-    "points": -2,
+    "points": 48,
     "routes": {
       "route1": {
         "status": "completed",
-        "reward_claimed": false
+        "reward_claimed": true
       }
     },
     "current_tour_plan": [

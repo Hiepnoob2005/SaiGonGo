@@ -62,7 +62,6 @@ window.addEventListener("scroll", function () {
                 <a href="profile.html" style="color: white; margin-right: 15px; font-weight: bold; text-decoration: underline;">
                     ${greetingPrefix} ${data.username}
                 </a>
-                
             `;
 
               originalLoginButton.replaceWith(userSection);

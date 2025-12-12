@@ -105,7 +105,8 @@ const translations = {
         btn_retry: "Thử lại",
         btn_great: "Tuyệt vời!",
         btn_exchange_voucher: "🛍️ Đổi Voucher",
-        
+        btn_skip_location: "Bỏ qua địa điểm này",
+
         // === Loading & Status ===
         status_loading: "Đang tải...",
         status_locating: "📡 Đang xác định vị trí...",
@@ -395,6 +396,7 @@ const translations = {
         complete_suggest_title: "Gợi ý địa điểm gần đây",
         complete_reset_confirm: "Bạn có chắc muốn xóa toàn bộ ảnh và đi lại từ đầu không?",
         complete_reset_success: "Đã xóa dữ liệu thành công!",
+        complete_back_home: "Về Trang Chủ",
         
         // Kho báu
         chest_closed: "Rương kho báu đang đóng",
@@ -528,7 +530,31 @@ const translations = {
         loc_ho_con_rua: "Hồ Con Rùa",
         loc_buu_dien: "Bưu điện Thành Phố",
         loc_bao_tang: "Bảo tàng Chiến tích",
-        loc_cho_ben_thanh: "Chợ Bến Thành"
+        loc_cho_ben_thanh: "Chợ Bến Thành",
+
+            // Thẻ Tag gợi ý bổ sung ngày 12/12
+        tag_street_food: "Ẩm thực đường phố",
+        tag_cafe: "Cafe",
+        tag_restaurant: "Nhà hàng",
+
+        // Tên và mô tả các quán ăn (Suggestions)
+        place_banhtrang_name: "Bánh Tráng Trộn",
+        place_banhtrang_desc: "Món ăn vặt \"quốc dân\" nhất định phải thử khi ngồi hóng gió tại hồ.",
+        
+        place_phela_name: "Phê La Coffee",
+        place_phela_desc: "Địa điểm check-in sang chảnh với kiến trúc cổ điển ấn tượng.",
+        
+        place_highlands_name: "Highlands Coffee",
+        place_highlands_desc: "Không gian rộng rãi, thích hợp để thư giãn và làm việc.",
+        
+        place_longwang_name: "Long Wang Hồ Con Rùa",
+        place_longwang_desc: "Một nơi lý tưởng để thưởng thức ẩm thực Trung Hoa.",
+        
+        place_rehab_name: "Rehab SGN | Rooftop",
+        place_rehab_desc: "Vừa thưởng thức ẩm thực vừa ngắm cảnh thành phố từ trên cao.",
+        
+        place_genchay_name: "Gen Chay",
+        place_genchay_desc: "Cửa hàng đồ ăn chay thế hệ mới với các món độc lạ."
 },
 
     // ===== ENGLISH =====
@@ -631,6 +657,7 @@ const translations = {
         btn_retry: "Retry",
         btn_great: "Great!",
         btn_exchange_voucher: "🛍️ Exchange Voucher",
+        btn_skip_location: "Skip this location",
         
         // === Loading & Status ===
         status_loading: "Loading...",
@@ -918,6 +945,7 @@ const translations = {
         complete_suggest_title: "Nearby Suggestions",
         complete_reset_confirm: "Are you sure you want to delete all photos and start over?",
         complete_reset_success: "Data deleted successfully!",
+        complete_back_home: "Back to Home",
 
         // Kho báu
         chest_closed: "Treasure chest closed",
@@ -1051,7 +1079,31 @@ const translations = {
         loc_ho_con_rua: "Turtle Lake",
         loc_buu_dien: "Central Post Office",
         loc_bao_tang: "War Remnants Museum",
-        loc_cho_ben_thanh: "Ben Thanh Market"
+        loc_cho_ben_thanh: "Ben Thanh Market",
+
+            // Tags updated 12/12
+        tag_street_food: "Street Food",
+        tag_cafe: "Cafe",
+        tag_restaurant: "Restaurant",
+
+        // Suggestions Translations
+        place_banhtrang_name: "Mixed Rice Paper",
+        place_banhtrang_desc: "A \"national\" street food snack you must try while enjoying the breeze at the lake.",
+        
+        place_phela_name: "Phe La Coffee",
+        place_phela_desc: "A chic check-in spot with impressive classical architecture.",
+        
+        place_highlands_name: "Highlands Coffee",
+        place_highlands_desc: "Spacious space, suitable for relaxing and working.",
+        
+        place_longwang_name: "Long Wang Turtle Lake",
+        place_longwang_desc: "An ideal place to enjoy authentic Chinese cuisine.",
+        
+        place_rehab_name: "Rehab SGN | Rooftop",
+        place_rehab_desc: "Enjoy cuisine while admiring the city view from above.",
+        
+        place_genchay_name: "Gen Chay",
+        place_genchay_desc: "New generation vegetarian shop with unique and delicious dishes."
     }
 };
 
