@@ -325,15 +325,9 @@
       resultBox.textContent = i18n.t('status_sending');
       uploadBtn.disabled = true;
 
-      const formData = new FormData();
-      formData.append("image", file);
-      // Gửi tên mặc định (Tiếng Việt) về server để xử lý, tránh lỗi AI không nhận diện được tên tiếng Anh
-      // Hoặc server phải xử lý đa ngôn ngữ. Ở đây tôi hardcode gửi về tiếng Việt nếu server chỉ hiểu tiếng Việt
-      formData.append("location", locationName);
-
+      // ✅ Dùng ServerAPI - tự động gửi ngôn ngữ hiện tại
       try {
-        const res = await fetch("/verify-image", { method: "POST", body: formData });
-        const data = await res.json();
+        const data = await ServerAPI.verifyImage(file, locationName);
 
         resultBox.textContent = data.message;
         uploadBtn.disabled = false;
@@ -450,6 +444,7 @@
   
   <script src="./assets/js/translations.js"></script>
 <script src="./assets/js/i18n.js"></script>
+<script src="./assets/js/api-helper.js"></script>
 <link rel="stylesheet" href="./assets/js/i18n.css">
 
 <script>
