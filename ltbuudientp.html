@@ -204,26 +204,13 @@
             }
         }
 
-        // --- HÀM 2: GỬI API LÊN SERVER ---
+        // --- HÀM 2: GỬI API LÊN SERVER (Sử dụng ServerAPI helper) ---
         async function fetchDirectionsFromServer(lat, lon, isAlternative) {
             if (!isAlternative) loadingStatus.textContent = i18n.t('lt_creating_route');
 
             try {
-                const res = await fetch("/get-dynamic-directions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        current_lat: lat,
-                        current_lon: lon,
-                        start: START_KEY,
-                        end: END_KEY,
-                        alternative: isAlternative,
-                        // --- THÊM DÒNG NÀY ---
-                        lang: i18n.currentLanguage
-                    }),
-                });
-
-                const data = await res.json();
+                // ✅ Dùng ServerAPI - tự động gửi ngôn ngữ hiện tại
+                const data = await ServerAPI.getDirections(START_KEY, END_KEY, isAlternative);
                 // Tên địa điểm đích cho thông báo
                 // Có thể cần thêm key dest_post_office vào translations
                 const destName = i18n.t('dest_post_office');
@@ -383,6 +370,7 @@
 
     <script src="./assets/js/translations.js"></script>
     <script src="./assets/js/i18n.js"></script>
+    <script src="./assets/js/api-helper.js"></script>
 
     <script>
         document.getElementById("skipBtn").addEventListener("click", async () => {
