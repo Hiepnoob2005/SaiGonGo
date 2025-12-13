@@ -10,7 +10,7 @@
       }
     },
     "current_tour_plan": [
-      "nha_tho_duc_ba",
+      "bao_tang_chien_tich",
       "cho_ben_thanh",
       "ho_con_rua"
     ],
