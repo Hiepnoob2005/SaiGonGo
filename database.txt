@@ -2,10 +2,10 @@
   {
     "username": "admin1",
     "email": "admin1@hcmus.edu.vn",
-    "points": 48,
+    "points": 50,
     "routes": {
       "route1": {
-        "status": "completed",
+        "status": "locked",
         "reward_claimed": true
       }
     },

@@ -350,42 +350,6 @@ async function goToNextStop(currentKey) {
       }
   });
 
-  async function uploadAndVerify(file, isReportMissing) {
-    document.getElementById('actionButtons').style.display = 'none';
-    document.getElementById('verifySection').style.display = 'block';
-    document.getElementById('loader').style.display = 'block';
-    document.getElementById('statusMsg').innerText = isReportMissing ? i18n.t('quiz_checking_scene') : i18n.t('quiz_analyzing');
-
-    // ✅ Dùng ServerAPI - tự động gửi ngôn ngữ hiện tại
-    try {
-      const data = await ServerAPI.verifyDetail(file, currentDetailId, isReportMissing);
-      document.getElementById('loader').style.display = 'none';
-      
-      if (data.success) {
-        if (data.data && data.data.valid) {
-            const correctMsg = i18n.t('quiz_correct');
-            const funFactLabel = i18n.t('quiz_fun_fact');
-            document.getElementById('statusMsg').innerHTML = `${correctMsg}<br><br><b>${funFactLabel}</b><br>${data.data.fact}`;
-            markCompleted();
-        } else if (data.status === 'skipped') {
-            const skippedMsg = i18n.t('quiz_skipped');
-            document.getElementById('statusMsg').innerHTML = `${skippedMsg}<br>${data.message}`;
-            markCompleted();
-        } else {
-            const wrongMsg = i18n.t('quiz_wrong');
-            const reason = data.data ? data.data.reason : data.message;
-            document.getElementById('statusMsg').innerHTML = `${wrongMsg}<br>${reason}`;
-            document.getElementById('retryBtn').style.display = 'inline-block';
-        }
-      } else {
-        document.getElementById('statusMsg').innerText = `❌ ${data.message}`;
-        document.getElementById('retryBtn').style.display = 'inline-block';
-      }
-    } catch (err) {
-      document.getElementById('statusMsg').innerText = i18n.t('quiz_connection_error');
-      document.getElementById('retryBtn').style.display = 'inline-block';
-    }
-  }
 
   function markCompleted() {
     if (completedDetails.has(currentDetailId)) return;
