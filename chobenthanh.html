@@ -301,7 +301,7 @@
         resultBox.textContent = data.message;
         uploadBtn.disabled = false;
 
-        if (data.message.includes("Đúng") || data.message.includes("✅")) {
+        if (data.message.includes("Đúng địa điểm") || data.message.includes("Correct location") || data.message.includes("✅")) {
           uploadBtn.style.display = "none";
           photoInput.style.display = "none";
           preview.style.display = "none";

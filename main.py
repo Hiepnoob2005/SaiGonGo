@@ -115,10 +115,10 @@ def save_db(users):
 
 # --- Khai báo API key và Khởi tạo GenAI ---
 load_dotenv()
-api_key_value = os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY")
-
-if not api_key_value:
-    print("FATAL ERROR: KHÔNG TÌM THẤY API KEY TRONG MÔI TRƯỜNG! Tính năng AI sẽ không hoạt động.")
+API_KEY = os.environ.get("GEMINI_API_KEY")
+api_key_value = API_KEY
+if not api_key_value:   
+    raise EnvironmentError("API Key chưa được thiết lập (GEMINI_API_KEY).")
     client = None
 else:
     try:

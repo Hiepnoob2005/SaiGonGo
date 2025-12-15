@@ -296,7 +296,7 @@
         resultBox.textContent = data.message;
         uploadBtn.disabled = false;
 
-        if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
+        if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("Correct location") || data.message.includes("✅"))) {
           try {
             const scoreRes = await fetch('/api/update-score', {
               method: 'POST',
