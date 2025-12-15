@@ -294,18 +294,14 @@
       resultBox.textContent = i18n.t('status_sending');
       uploadBtn.disabled = true;
 
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("location", "Chợ Bến Thành");
-
+      // ✅ Dùng ServerAPI - tự động gửi ngôn ngữ hiện tại
       try {
-        const res = await fetch("/verify-image", { method: "POST", body: formData });
-        const data = await res.json();
+        const data = await ServerAPI.verifyImage(file, "Chợ Bến Thành");
 
         resultBox.textContent = data.message;
         uploadBtn.disabled = false;
 
-        if (data.message.includes("Đúng") || data.message.includes("✅")) {
+        if (data.message.includes("Đúng địa điểm") || data.message.includes("Correct location") || data.message.includes("✅")) {
           uploadBtn.style.display = "none";
           photoInput.style.display = "none";
           preview.style.display = "none";
@@ -362,6 +358,7 @@
 
   <script src="./assets/js/translations.js"></script>
   <script src="./assets/js/i18n.js"></script>
+  <script src="./assets/js/api-helper.js"></script>
   <link rel="stylesheet" href="./assets/js/i18n.css">
 
 </body>

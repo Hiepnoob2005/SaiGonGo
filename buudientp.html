@@ -296,18 +296,14 @@
       resultBox.textContent = i18n.t('status_sending');
       uploadBtn.disabled = true;
 
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("location", locationName);
-
+      // ✅ Dùng ServerAPI - tự động gửi ngôn ngữ hiện tại
       try {
-        const res = await fetch("/verify-image", { method: "POST", body: formData });
-        const data = await res.json();
+        const data = await ServerAPI.verifyImage(file, locationName);
 
         resultBox.textContent = data.message;
         uploadBtn.disabled = false;
 
-        if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("✅"))) {
+        if (data.message && (data.message.includes("Đúng địa điểm") || data.message.includes("Correct location") || data.message.includes("✅"))) {
           // --- CODE CỘNG ĐIỂM (+5) ---
           try {
             const scoreRes = await fetch('/api/update-score', {
@@ -444,6 +440,7 @@
   
   <script src="./assets/js/translations.js"></script>
 <script src="./assets/js/i18n.js"></script>
+<script src="./assets/js/api-helper.js"></script>
 
 <script>
   // --- LOGIC GIỮ NGUYÊN LỘ TRÌNH KHI BẤM QUAY LẠI ---
