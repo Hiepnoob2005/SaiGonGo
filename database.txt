@@ -2,18 +2,17 @@
   {
     "username": "admin1",
     "email": "admin1@hcmus.edu.vn",
-    "points": -2,
+    "points": 48,
     "routes": {
       "route1": {
         "status": "completed",
-        "reward_claimed": false
+        "reward_claimed": true
       }
     },
     "current_tour_plan": [
-      "dinh_doc_lap",
       "nha_tho_duc_ba",
-      "ho_con_rua"
+      "cho_ben_thanh"
     ],
-    "current_step_index": 2
+    "current_step_index": 1
   }
 ]

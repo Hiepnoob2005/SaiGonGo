@@ -156,6 +156,45 @@
       border-radius: 50%; width: 30px; height: 30px;
       animation: spin 1s linear infinite; margin: 10px auto; display: none;
     }
+    /* --- POINT --- */
+    .score-badge {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      font-weight: bold;
+      font-size: 1rem;
+      color: #333;
+      z-index: 999;
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Hiệu ứng điểm bay lên */
+    .point-animation {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 4rem;
+      font-weight: 800;
+      color: #ffca28; /* Màu vàng */
+      text-shadow: 0 0 10px rgba(0,0,0,0.3);
+      pointer-events: none;
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.5s ease-out;
+    }
+
+    .point-animation.active {
+      transform: translate(-50%, -150%) scale(1.2);
+      opacity: 1;
+    }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     /* --- ADMIN BUTTON STYLE --- */
     .admin-badge {
@@ -190,6 +229,10 @@
   </style>
 </head>
 <body>
+<div id="score-display" class="score-badge">
+    💎 <span id="user-points">Loading...</span>
+  </div>
+  <div id="point-anim" class="point-animation">+2</div>
 
 <div class="container">
   <a href="baotang.html" style="text-decoration: none; color: var(--primary); font-weight: bold;" data-i18n="btn_back">← Quay lại</a>
@@ -404,6 +447,70 @@ async function goToNextStop(currentKey) {
       }
   });
 
+  function markCompleted() {
+    if (completedDetails.has(currentDetailId)) {
+        return;
+    }
+    completedDetails.add(currentDetailId);
+    completedCount++;
+    document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('confirmBtn').style.display = 'inline-block';
+    
+    initGrid(); 
+  }
+  
+  window.addEventListener('languageChanged', () => {
+      initGrid();
+  });
+
+  window.addEventListener('load', () => {
+       if(typeof i18n !== 'undefined') initGrid();
+  });
+  // --- 1. HÀM MỚI: CỘNG ĐIỂM VÀ TẠO HIỆU ỨNG ---
+  async function addScore(points) {
+    try {
+      // Gọi API backend main.py
+      const res = await fetch('/api/update-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ points: points, routeId: 'route1' })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        // Cập nhật số điểm hiển thị trên góc
+        document.getElementById('user-points').textContent = data.new_points;
+
+        // Chạy hiệu ứng +2 bay lên
+        const anim = document.getElementById('point-anim');
+        anim.textContent = '+' + points;
+        anim.classList.add('active');
+        
+        // Reset hiệu ứng sau 1 giây
+        setTimeout(() => {
+          anim.classList.remove('active');
+        }, 1000);
+      }
+    } catch (e) {
+      console.error("Lỗi cộng điểm:", e);
+    }
+  }
+
+  // --- 2. HÀM MỚI: TẢI ĐIỂM LÚC ĐẦU (để hiển thị đúng số điểm hiện có) ---
+  async function loadInitialScore() {
+    try {
+      const res = await fetch('/api/user');
+      const data = await res.json();
+      if (data.logged_in) {
+        document.getElementById('user-points').textContent = data.points;
+      }
+    } catch (e) { console.error(e); }
+  }
+  // Gọi hàm này khi tải trang
+  window.addEventListener('load', loadInitialScore);
+
+
+  // --- 3. SỬA HÀM uploadAndVerify (Tìm hàm cũ và thay thế đoạn xử lý thành công) ---
   async function uploadAndVerify(file, isReportMissing) {
     document.getElementById('actionButtons').style.display = 'none';
     document.getElementById('verifySection').style.display = 'block';
@@ -425,19 +532,29 @@ async function goToNextStop(currentKey) {
       document.getElementById('loader').style.display = 'none';
       
       if (data.success) {
+        // TRƯỜNG HỢP 1: AI XÁC NHẬN ĐÚNG VẬT THỂ
         if (data.data && data.data.valid) {
-             // SỬA LỖI Ở ĐÂY: Dùng i18n thay vì text cứng
             const correctMsg = i18n.t('quiz_correct');
             const funFactLabel = i18n.t('quiz_fun_fact');
             
-            // data.data.fact là text từ server (có thể vẫn là tiếng Việt nếu server chưa update)
             document.getElementById('statusMsg').innerHTML = `${correctMsg}<br><br><b>${funFactLabel}</b><br>${data.data.fact}`;
+            
+            // >>> THÊM DÒNG NÀY: Cộng 2 điểm <<<
+            addScore(2); 
+
             markCompleted();
+        
+        // TRƯỜNG HỢP 2: BÁO CÁO MẤT THÀNH CÔNG (Cũng được tính là đúng)
         } else if (data.status === 'skipped') {
              const skippedMsg = i18n.t('quiz_skipped');
              document.getElementById('statusMsg').innerHTML = `${skippedMsg}<br>${data.message}`;
+             
+             // >>> THÊM DÒNG NÀY: Cộng 2 điểm an ủi/chính xác <<<
+             addScore(2);
+
              markCompleted();
         } else {
+            // SAI -> Không cộng điểm
             const wrongMsg = i18n.t('quiz_wrong');
             const reason = data.data ? data.data.reason : data.message;
             document.getElementById('statusMsg').innerHTML = `${wrongMsg}<br>${reason}`;
@@ -453,26 +570,6 @@ async function goToNextStop(currentKey) {
       document.getElementById('retryBtn').style.display = 'inline-block';
     }
   }
-
-  function markCompleted() {
-    if (completedDetails.has(currentDetailId)) {
-        return;
-    }
-    completedDetails.add(currentDetailId);
-    completedCount++;
-    document.getElementById('actionButtons').style.display = 'none';
-    document.getElementById('confirmBtn').style.display = 'inline-block';
-    
-    initGrid(); 
-  }
-  
-  window.addEventListener('languageChanged', () => {
-      initGrid();
-  });
-
-  window.addEventListener('load', () => {
-       if(typeof i18n !== 'undefined') initGrid();
-  });
 </script>
 <script src="./assets/js/translations.js"></script>
 <script src="./assets/js/i18n.js"></script>
@@ -494,7 +591,7 @@ async function goToNextStop(currentKey) {
       }
     }
   </script>
-  {% endif %}
+{% endif %}
 
 
 </body>

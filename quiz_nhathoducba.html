@@ -220,6 +220,45 @@
       margin: 10px auto;
       display: none;
     }
+        /* --- POINT --- */
+    .score-badge {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      font-weight: bold;
+      font-size: 1rem;
+      color: #333;
+      z-index: 999;
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Hiệu ứng điểm bay lên */
+    .point-animation {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 4rem;
+      font-weight: 800;
+      color: #ffca28; /* Màu vàng */
+      text-shadow: 0 0 10px rgba(0,0,0,0.3);
+      pointer-events: none;
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.5s ease-out;
+    }
+
+    .point-animation.active {
+      transform: translate(-50%, -150%) scale(1.2);
+      opacity: 1;
+    }
 
     @keyframes spin {
       0% { transform: rotate(0deg); }
@@ -427,47 +466,6 @@ async function goToNextStop(currentKey) {
       }
   });
 
-  async function uploadAndVerify(file, isReportMissing) {
-    document.getElementById('actionButtons').style.display = 'none';
-    document.getElementById('verifySection').style.display = 'block';
-    document.getElementById('loader').style.display = 'block';
-    document.getElementById('statusMsg').innerText = isReportMissing ? i18n.t('quiz_checking_scene') : i18n.t('quiz_analyzing');
-    
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('detail_id', currentDetailId);
-    formData.append('report_missing', isReportMissing);
-
-    try {
-      const res = await fetch('/api/verify-detail', { method: 'POST', body: formData });
-      const data = await res.json();
-      document.getElementById('loader').style.display = 'none';
-      
-      if (data.success) {
-          if (data.data && data.data.valid) {
-            const correctMsg = i18n.t('quiz_correct');
-            const funFactLabel = i18n.t('quiz_fun_fact');
-            document.getElementById('statusMsg').innerHTML = `${correctMsg}<br><br><b>${funFactLabel}</b><br>${data.data.fact}`;
-            markCompleted();
-        } else if (data.status === 'skipped') {
-            const skippedMsg = i18n.t('quiz_skipped');
-            document.getElementById('statusMsg').innerHTML = `${skippedMsg}<br>${data.message}`;
-            markCompleted();
-        } else {
-            const wrongMsg = i18n.t('quiz_wrong');
-            const reason = data.data ? data.data.reason : data.message;
-            document.getElementById('statusMsg').innerHTML = `${wrongMsg}<br>${reason}`;
-            document.getElementById('retryBtn').style.display = 'inline-block';
-        }
-      } else {
-        document.getElementById('statusMsg').innerText = `❌ ${data.message}`;
-        document.getElementById('retryBtn').style.display = 'inline-block';
-      }
-    } catch (err) {
-      document.getElementById('statusMsg').innerText = i18n.t('quiz_connection_error');
-      document.getElementById('retryBtn').style.display = 'inline-block';
-    }
-  }
 
   function markCompleted() {
     if (completedDetails.has(currentDetailId)) return;
@@ -484,6 +482,110 @@ async function goToNextStop(currentKey) {
   window.addEventListener('load', () => {
        if(typeof i18n !== 'undefined') initGrid();
   });
+    // --- 1. HÀM MỚI: CỘNG ĐIỂM VÀ TẠO HIỆU ỨNG ---
+  async function addScore(points) {
+    try {
+      // Gọi API backend main.py
+      const res = await fetch('/api/update-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ points: points, routeId: 'route1' })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        // Cập nhật số điểm hiển thị trên góc
+        document.getElementById('user-points').textContent = data.new_points;
+
+        // Chạy hiệu ứng +2 bay lên
+        const anim = document.getElementById('point-anim');
+        anim.textContent = '+' + points;
+        anim.classList.add('active');
+        
+        // Reset hiệu ứng sau 1 giây
+        setTimeout(() => {
+          anim.classList.remove('active');
+        }, 1000);
+      }
+    } catch (e) {
+      console.error("Lỗi cộng điểm:", e);
+    }
+  }
+
+  // --- 2. HÀM MỚI: TẢI ĐIỂM LÚC ĐẦU (để hiển thị đúng số điểm hiện có) ---
+  async function loadInitialScore() {
+    try {
+      const res = await fetch('/api/user');
+      const data = await res.json();
+      if (data.logged_in) {
+        document.getElementById('user-points').textContent = data.points;
+      }
+    } catch (e) { console.error(e); }
+  }
+  // Gọi hàm này khi tải trang
+  window.addEventListener('load', loadInitialScore);
+
+
+  // --- 3. SỬA HÀM uploadAndVerify (Tìm hàm cũ và thay thế đoạn xử lý thành công) ---
+  async function uploadAndVerify(file, isReportMissing) {
+    document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('verifySection').style.display = 'block';
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('statusMsg').innerText = isReportMissing ? i18n.t('quiz_checking_scene') : i18n.t('quiz_analyzing');
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('detail_id', currentDetailId);
+    formData.append('report_missing', isReportMissing);
+
+    try {
+      const res = await fetch('/api/verify-detail', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      
+      document.getElementById('loader').style.display = 'none';
+      
+      if (data.success) {
+        // TRƯỜNG HỢP 1: AI XÁC NHẬN ĐÚNG VẬT THỂ
+        if (data.data && data.data.valid) {
+            const correctMsg = i18n.t('quiz_correct');
+            const funFactLabel = i18n.t('quiz_fun_fact');
+            
+            document.getElementById('statusMsg').innerHTML = `${correctMsg}<br><br><b>${funFactLabel}</b><br>${data.data.fact}`;
+            
+            // >>> THÊM DÒNG NÀY: Cộng 2 điểm <<<
+            addScore(2); 
+
+            markCompleted();
+        
+        // TRƯỜNG HỢP 2: BÁO CÁO MẤT THÀNH CÔNG (Cũng được tính là đúng)
+        } else if (data.status === 'skipped') {
+             const skippedMsg = i18n.t('quiz_skipped');
+             document.getElementById('statusMsg').innerHTML = `${skippedMsg}<br>${data.message}`;
+             
+             // >>> THÊM DÒNG NÀY: Cộng 2 điểm an ủi/chính xác <<<
+             addScore(2);
+
+             markCompleted();
+        } else {
+            // SAI -> Không cộng điểm
+            const wrongMsg = i18n.t('quiz_wrong');
+            const reason = data.data ? data.data.reason : data.message;
+            document.getElementById('statusMsg').innerHTML = `${wrongMsg}<br>${reason}`;
+            document.getElementById('retryBtn').style.display = 'inline-block';
+        }
+      } else {
+        document.getElementById('statusMsg').innerText = `❌ ${data.message}`;
+        document.getElementById('retryBtn').style.display = 'inline-block';
+      }
+    } catch (err) {
+      console.error(err);
+      document.getElementById('statusMsg').innerText = i18n.t('quiz_connection_error');
+      document.getElementById('retryBtn').style.display = 'inline-block';
+    }
+  }
 </script>
 
 <script src="./assets/js/translations.js"></script>
