@@ -115,16 +115,16 @@ def save_db(users):
 
 # --- Khai báo API key và Khởi tạo GenAI ---
 load_dotenv()
-api_key_value = os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY")
-
-if not api_key_value:
-    print("FATAL ERROR: KHÔNG TÌM THẤY API KEY TRONG MÔI TRƯỜNG! Tính năng AI sẽ không hoạt động.")
+API_KEY = os.environ.get("GEMINI_API_KEY")
+api_key_value = API_KEY
+if not api_key_value:   
+    raise EnvironmentError("API Key chưa được thiết lập (GEMINI_API_KEY).")
     client = None
 else:
     try:
         genai.api_key = api_key_value
         client = genai.Client(api_key=api_key_value)
-        MODEL_NAME = 'gemini-2.5-flash'
+        MODEL_NAME = 'gemini-flash-latest'
         print("✅ Khởi tạo Gemini Client thành công.")
     except Exception as e:
         print(f"❌ Lỗi khởi tạo Gemini Client: {e}")
@@ -509,6 +509,7 @@ def get_direction_modifier(modifier):
 def get_dynamic_directions():
     """
     Sinh chỉ dẫn lộ trình bằng văn bản với Google Gemini.
+    Hỗ trợ đa ngôn ngữ: nhận tham số 'lang' từ client.
     """
     if not client:
         return jsonify({"success": False, "message": "❌ Lỗi: Gemini Client chưa được khởi tạo."}), 500
@@ -518,12 +519,15 @@ def get_dynamic_directions():
         start_key = data.get("start")
         end_key = data.get("end")
         is_alternative = data.get("alternative", False)
+        lang = data.get("lang", "vi")  # Mặc định tiếng Việt
 
         if not start_key or not end_key:
-            return jsonify({"success": False, "message": "Thiếu thông tin điểm bắt đầu hoặc kết thúc"}), 400
+            error_msg = "Thiếu thông tin điểm bắt đầu hoặc kết thúc" if lang == "vi" else "Missing start or end location"
+            return jsonify({"success": False, "message": error_msg}), 400
 
         if start_key not in LOCATIONS or end_key not in LOCATIONS:
-            return jsonify({"success": False, "message": "Tên địa điểm không hợp lệ"}), 400
+            error_msg = "Tên địa điểm không hợp lệ" if lang == "vi" else "Invalid location name"
+            return jsonify({"success": False, "message": error_msg}), 400
 
         start = LOCATIONS[start_key]
         end = LOCATIONS[end_key]
@@ -536,7 +540,7 @@ def get_dynamic_directions():
             f"&travelmode=walking"
         )
 
-        # Tính khoảng cách Haversine (giữ nguyên)
+        # Tính khoảng cách Haversine
         R = 6371.0
         dlat = radians(end["lat"] - start["lat"])
         dlon = radians(end["lon"] - start["lon"])
@@ -544,40 +548,59 @@ def get_dynamic_directions():
         c = 2 * atan2(sqrt(a), sqrt(1 - a))
         distance_km = R * c
 
-        # SINH CHỈ DẪN BẰNG GEMINI (ĐÃ SỬA LỖI CÚ PHÁP)
-        
-        # SỬA LỖI: Gọi mô hình qua client.models.get()
-        # Sử dụng model gemini-2.5-flash để đồng nhất và tối ưu tốc độ/chi phí
-        model_name_for_text = "gemini-2.5-flash" 
-        
-            # --- PROMPT TIẾNG VIỆT (CŨ) ---
-            # --- PROMPT TIẾNG VIỆT (CŨ) ---
-        if is_alternative:
+        # SINH PROMPT THEO NGÔN NGỮ
+        model_name_for_text = "gemini-flash-latest"
+
+        if lang == "en":
+            # English prompts
+            if is_alternative:
+                prompt = (
+                    f"You are a Ho Chi Minh City tour guide. The user reports that the MAIN ROAD IS BLOCKED or INACCESSIBLE. "
+                    f"Please provide an ALTERNATIVE ROUTE (detour, side streets, or parallel roads) "
+                    f"from '{start['name']}' to '{end['name']}'. "
+                    f"If the distance is very close (under 100 meters), return a message saying the user has already arrived. "
+                    f"Do NOT suggest the main shortest route. "
+                    f"List 4-6 specific walking steps. Start your response with: '⚠️ Since the main road is blocked, follow this route:...'"
+                )
+            else:
+                prompt = (
+                    f"You are a Ho Chi Minh City tour guide. "
+                    f"Describe 4-6 clear walking directions in English for the shortest route "
+                    f"from '{start['name']}' to '{end['name']}'. "
+                    f"If the distance is very close (under 100 meters), return a message saying the user has already arrived. "
+                    f"Total distance is approximately {round(distance_km, 2)} km. "
+                    f"Do not include links or special symbols."
+                )
+        else:
+            # Vietnamese prompts (mặc định)
+            if is_alternative:
                 prompt = (
                     f"Bạn là hướng dẫn viên du lịch TP.HCM. Người dùng báo rằng CON ĐƯỜNG CHÍNH ĐANG BỊ CHẶN hoặc KHÔNG ĐI ĐƯỢC. "
                     f"Hãy chỉ dẫn một LỘ TRÌNH THAY THẾ (đi đường vòng, đi qua hẻm lớn hoặc đường song song) "
                     f"từ '{start['name']}' đến '{end['name']}'. "
-                    f"Nếu vị trí đã quá gần (dưới 100 mét), hãy trả về kết quả người dùng đã đến nơi rồi."
+                    f"Nếu vị trí đã quá gần (dưới 100 mét), hãy trả về kết quả người dùng đã đến nơi rồi. "
                     f"Tuyệt đối không chỉ dẫn đi lại con đường chính ngắn nhất. "
                     f"Hãy liệt kê 4-6 bước đi cụ thể. Bắt đầu câu trả lời bằng: '⚠️ Vì đường chính bị chặn, hãy đi theo lối này:...'"
                 )
-        else:
+            else:
                 prompt = (
                     f"Bạn là hướng dẫn viên du lịch TP.HCM. "
                     f"Hãy mô tả 4–6 bước chỉ đường đi bộ ngắn nhất, dễ hiểu bằng tiếng Việt, "
                     f"từ '{start['name']}' đến '{end['name']}'. "
-                    f"Nếu vị trí đã quá gần (dưới 100 mét), hãy trả về kết quả người dùng đã đến nơi rồi."
+                    f"Nếu vị trí đã quá gần (dưới 100 mét), hãy trả về kết quả người dùng đã đến nơi rồi. "
                     f"Tổng khoảng cách khoảng {round(distance_km, 2)} km. "
                     f"Không kèm liên kết hoặc ký hiệu đặc biệt."
                 )
-        
+
         # Gọi generate_content bằng client.models
         response = client.models.generate_content(
             model=model_name_for_text,
             contents=[prompt]
         )
 
-        route_text = response.text.strip() if response.text else "Không tạo được lộ trình."
+        route_text = response.text.strip() if response.text else (
+            "Không tạo được lộ trình." if lang == "vi" else "Could not create route."
+        )
 
         return jsonify({
             "success": True,
@@ -598,24 +621,33 @@ def verify_image():
     try:
         if 'image' not in request.files or 'location' not in request.form:
             return jsonify({"message": "Thiếu dữ liệu hình ảnh hoặc tên địa điểm"}), 400
-        
+
         file = request.files["image"]
         location_name = request.form["location"]
+        lang = request.form.get("lang", "vi")  # Nhận tham số ngôn ngữ
         image_bytes = file.read()
         img = Image.open(BytesIO(image_bytes))
-        
-        prompt = (
-            f"Bạn là trợ lý giúp xác định chính xác địa điểm trong ảnh. "
-            f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'."
-            f"Trả lời ngắn gọn **CHỈ** bằng 1 trong 2 cụm từ sau: 'Đúng địa điểm' hoặc 'Không đúng địa điểm'."
-        )
-        
+
+        # Tạo prompt theo ngôn ngữ
+        if lang == "en":
+            prompt = (
+                f"You are an assistant that accurately identifies locations in images. "
+                f"Compare this image with the location '{location_name}'. "
+                f"Answer briefly with ONLY one of these two phrases: 'Correct location' or 'Incorrect location'."
+            )
+        else:
+            prompt = (
+                f"Bạn là trợ lý giúp xác định chính xác địa điểm trong ảnh. "
+                f"Hãy so sánh hình ảnh này với địa điểm '{location_name}'. "
+                f"Trả lời ngắn gọn **CHỈ** bằng 1 trong 2 cụm từ sau: 'Đúng địa điểm' hoặc 'Không đúng địa điểm'."
+            )
+
         response = client.models.generate_content(
-            model='gemini-2.5-flash', 
+            model='gemini-flash-latest',
             contents=[img, prompt],
         )
         result = response.text.strip()
-        
+
         print(f"🤖 Kết quả Gemini: {result}")
         return jsonify({"message": f"🤖 Kết quả AI: {result}"}), 200
 
@@ -682,50 +714,70 @@ DETAILS_INFO = {
 def verify_detail():
     if not client:
         return jsonify({"success": False, "message": "Lỗi: AI chưa khởi tạo."}), 500
-        
+
     try:
         if 'image' not in request.files or 'detail_id' not in request.form:
             return jsonify({"success": False, "message": "Thiếu dữ liệu"}), 400
-            
+
         file = request.files["image"]
         detail_id = request.form["detail_id"]
         report_missing = request.form.get("report_missing", "false") == "true"
-        
+        lang = request.form.get("lang", "vi")  # Nhận tham số ngôn ngữ
+
         target_object = DETAILS_INFO.get(detail_id, "vật thể quân sự")
         image_bytes = file.read()
         img = Image.open(BytesIO(image_bytes))
 
-        # Trường hợp 1: Người dùng báo cáo không tìm thấy -> AI kiểm tra xem chỗ đó CÓ TRỐNG KHÔNG
+        # Trường hợp 1: Người dùng báo cáo không tìm thấy
         if report_missing:
-            prompt = (
-                f"Người dùng đang tìm '{target_object}' nhưng báo cáo là nó đã bị di dời hoặc sửa chữa. "
-                f"Hãy nhìn ảnh chụp hiện trường này. Nếu bạn thấy '{target_object}' vẫn còn đó rõ ràng, hãy trả lời 'STILL_THERE'. "
-                f"Nếu không thấy vật thể đó (chỉ thấy tường, sàn, giàn giáo, hoặc vật khác), hãy trả lời 'MISSING_CONFIRMED'. "
-                f"Chỉ trả lời đúng keyword."
-            )
-        # Trường hợp 2: Người dùng nộp ảnh vật thể -> AI kiểm tra đúng sai và cung cấp thông tin
+            if lang == "en":
+                prompt = (
+                    f"The user is looking for '{target_object}' but reports it has been moved or is under renovation. "
+                    f"Look at this photo of the scene. If you clearly see '{target_object}' still there, answer 'STILL_THERE'. "
+                    f"If you don't see the object (only walls, floors, scaffolding, or other items), answer 'MISSING_CONFIRMED'. "
+                    f"Only respond with the keyword."
+                )
+            else:
+                prompt = (
+                    f"Người dùng đang tìm '{target_object}' nhưng báo cáo là nó đã bị di dời hoặc sửa chữa. "
+                    f"Hãy nhìn ảnh chụp hiện trường này. Nếu bạn thấy '{target_object}' vẫn còn đó rõ ràng, hãy trả lời 'STILL_THERE'. "
+                    f"Nếu không thấy vật thể đó (chỉ thấy tường, sàn, giàn giáo, hoặc vật khác), hãy trả lời 'MISSING_CONFIRMED'. "
+                    f"Chỉ trả lời đúng keyword."
+                )
+        # Trường hợp 2: Người dùng nộp ảnh vật thể
         else:
-            prompt = (
-                f"Bạn là trọng tài trò chơi truy tìm kho báu tại bảo tàng. "
-                f"Người chơi cần tìm: '{target_object}'. "
-                f"Hãy xem ảnh. Nếu trong ảnh CHÍNH XÁC là '{target_object}', hãy trả lời theo định dạng JSON: "
-                f"{{ \"valid\": true, \"fact\": \"[Một sự thật lịch sử thú vị ngắn gọn 1 câu về vật này bằng tiếng Việt]\" }}. "
-                f"Nếu hoàn toàn sai, trả lời: {{ \"valid\": false, \"reason\": \"[Lý do ngắn gọn]\" }}."
-            )
+            if lang == "en":
+                prompt = (
+                    f"You are a referee for a treasure hunt game at a museum. "
+                    f"The player needs to find: '{target_object}'. "
+                    f"Look at the image. If it EXACTLY shows '{target_object}', respond in JSON format: "
+                    f"{{ \"valid\": true, \"fact\": \"[A brief interesting historical fact about this object in English (1 sentence)]\" }}. "
+                    f"If completely wrong, respond: {{ \"valid\": false, \"reason\": \"[Brief reason]\" }}."
+                )
+            else:
+                prompt = (
+                    f"Bạn là trọng tài trò chơi truy tìm kho báu tại bảo tàng. "
+                    f"Người chơi cần tìm: '{target_object}'. "
+                    f"Hãy xem ảnh. Nếu trong ảnh CHÍNH XÁC là '{target_object}', hãy trả lời theo định dạng JSON: "
+                    f"{{ \"valid\": true, \"fact\": \"[Một sự thật lịch sử thú vị ngắn gọn 1 câu về vật này bằng tiếng Việt]\" }}. "
+                    f"Nếu hoàn toàn sai, trả lời: {{ \"valid\": false, \"reason\": \"[Lý do ngắn gọn]\" }}."
+                )
 
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-flash-latest',
             contents=[img, prompt]
         )
         
         result_text = response.text.strip()
-        
+
         # Xử lý kết quả trả về
         if report_missing:
             if "MISSING_CONFIRMED" in result_text:
-                return jsonify({"success": True, "status": "skipped", "message": "Đã xác nhận vật thể bị thiếu. Bạn được tính hoàn thành chi tiết này!"})
+                msg = "Confirmed missing. You get credit for this detail!" if lang == "en" else "Đã xác nhận vật thể bị thiếu. Bạn được tính hoàn thành chi tiết này!"
+                return jsonify({"success": True, "status": "skipped", "message": msg})
             else:
-                return jsonify({"success": False, "status": "rejected", "message": "AI vẫn nhìn thấy vật thể trong ảnh của bạn. Hãy tìm kỹ lại!"})
+                msg = "AI still sees the object in your photo. Please search more carefully!" if lang == "en" else "AI vẫn nhìn thấy vật thể trong ảnh của bạn. Hãy tìm kỹ lại!"
+                return jsonify({"success": False, "status": "rejected", "message": msg})
         else:
             # Xử lý JSON từ AI (cần dọn dẹp chuỗi nếu AI trả về markdown)
             clean_json = result_text.replace('```json', '').replace('```', '').strip()
@@ -734,7 +786,8 @@ def verify_detail():
                 return jsonify({"success": True, "data": data})
             except:
                 # Fallback nếu AI không trả JSON chuẩn
-                return jsonify({"success": False, "message": "Lỗi phân tích AI, vui lòng thử lại chụp rõ hơn."})
+                msg = "AI parsing error, please try taking a clearer photo." if lang == "en" else "Lỗi phân tích AI, vui lòng thử lại chụp rõ hơn."
+                return jsonify({"success": False, "message": msg})
 
     except Exception as e:
         print(f"Lỗi verify detail: {e}")

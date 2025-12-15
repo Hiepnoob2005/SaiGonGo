@@ -54,7 +54,7 @@
                 <input type="checkbox" id="dynamicLocationToggle">
                 <span class="slider"></span>
             </label>
-            <span id="locationModeLabel" data-i18n="lt_test_mode_cathedral">Chế độ Thử nghiệm (Nhà thờ Đức Bà)</span>
+            <span id="locationModeLabel" data-i18n="lt_test_mode">Chế độ Thử nghiệm</span>
         </div>
         {% endif %}
 
@@ -72,20 +72,20 @@
         </div>
 
         <button id="btnOpenMap" class="btn-action btn-map" onclick="openGoogleMap()"
-            style="display: none; background-color: #2196F3;">
+            style="display: none; background-color: #2196F3;" data-i18n="btn_open_map">
             🗺️ Mở Map Trợ giúp
         </button>
 
         <div style="margin-top: 25px;">
-            <button id="skipBtn" class="btn-action" style="background-color:#f92929">
+            <button id="skipBtn" class="btn-action" style="background-color:#f92929" data-i18n="btn_skip_location">
                 Bỏ qua địa điểm này
             </button>
         </div>
 
         <section class="challenge-section" id="photoChallenge" style="display: none;">
             <a href="nhathoducba.html" class="btn-action" style="text-decoration: none; background-color: green;"
-                data-i18n="quiz_continue_cathedral">
-                Hoàn thành thử thách →
+                data-i18n="btn_continue_general">
+                Tiếp tục →
             </a>
         </section>
     </main>
@@ -212,19 +212,8 @@
             if (!isAlternative) loadingStatus.textContent = i18n.t('lt_creating_route');
 
             try {
-                const res = await fetch("/get-dynamic-directions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        current_lat: lat,
-                        current_lon: lon,
-                        start: START_KEY,
-                        end: END_KEY,
-                        alternative: isAlternative, // Quan trọng: Gửi cờ tìm đường khác
-                    }),
-                });
-
-                const data = await res.json();
+                // ✅ Dùng ServerAPI - tự động gửi ngôn ngữ hiện tại
+                const data = await ServerAPI.getDirections(START_KEY, END_KEY, isAlternative);
                 const destName = i18n.t('dest_cathedral');
 
                 if (data.success) {
@@ -434,6 +423,7 @@
 
     <script src="./assets/js/translations.js"></script>
     <script src="./assets/js/i18n.js"></script>
+    <script src="./assets/js/api-helper.js"></script>
 
     {% if is_admin %}
     <button onclick="adminSkipAll('nhathoducba.html')" class="admin-badge">
