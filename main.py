@@ -124,7 +124,7 @@ else:
     try:
         genai.api_key = api_key_value
         client = genai.Client(api_key=api_key_value)
-        MODEL_NAME = 'gemini-2.5-flash'
+        MODEL_NAME = 'gemini-flash-latest'
         print("✅ Khởi tạo Gemini Client thành công.")
     except Exception as e:
         print(f"❌ Lỗi khởi tạo Gemini Client: {e}")
@@ -549,7 +549,7 @@ def get_dynamic_directions():
         distance_km = R * c
 
         # SINH PROMPT THEO NGÔN NGỮ
-        model_name_for_text = "gemini-2.5-flash"
+        model_name_for_text = "gemini-flash-latest"
 
         if lang == "en":
             # English prompts
@@ -643,7 +643,7 @@ def verify_image():
             )
 
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-flash-latest',
             contents=[img, prompt],
         )
         result = response.text.strip()
@@ -764,7 +764,7 @@ def verify_detail():
                 )
 
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-flash-latest',
             contents=[img, prompt]
         )
         
