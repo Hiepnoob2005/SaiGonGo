@@ -59,7 +59,7 @@ window.addEventListener("scroll", function () {
               const logoutText = typeof i18n !== 'undefined' ? i18n.t('nav_logout') : 'Logout';
 
               userSection.innerHTML = `
-                <a href="profile.html" style="color: white; margin-right: 15px; font-weight: bold; text-decoration: underline;">
+                <a href="profile.html" style="color: var(--viridian-green); margin-right: 15px; font-weight: bold; text-decoration: underline;">
                     ${greetingPrefix} ${data.username}
                 </a>
             `;

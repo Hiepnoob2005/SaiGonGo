@@ -462,8 +462,12 @@ a.navbar-links[href="login.html"]:hover {
     gap: 15px;
   }
 
-  .navbar-links {
-    color: var(--text-dark);
+  a {
+    color: var(--viridian-green);
+  }
+  
+  a.navbar-links {
+    color: var(--viridian-green);
     width: 100%;
     display: block;
     text-align: center;
@@ -568,6 +572,13 @@ a.navbar-links[href="login.html"]:hover {
 
 /* Desktop Hero Layout */
 @media (min-width: 992px) {
+  .navbar-links {
+    color: var(--viridian-green);
+    width: 100%;
+    display: block;
+    text-align: center;
+    padding: 10px;
+  }
   .hero-content {
     grid-template-columns: 1fr 1fr;
     grid-template-areas: 
@@ -959,6 +970,13 @@ a.navbar-links[href="login.html"]:hover {
  * responsive for larger than 768px screen 
  */
 @media (min-width: 768px) {
+  .navbar-links {
+    color: var(--viridian-green);
+    width: 100%;
+    display: block;
+    text-align: center;
+    padding: 10px;
+  }
   .container {
     max-width: 750px;
     margin-inline: auto;

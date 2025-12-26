@@ -62,10 +62,11 @@ button { cursor: pointer; border: none; background: none; }
 }
 
 .footer {
-    position: relative;
+    position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
+    z-index: -10;
 }
 
 .header .container {
@@ -400,6 +401,13 @@ input:checked + .slider:before {
   .navbar-list { flex-direction: column; width: 100%; gap: 15px; }
   .navbar-links { color: var(--text-dark); display: block; width: 100%; text-align: center; }
   .btn-outline { color: var(--primary-color); border-color: var(--primary-color); width: 100%; }
+
+  .footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
 }
 
 /* --- Mobile (Dưới 575px) --- */
@@ -418,5 +426,12 @@ input:checked + .slider:before {
   .toggle-container {
     flex-direction: column; /* Trên mobile nhỏ thì xếp dọc toggle và label */
     gap: 10px;
+  }
+
+    .footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
   }
 }

@@ -49,7 +49,6 @@
         {% if is_admin %}
 
         <div class="toggle-container">
-            <span data-i18n="lt_use_real_location">Sử dụng vị trí thực tế</span>
             <label class="toggle-switch">
                 <input type="checkbox" id="dynamicLocationToggle">
                 <span class="slider"></span>
@@ -140,28 +139,36 @@
         const directionsBox = document.getElementById("directionsBox");
         const loadingStatus = document.getElementById("loadingStatus");
         const photoChallenge = document.getElementById("photoChallenge");
+        // --- SỬA LẠI ĐOẠN NÀY ---
         const locationToggle = document.getElementById("dynamicLocationToggle");
         const locationModeLabel = document.getElementById("locationModeLabel");
 
         let useDynamicLocation = false;
 
-        // Cập nhật trạng thái Toggle ban đầu
-        locationToggle.checked = !useDynamicLocation;
-        // Logic hiển thị label sẽ được i18n xử lý, nhưng ta cần update khi toggle thay đổi
+        // Kiểm tra xem nút toggle có tồn tại không (chỉ Admin mới có)
+        if (locationToggle) {
+            // Init Toggle
+            locationToggle.checked = !useDynamicLocation;
 
-        function updateLocationLabel() {
-            if (locationToggle.checked) {
-                locationModeLabel.textContent = i18n.t('lt_test_mode');
-            } else {
-                locationModeLabel.textContent = i18n.t('lt_use_real_location');
+            function updateLocationLabel() {
+                if (locationModeLabel) { // Kiểm tra label luôn cho chắc chắn
+                    if (locationToggle.checked) {
+                        locationModeLabel.textContent = i18n.t('lt_test_mode_post');
+                    } else {
+                        locationModeLabel.textContent = i18n.t('lt_use_real_location');
+                    }
+                }
             }
-        }
 
-        // Sự kiện khi gạt nút Toggle
-        locationToggle.addEventListener('change', () => {
-            useDynamicLocation = !locationToggle.checked;
-            updateLocationLabel();
-        });
+            locationToggle.addEventListener('change', () => {
+                useDynamicLocation = !locationToggle.checked;
+                updateLocationLabel();
+            });
+        } else {
+            // Nếu không phải admin (không có nút toggle), mặc định dùng chế độ User (false hoặc true tùy logic của bạn)
+            // Ở đây bạn đang để mặc định useDynamicLocation = false ở trên.
+            console.log("User mode: Dynamic Location Toggle hidden");
+        }
 
         // --- HÀM 1: XỬ LÝ NÚT BẤM & LẤY VỊ TRÍ ---
         function getAndSendLocation(isAlternative = false) {
